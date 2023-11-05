@@ -5,7 +5,7 @@ stages:
 build:
     stage: build
     script:
-        - echo: "Building"
+        - echo "Building"
         - mkdir build
         - touch build/info.txt
     artifacts:

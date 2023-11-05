@@ -9,7 +9,7 @@ build:
         - mkdir build
         - touch build/info.txt
     artifacts:
-        path:
+        paths:
             - build/
 
 test:

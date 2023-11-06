@@ -59,4 +59,4 @@ async function insertData() {
         console.error(err.stack);
         process.exit(1);
     }
-})();
+});

@@ -5,7 +5,6 @@ const User = require("../schemas/users");
 const Dentist = require("../schemas/dentists");
 const Slot = require("../schemas/slots");
 const Clinic = require("../schemas/clinics");
-const slots = require("../schemas/slots");
 
 async function insertData() {
     await mongoose.connect(mongoURI);

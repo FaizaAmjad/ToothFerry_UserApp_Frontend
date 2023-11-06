@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 /**
  * firstName: The first name of the user
- * middleName: The middle name of the user (If he or she has any)
  * lastName: The last name of the user
  * birthDay: The birth date of the user
  * postCode: The simple address of the user (Used to find the nearest dentist)
@@ -15,10 +14,6 @@ const userSchema = new Schema({
     firstName: {
         type: String,
         required: [true, "First name must be entered"]
-    },
-    middleName: {
-        type: String,
-        required: false
     },
     lastName: {
         type: String,

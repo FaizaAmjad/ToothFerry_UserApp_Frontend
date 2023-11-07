@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../schemas/users.js");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // The following endpoints are just for future implementations.
 // Once the authentication method is created, we can work on the endpoints.
@@ -12,7 +13,35 @@ const bcrypt = require('bcrypt');
  * @return {object} Bad request response: 400
  */
 router.post("/login", function (req, res) {
-    res.status(501).send("TODO")
+    User.findOne({ email: req.body.email })
+    .then((user) => {
+        //user doesn't exist
+        if (!user) {
+          return res.status(401).json({
+            title: 'user not found',
+            error: 'invalid credentials'
+          })
+        }
+        //incorrect password
+        if (!bcrypt.compareSync(req.body.password, user.password)) {
+          return res.status(401).json({
+            tite: 'login failed',
+            error: 'invalid credentials'
+          })
+        }
+        //IF ALL IS GOOD create a token and send to frontend
+        let token = jwt.sign({ userId: user._id}, 'secretkey');
+        return res.status(200).json({
+          title: 'login sucess',
+          token: token
+        })
+      })
+    .catch ((err) => {
+        return res.status(500).json({
+            title: 'server error',
+            error: err
+      })
+    })  
 })
 
 /**
@@ -29,10 +58,10 @@ router.post("/signup", function (req, res) {
         postCode: req.body.postCode,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 10)
-      })
-      console.log(newUser);
-      newUser.save()
-      .then ((err) => {
+    })
+    console.log(newUser);
+    newUser.save()
+    .then ((err) => {
         if (err) {
             return res.status(400).json({
             title: 'error',
@@ -42,7 +71,13 @@ router.post("/signup", function (req, res) {
         return res.status(200).json({
             title: 'signup success'
         })
-      })
+    })
+    .catch ((err) => {
+        return res.status(500).json({
+            title: 'server error',
+            error: err
+        })
+    })  
 })
 
 /**

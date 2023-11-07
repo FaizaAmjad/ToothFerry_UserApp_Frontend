@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const Users = require("../schemas/users.js");
+const User = require("../schemas/users.js");
+const bcrypt = require('bcrypt');
 
 // The following endpoints are just for future implementations.
 // Once the authentication method is created, we can work on the endpoints.
@@ -21,7 +22,25 @@ router.post("/login", function (req, res) {
  * @return {object} Bad request response: 400
  */
 router.post("/signup", function (req, res) {
-    res.status(501).send("TODO")
+    const newUser = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        birthday: req.body.birthday,
+        postCode: req.body.postCode,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 10)
+      })
+      newUser.save(err => {
+        if (err) {
+          return res.status(400).json({
+            title: 'error',
+            error: 'Email is already in use.'
+          })
+        }
+        return res.status(200).json({
+          title: 'signup success'
+        })
+      })
 })
 
 /**

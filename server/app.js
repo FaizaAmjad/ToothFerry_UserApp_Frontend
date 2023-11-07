@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require("mongoose");
+var userRoutes = require('./routes/users');
  
 // Creating express object
 const app = express();
@@ -16,6 +17,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/api', (req, res) => { 
     res.json({ message: "ToothFerry API is running!"})
 }) 
+
+app.use('/', userRoutes)
 
 // Set URI to connect to
 const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/ToothFerry";

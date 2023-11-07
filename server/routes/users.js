@@ -30,15 +30,17 @@ router.post("/signup", function (req, res) {
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 10)
       })
-      newUser.save(err => {
+      console.log(newUser);
+      newUser.save()
+      .then ((err) => {
         if (err) {
-          return res.status(400).json({
+            return res.status(400).json({
             title: 'error',
             error: 'Email is already in use.'
-          })
+            })
         }
         return res.status(200).json({
-          title: 'signup success'
+            title: 'signup success'
         })
       })
 })

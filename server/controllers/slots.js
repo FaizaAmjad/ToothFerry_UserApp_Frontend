@@ -45,3 +45,5 @@ router.get("/", function(req, res){
 router.delete("/:id", function(req, res){
     res.status(501).response("TODO")
 })
+
+module.exports = router;

@@ -10,7 +10,7 @@ const Dentists = require("../schemas/dentists.js");
  * @return {object} Successful Response: 200
  * @return {object} Dentists not found: 404
  */
-router.post("/", function (req, res) {
+router.get("/", function (req, res) {
     res.status(501).send("TODO")
 })
 
@@ -20,7 +20,7 @@ router.post("/", function (req, res) {
  * @return {object} Successful Response: 200
  * @return {object} Dentist not found: 404
  */
-router.post("/", function (req, res) {
+router.get("/:id", function (req, res) {
     res.status(501).send("TODO")
 })
 
@@ -80,3 +80,5 @@ router.delete("/:id", function (req, res) {
 router.delete("/", function (req, res) {
     res.status(501).send("TODO")
 })
+
+module.exports = router;

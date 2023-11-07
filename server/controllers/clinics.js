@@ -57,3 +57,5 @@ router.delete("/:id", function(req, res){
 router.delete("/", function(req, res){
     res.status(501).response("TODO")
 })
+
+module.exports = router;

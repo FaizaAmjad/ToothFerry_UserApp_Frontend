@@ -60,3 +60,5 @@ router.delete("/:id", function (req, res) {
 router.delete("/", function (req, res) {
     res.status(501).send("TODO")
 })
+
+module.exports = router;

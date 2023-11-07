@@ -13,7 +13,7 @@ app.get('/api', (req, res) => {
 
 // Set URI to connect to
 const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/ToothFerry";
-const port = process.env.PORT || 3001; // Temporarily set to 3001. NEEDS TO BE CHANGED TO 3000!!!
+const port = process.env.PORT || 3000;
 
 // Connect to MongoDB
 mongoose

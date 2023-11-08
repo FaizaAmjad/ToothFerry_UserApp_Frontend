@@ -45,4 +45,4 @@ const userSchema = new Schema({
     theme: { type: String, enum: ["light", "dark"], default: "light" },
 });
 
-module.exports = mongoose.model("Users", userSchema);
+module.exports = mongoose.model("User", userSchema);

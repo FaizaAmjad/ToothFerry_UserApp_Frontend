@@ -3,10 +3,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const authorizationMiddleware = require("../middlewares/AuthorizationMiddleware");
-const User = require("../models/User");
-const Sessions = require("../models/Session");
-const Exercises = require("../models/Exercise");
-const WorkoutPlans = require("../models/WorkoutPlan");
+const User = require("../schemas/users.js");
 const { flatMap, uniq } = require("lodash");
 // GET
 router.get("/", async function (req, res, next) {

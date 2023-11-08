@@ -9,7 +9,11 @@ const Slots = require("./slots.js");
  * slot: The time slot of the dentist
  */
 const dentistSchema = new Schema({
-    name: {
+    firstName: {
+        type: String,
+        required: [true, "Name must be entered"]
+    },
+    lastName: {
         type: String,
         required: [true, "Name must be entered"]
     },

@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require("mongoose");
 var userRoutes = require('./routes/users');
-const usersControllers = require("./routes/usersControllers");
+const usersControllers = require("./routes/usersController");
+const dentistsControllers = require("./routes/dentistsControllers");
 const morgan = require("morgan");
 const path = require("path");
 const cors = require("cors");
@@ -32,6 +33,7 @@ app.get('/api', (req, res) => {
 }) 
 app.use("/api/v1/auth", Authentication);
 app.use("/api/v1/users", authorizationMiddleware, usersControllers);
+app.use("/api/v1/dentists", authorizationMiddleware, dentistsControllers);
 app.use('/', userRoutes)
 
 

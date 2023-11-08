@@ -1,9 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
+const Dentist = require("../schemas/dentists.js");
 const bcrypt = require("bcryptjs");
 const { flatMap, uniq } = require("lodash");
-const User = require("../schemas/users.js");
 // GET
 router.get("/", async function (req, res, next) {
   const filterfirstName = req.query.firstName;
@@ -27,22 +27,22 @@ router.get("/", async function (req, res, next) {
   }
 
   // Sending filters object to the find function
-  const users = await User.find(filters).catch((err) => {
+  const dentists = await Dentist.find(filters).catch((err) => {
     err.status = 422;
     next(err);
   });
-  res.status(200).json(users);
+  res.status(200).json(dentists);
 });
 
 router.get("/me", async (req, res, next) => {
   try {
-    const id = req.userid;
+    const id = req.dentistid;
 
-    const user = await User.findById(id);
-    if (user == null) {
+    const dentist = await Dentist.findById(id);
+    if (dentist == null) {
       res.status(404).json({ message: "User not found" });
     } else {
-      res.status(200).json(user);
+      res.status(200).json(dentist);
     }
   } catch (error) {
     error.status = 403;
@@ -55,11 +55,11 @@ router.get("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
 
-    const user = await User.findById(id);
-    if (user == null) {
+    const dentist = await Dentist.findById(id);
+    if (dentist == null) {
       res.status(404).json({ message: "User not found" });
     } else {
-      res.status(200).json(user);
+      res.status(200).json(dentist);
     }
   } catch (error) {
     error.status = 403;
@@ -74,11 +74,11 @@ router.post("/", function (req, res, next) {
         err: "no password provided",
       });
     } else {
-      var new_user = new User(req.body);
-      new_user.password = hashedPass;
-      new_user
+      var new_dentist = new Dentist(req.body);
+      new_dentist.password = hashedPass;
+      new_dentist
         .save()
-        .then(() => res.status(201).json(new_user))
+        .then(() => res.status(201).json(new_dentist))
         .catch((err) => {
           err.status = 422;
           next(err);
@@ -91,19 +91,19 @@ router.post("/", function (req, res, next) {
 router.put("/:id", async function (req, res, next) {
   try {
     const id = req.params.id;
-    const user = await User.findById(id);
+    const dentist = await Dentist.findById(id);
 
-    if (!user) {
+    if (!dentist) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    user.firstName = req.body.firstName;
-    user.email = req.body.email;
-    user.lastName = req.body.lastName;
+    dentist.firstName = req.body.firstName;
+    dentist.email = req.body.email;
+    dentist.lastName = req.body.lastName;
 
-    await user.save();
+    await dentist.save();
 
-    res.status(200).json(user);
+    res.status(200).json(dentist);
   } catch (error) {
     next(error);
   }
@@ -112,25 +112,25 @@ router.put("/:id", async function (req, res, next) {
 router.patch("/:id", async function (req, res, next) {
   try {
     const id = req.params.id;
-    const user = await User.findById(id);
+    const dentist = await Dentist.findById(id);
 
-    if (!user) {
+    if (!dentist) {
       return res.status(404).json({ message: "User not found" });
     }
 
     if (req.body.firstName) {
-      user.firstName = req.body.firstName;
+        dentist.firstName = req.body.firstName;
     }
     if (req.body.email) {
-      user.email = req.body.email;
+        dentist.email = req.body.email;
     }
     if (req.body.lastName) {
-      user.lastName = req.body.lastName;
+        dentist.lastName = req.body.lastName;
     }
 
-    await user.save();
+    await dentist.save();
 
-    res.status(200).json(user);
+    res.status(200).json(dentist);
   } catch (error) {
     next(error);
   }
@@ -140,9 +140,9 @@ router.patch("/:id", async function (req, res, next) {
 router.delete("/:id", async function (req, res, next) {
   try {
     var id = req.params.id;
-    const user = await User.findByIdAndDelete({ _id: id });
+    const dentist = await Dentist.findByIdAndDelete({ _id: id });
 
-    if (user === null) {
+    if (dentist === null) {
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -154,7 +154,7 @@ router.delete("/:id", async function (req, res, next) {
 
 router.delete("/", async function (req, res, next) {
   try {
-    await User.deleteMany({});
+    await Dentist.deleteMany({});
     // Success
     res.status(204).json({ message: "Deleted all users" });
   } catch (error) {

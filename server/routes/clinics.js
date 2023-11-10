@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Clinics = require("../schemas/clinics.js");
-const assertAdmin = require("../utilities/assertAuthority.js");
+const { assertAdmin } = require("../utilities/assertAuthority.js");
 
 /**
  * Get /clinics
@@ -40,25 +40,38 @@ router.get("/:id", async function(req, res){
  * @return {object} Successful Request (Clinic created): 201
  * @return {object} Bad Request Response: 400
  */
-router.post("/", assertAdmin, function(req, res){
+router.post("/", function(req, res) {
     const newClinic = new Clinic({
         clinicName: req.body.clinicName,
         address: req.body.address
-    })
-    console.log(newClinic)
-    newClinic.save() 
-    .then((err) => {
-        if (err) {
-            return res.status(400).json({
-                title: "Error",
-                message: "A clinic with the same addreess already exists!!"
-            })
-        }
-        return res.status(201).json({
-            message: "Clinic successfully created :)"
+    });
+
+    console.log(newClinic);
+
+    newClinic.save()
+        .then(savedClinic => {
+            // If you want to check for a duplicate key error, you can use the err.code property
+            return res.status(201).json({
+                message: "Clinic successfully created :)",
+                clinic: savedClinic
+            });
         })
-    })
-})
+        .catch(err => {
+            if (err.code === 11000) {
+                return res.status(400).json({
+                    title: "Error",
+                    message: "A clinic with the same address already exists!!"
+                });
+            } else {
+                console.error("Error saving clinic:", err);
+                return res.status(500).json({
+                    title: "Error",
+                    message: "Internal Server Error"
+                });
+            }
+        });
+});
+
 
 /**
  * Delete /clinics/{id}

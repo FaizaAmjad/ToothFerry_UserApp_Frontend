@@ -15,6 +15,8 @@ const Authentication = require("./routes/AuthenticationController");
 const authorizationMiddleware = require("./middlewares/AuthorizationMiddleware");
 const methodOverride = require("method-override");
 const hateoasLinker = require("express-hateoas-links");
+const mqtt = require("mqtt")  // require mqtt
+const userClient = mqtt.connect("test.mosquitto.org")
 // Creating express object
 const app = express();
 

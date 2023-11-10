@@ -50,7 +50,6 @@ router.post("/", function(req, res) {
 
     newClinic.save()
         .then(savedClinic => {
-            // If you want to check for a duplicate key error, you can use the err.code property
             return res.status(201).json({
                 message: "Clinic successfully created :)",
                 clinic: savedClinic

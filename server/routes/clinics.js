@@ -26,7 +26,7 @@ router.get("/", async function(req, res){
  */
 router.get("/:id", async function(req, res){
     const clinic = await Clinics.findOne({ id: req.params._id }).select("-__v");
-    if (!clinic._id) {
+    if (clinic && !clinic._id) {
         return res.status(404).json({
             message: "The following clinic does not exist."
         })
@@ -40,8 +40,8 @@ router.get("/:id", async function(req, res){
  * @return {object} Successful Request (Clinic created): 201
  * @return {object} Bad Request Response: 400
  */
-router.post("/", function(req, res) {
-    const newClinic = new Clinic({
+router.post("/", async function(req, res) {
+    const newClinic = new Clinics({
         clinicName: req.body.clinicName,
         address: req.body.address
     });
@@ -80,15 +80,18 @@ router.post("/", function(req, res) {
  * @return {object} No permission to delete the account: 403
  * @return {object} Clinic with the id does not exist: 404
  */
-router.delete("/:id", assertAdmin, async function(req, res){
-    const clinic = await Clinics.findOne({ id: params.Clinic._id }).select("-__v");
-    await clinic.deleteOne();
+router.delete("/:id", async function(req, res){
+    const clinicId = req.params.id;
+    const clinic = await Clinics.findOne({ id: clinicId }).select("-__v");
     if (!clinic) {
         return res.status(404).json({
             message: "User does not exist!!"
         })
     }
-    return res.status(204).send(clinic);
+    await clinic.deleteOne();
+    res.json({
+        message: "Clinic deleted successfully"
+    });
 })
 
 /**
@@ -97,10 +100,18 @@ router.delete("/:id", assertAdmin, async function(req, res){
  * @return {object} Successful response: 200
  * @return {object} Not authorized: 403
  */
-router.delete("/", assertAdmin, async function(req, res){
-    const clinics = Clinics.find().select("-__v -clinicName")
-    await Clinics.deleteMany();
-    return res.status(204).send(clinics);
-})
+router.delete("/", async function (req, res) {
+    try {
+        const clinics = await Clinics.find().select("-__v -clinicName");
+        await Clinics.deleteMany();
+        return res.status(204).send(clinics);
+    } catch (error) {
+        console.error("Error deleting clinics:", error);
+        return res.status(500).json({
+            title: "Error",
+            message: "Internal Server Error"
+        });
+    }
+});
 
 module.exports = router;

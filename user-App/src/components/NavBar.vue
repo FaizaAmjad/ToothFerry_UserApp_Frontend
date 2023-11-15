@@ -40,30 +40,4 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <style scoped>
 
-.navbar {
-    background-color: rgb(142, 197, 197);
-}
-
-.app-name {
-  font-size: 24px; /* Adjust the size as needed */
-  color: rgb(99, 99, 189);
-  font-weight: bold; /* If you want it to be bold */
-}
-
-.tagline {
-  font-size: 14px !important; /* Adjust the size as needed */
-  color: rgb(99, 99, 189) ;
-  display: inline; /* Place the tagline on a new line */
-}
-.nav-link {
-  color: rgb(99, 99, 189) !important; /* Set link text color to white */
-}
-.nav-link:hover {
-  text-decoration: underline !important; /* Remove underline on hover */
-  color: rgb(26, 20, 138); /* Change link color on hover */
-}
-body{
-  background-color: #def7dc !important;
-}
-
 </style>

@@ -5,16 +5,18 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require("mongoose");
 var userRoutes = require('./routes/users');
-const usersControllers = require("./routes/usersController");
+const usersControllers = require("./routes/usersControllors");
 const dentistsControllers = require("./routes/dentistsControllers");
+const clinicsControllers = require("./routes/clinics");
 const morgan = require("morgan");
 const path = require("path");
-const cors = require("cors");
 const history = require("connect-history-api-fallback");
 const Authentication = require("./routes/AuthenticationController");
 const authorizationMiddleware = require("./middlewares/AuthorizationMiddleware");
 const methodOverride = require("method-override");
 const hateoasLinker = require("express-hateoas-links");
+const mqtt = require("mqtt")  // require mqtt
+const userClient = mqtt.connect("test.mosquitto.org")
 // Creating express object
 const app = express();
 
@@ -34,6 +36,7 @@ app.get('/api', (req, res) => {
 app.use("/api/v1/auth", Authentication);
 app.use("/api/v1/users", authorizationMiddleware, usersControllers);
 app.use("/api/v1/dentists", authorizationMiddleware, dentistsControllers);
+app.use("/api/v1/clinics", clinicsControllers);
 app.use('/', userRoutes)
 
 

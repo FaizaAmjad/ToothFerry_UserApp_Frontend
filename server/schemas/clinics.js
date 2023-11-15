@@ -14,6 +14,7 @@ const clinicSchema = new Schema({
     },
     address: {
         type: String,
+        unique: true,
         required: [true, "Address must be registered"]
     },
     workingDentists: [

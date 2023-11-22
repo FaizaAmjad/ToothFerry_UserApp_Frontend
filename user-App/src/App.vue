@@ -3,20 +3,13 @@
         <header>
             <NavBar/>
         </header>
-        <div class="auth-wrapper">
-            <div class="auth-inner">
-                <HomeView/>
-                <LoginView/>
-            </div>
-        </div>
+        
     </div>
 </template>
 
 <script setup>
-  import "bootstrap/dist/css/bootstrap.min.css"
-  import NavBar from './components/NavBar.vue'
-import HomeView from "./views/HomeView.vue";
-import LoginView from "./views/LoginView.vue";
+    import "bootstrap/dist/css/bootstrap.min.css"
+    import NavBar from './components/NavBar.vue'
 
 </script>
 
@@ -52,6 +45,8 @@ body, html, #app, #root, .auth-wrapper {
     justify-content: center;
     flex-direction: column;
     text-align: left;
+    padding: 40px;
+    
 }
 
 .auth-inner {
@@ -59,7 +54,7 @@ body, html, #app, #root, .auth-wrapper {
     margin: auto;
     background: #ffffff;
     box-shadow: 0px 14px 80px rgba(34,35,58,0.2);
-    padding: 40px, 55px, 45px, 55px;
+    padding: 40px;
     border-radius: 15px;
     transition: all .3s;
 }

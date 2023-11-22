@@ -3,13 +3,25 @@
         <header>
             <NavBar/>
         </header>
-        
+        <router-view/>
     </div>
 </template>
 
-<script setup>
+<script>
+    import axios from 'axios'
     import "bootstrap/dist/css/bootstrap.min.css"
     import NavBar from './components/NavBar.vue'
+
+    export default {
+        components: {
+            NavBar
+        },
+        async created() {
+            const response = await axios.get('user');
+            this.$store.dispatch('user', response.data);
+        }
+    }
+    
 
 </script>
 

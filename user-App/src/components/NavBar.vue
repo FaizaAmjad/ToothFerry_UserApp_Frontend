@@ -32,7 +32,7 @@
 
 </template>
 
-<script script setup lang="ts">
+<script script setup>
 import { RouterLink, RouterView } from 'vue-router'
 
 

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    //import axios from 'axios'
     import "bootstrap/dist/css/bootstrap.min.css"
     import NavBar from './components/NavBar.vue'
 
@@ -16,10 +16,10 @@
         components: {
             NavBar
         },
-        async created() {
-            const response = await axios.get('user');
-            this.$store.dispatch('user', response.data);
-        }
+       // async created() {
+         //   const response = await axios.get('user');
+           // this.$store.dispatch('user', response.data);
+        //}
     }
     
 

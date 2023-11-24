@@ -5,7 +5,7 @@
                 <div class="auth-inner">
                     <div>
                         <h3>Login</h3>
-                        <p>Welcom to login page!</p>
+                        <p>Welcome to login page!</p>
                         <hr />
                     </div>
                 
@@ -13,17 +13,22 @@
                         <div class="form-group">
                             <label>Email</label>
                             <input
-                                type="text"
+                                type="email"
                                 class="form-control"
-                                v-model.trim="email"
+                                placeholder="jenny.kim@email.com"
+                                v-model.trim="form.email"
+                                required
                             />
                         </div>
+
                         <div class="form-group">
                             <label>Password</label>
                             <input
                                 type="password"
                                 class="form-control"
-                                v-model.trim="password"
+                                placeholder="*******"
+                                v-model.trim="form.password"
+                                required
                             />
                         </div>
                         <div class="my-3">
@@ -44,13 +49,15 @@ export default {
   name: 'login-view',
   data() {
     return {
-        email: '',
-        password: ''
+        form: {
+            email: '',
+            password: ''
+        }
     }
   },
   methods: {
     async onLogin() {
-        console.log(this.email)
+        console.log('Logged in' + this.email)
       /*const response = await axios.post('login', {
         email: this.email,
         password: this.password
@@ -58,8 +65,8 @@ export default {
 
       
       localStorage.setItem('token', response.data.token);
-      this.$store.dispatch('user', response.data.user);
-      this.$router.push('/');*/
+      this.$store.dispatch('user', response.data.user);*/
+      this.$router.push('/');
     },
     
   }
@@ -68,13 +75,5 @@ export default {
 
 
 <style scoped>
-.box{
-    max-width: 1000px;
-    margin: 30px auto;
-    overflow: auto;
-    min-height: 300px;
-    border: 1px solid #3e6499 !important;
-    padding: 30px;
-    border-radius: 5px;
-  }
+
 </style>

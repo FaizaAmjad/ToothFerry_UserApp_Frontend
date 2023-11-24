@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 export default {
   name: 'login-view',
   data() {
@@ -50,15 +50,16 @@ export default {
   },
   methods: {
     async onLogin() {
-      const response = await axios.post('login', {
+        console.log(this.email)
+      /*const response = await axios.post('login', {
         email: this.email,
         password: this.password
       })
 
-      console.log(response)
+      
       localStorage.setItem('token', response.data.token);
       this.$store.dispatch('user', response.data.user);
-      this.$router.push('/');
+      this.$router.push('/');*/
     },
     
   }

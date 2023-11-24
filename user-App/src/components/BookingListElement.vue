@@ -6,7 +6,6 @@
       {{booking.time}}
     </div>
   </b-card>
-  <br>
 </template>
   
 <script>
@@ -35,6 +34,13 @@ export default {
 
 .time {
   text-align: right;
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  /* Add more styles as needed */
 }
 
 .card:hover {

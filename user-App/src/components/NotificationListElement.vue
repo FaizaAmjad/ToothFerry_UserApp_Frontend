@@ -8,7 +8,6 @@
       </b-card-text>
     </div>
   </b-card>
-  <br>
 </template>
   
 <script>
@@ -23,7 +22,7 @@ export default {
   },
   methods: {
     expand() {
-      console.log('Expand '+ this.booking.type)
+      this.$router.push(`/inbox/${this.notification._id}`)
     }
   }
   // Add methods or lifecycle hooks as needed

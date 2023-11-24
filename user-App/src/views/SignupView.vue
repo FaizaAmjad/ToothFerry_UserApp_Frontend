@@ -36,7 +36,9 @@
                         <div class="form-group">
                             <label>SSN</label>
                             <input
-                                type="number"
+                                type="text"
+                                minlength="10"
+                                maxlength="11"
                                 class="form-control"
                                 placeholder="987654-4321"
                                 v-model.trim="form.socialNumber"

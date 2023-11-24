@@ -1,5 +1,5 @@
 <template>
-  <b-card :title=booking.type :subtitle=booking.clinic.name @click="expand" class="card">
+  <b-card :title=booking.type :subtitle=booking.clinic.name class="card">
     <div class="time">
       {{ booking.date }}
       <br>

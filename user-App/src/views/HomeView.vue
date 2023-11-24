@@ -8,35 +8,52 @@
 
       <!-- Right Section -->
       <div class="col-md-4">
-        <div class="container-fluid">
-          <!-- My Bookings -->
-          <div class="container-fluid bg-light p-5">
-            <div class="card">
-              <h5 class="bookingsHeader">My Bookings</h5>
-              <br>
-              <BookingListElement v-for="booking in bookings" :booking="booking" :key="booking.id" />
-              <b-pagination
-                class="pagination"
-                v-model="currentPage"
-                :link-gen="generatePaginationLink"
-                :total-rows="numPages"
-                align="center"
-              ></b-pagination>
-            </div>
-          </div>
-          
-
-          <!-- Inbox -->
-          <div class="container-fluid bg-light p-5">
-            <div class="card">
-              <h5 class="card-header" @click="goToInbox">Inbox</h5>
-              <br>
-              <NotificationListElement v-for="notification in notifications" :notification="notification" :key="notification.id" />
-            </div>
+        <!-- My Bookings -->
+        <div class="bg-light p-5">
+          <div class="card">
+            <h5 class="bookingsHeader">My Bookings</h5>
+            <br>
+            <BookingListElement v-for="booking in bookings" :booking="booking" :key="booking.id" @click="showPopup(booking)"/>
+            <b-pagination
+              class="pagination"
+              v-model="currentPage"
+              :link-gen="generatePaginationLink"
+              :total-rows="numPages"
+              align="center"
+            ></b-pagination>
           </div>
         </div>
-      </div>
+        
+
+        <!-- Inbox -->
+        <div class="bg-light p-5">
+          <div class="card">
+            <h5 class="card-header" @click="goToInbox">Inbox</h5>
+            <br>
+            <NotificationListElement v-for="notification in notifications" :notification="notification" :key="notification.id"/>
+            <p :style="{ color: unreadMessages > 0 ? 'red' : 'black' }">
+            {{ unreadMessages }} unread messages
+            </p>
+          </div>
+        </div>
+      </div>  
     </b-row>
+  </div>
+
+  <!-- Popup Container -->
+  <div v-if="isPopupVisible" id="popup-container">
+    <b-card v-if="isPopupVisible" class="popupCard">
+      <h5 class="card-header">{{ popupInfo.type }}</h5>
+      <div class="card-body">
+        <h5 class="card-title">{{ popupInfo.clinic.name }}</h5>
+        <p class="card-sub-title">{{ popupInfo.clinic.location }}</p>
+        <p class="card-text">{{ popupInfo.date }}</p>
+        <p class="card-text">{{ popupInfo.time }}</p>
+        <p class="card-text">{{ popupInfo.comments }}</p>
+        <a class="btn btn-primary" @click="cancelBooking">Cancel</a>
+      </div>
+      <button id="close-button" @click="hidePopup">Close</button>
+    </b-card>
   </div>
 </template>
 
@@ -57,6 +74,9 @@ export default {
     return {
       // mock data
       numPages: 3,
+      unreadMessages: 1,
+      isPopupVisible: false,
+      popupInfo: {},
       bookings: [
         {
           type: 'Checkup',
@@ -101,14 +121,29 @@ export default {
       ]
     }
   },
-  generatePaginationLink(pageNum) {
-    const offset = (pageNum - 1) * CARDS_PER_PAGINATION
-    return `${this.$route.path}?offset=${offset}&limit=${CARDS_PER_PAGINATION}`
+  methods: {
+    generatePaginationLink(pageNum) {
+      const offset = (pageNum - 1) * CARDS_PER_PAGINATION
+      return `${this.$route.path}?offset=${offset}&limit=${CARDS_PER_PAGINATION}`
+    },
+    goToInbox() {
+      console.log('Go to inbox')
+      this.$router.push('/inbox')
+    },
+    showPopup(booking) {
+      this.isPopupVisible = true
+      this.popupInfo = booking
+      console.log(booking)
+    },
+    hidePopup() {
+      this.isPopupVisible = false
+      console.log('Hide popup')
+    },
+    cancelBooking() {
+      console.log('TODO: Cancel booking using api call')
+      //we have the _id of the selected booking in this.popupInfo._id  
+    }
   },
-  goToInbox() {
-    console.log('Go to inbox')
-    this.$router.push('/inbox')
-  }
   /*
   ,
   async created() {
@@ -125,6 +160,40 @@ export default {
 
 <style scoped>
 
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#popup-content {
+  background: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.popupCard {
+  width: 400px;
+  height: 400px;
+  background: #fff;
+  padding: 20px;
+  text-align: center;
+}
+.hidden {
+  display: none;
+}
 .notification {
   border: 1px solid #ccc;
   padding: 5px;

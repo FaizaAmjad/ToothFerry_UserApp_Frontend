@@ -19,7 +19,7 @@
           <RouterLink class="nav-link" to="/login">Login</RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link" to="#">Sign up</RouterLink>
+          <RouterLink class="nav-link" to="/signup">Sign up</RouterLink>
         </li>
       </ul>
       <ul class="navbar-nav" v-if="user">

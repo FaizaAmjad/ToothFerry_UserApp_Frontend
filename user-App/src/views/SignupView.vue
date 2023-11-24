@@ -15,7 +15,10 @@
                             <input
                                 type="text"
                                 class="form-control"
+                                prepend-icon="ni ni-hat-3"
+                                placeholder="Jenny"
                                 v-model.trim="form.firstName"
+                                required
                             />
                         </div>
 
@@ -24,25 +27,31 @@
                             <input
                                 type="text"
                                 class="form-control"
+                                placeholder="Kim"
                                 v-model.trim="form.lastName"
+                                required
                             />
                         </div>
 
                         <div class="form-group">
-                            <label>Social Security Number</label>
+                            <label>SSN</label>
                             <input
                                 type="number"
                                 class="form-control"
+                                placeholder="987654-4321"
                                 v-model.trim="form.socialNumber"
+                                required
                             />
                         </div>
 
                         <div class="form-group">
                             <label>Email</label>
                             <input
-                                type="text"
+                                type="email"
                                 class="form-control"
+                                placeholder="jenny.kim@email.com"
                                 v-model.trim="form.email"
+                                required
                             />
                         </div>
 
@@ -51,7 +60,9 @@
                             <input
                                 type="password"
                                 class="form-control"
+                                placeholder="*******"
                                 v-model.trim="form.password"
+                                required
                             />
                         </div>
 
@@ -60,7 +71,9 @@
                             <input
                                 type="password"
                                 class="form-control"
+                                placeholder="*******"
                                 v-model.trim="form.confirmPassword"
+                                required
                             />
                         </div>
 
@@ -95,20 +108,20 @@ export default {
   },
   methods: {
     async onSignUp() {
-        console.log('submitted' + this.email)
-      /*const response = await axios.post('login', {
-        firstName = this.firstName,
-        lastName = this.lastName,
-        socialNumber = this.socialNumber,
-        email: this.email,
-        password: this.password,
-        confirmPassword = this.confirmPassword
+        console.log(' submitted ' + this.form.email)
+      /*const response = await axios.post('signup', {
+        firstName = this.form.firstName,
+        lastName = this.form.lastName,
+        socialNumber = this.form.socialNumber,
+        email: this.form.email,
+        password: this.form.password,
+        confirmPassword = this.form.confirmPassword
       })
 
       
       localStorage.setItem('token', response.data.token);
-      this.$store.dispatch('user', response.data.user);
-      this.$router.push('/');*/
+      this.$store.dispatch('user', response.data.user);*/
+      this.$router.push('/login');
     },
     
   }

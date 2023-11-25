@@ -1,28 +1,29 @@
 <template>
-<nav class="navbar navbar-expand-lg bg-body-tertiary navbar-light">
+<nav toggleable="lg" class="navbar navbar-expand-lg bg-body-tertiary navbar-light">
   <div class="container-fluid">
     <RouterLink class="navbar-brand" to="/">
-        <div class="d-flex align-items-center">
-          <span class="cart-icon d-none d-lg-block d-xl-none">&#128722;</span>
-        </div>
         <span class="app-name"> ToothFerry - <span class="tagline">PROTECTS YOUR TEETH!</span></span>
     </RouterLink>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
     <button class="navbar-toggler" type="button" data-coreui-toggle="collapse" data-coreui-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav" v-if="!user">
+      <ul class="nav navbar-nav navbar-right" v-if="!user">
         <li class="nav-item">
           <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link" to="/login">Login</RouterLink>
+          <RouterLink class="nav-link" to="/login"><span class="glyphicon glyphicon-log-in"></span>Login</RouterLink>
         </li>
         <li class="nav-item">
           <RouterLink class="nav-link" to="/signup">Sign up</RouterLink>
         </li>
       </ul>
-      <ul class="navbar-nav" v-if="user">
+      <ul class="nav navbar-nav navbar-left" v-if="user">
         <li class="nav-item">
           <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
         </li>

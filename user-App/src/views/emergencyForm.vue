@@ -1,7 +1,7 @@
 <template>
-    <div>
-      <div class="Explannation">
-        The following questionnaire is to figure out whether you are an emergency patient or not. Please answer truthfully, and thoughtfully.
+    <div class="wrapper inner">
+      <div class="explannation">
+        <h4>The following questionnaire is to figure out whether you are an emergency patient or not.<br/> Please answer truthfully, and thoughtfully.</h4><br/>
       </div>
       <b-form-group label="1. When did you last visit a dentist?" v-slot="{ ariaDescribedby }">
         <b-form-checkbox-group
@@ -188,9 +188,21 @@ export default {
 </script>
 
 <style>
+.inner {
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    transition: all .3s;
+    text-align: left;
+}
 .explannation {
     display: flex;
     align-content: center;
     justify-content: center;
+    padding: 40px;
 }
 </style>

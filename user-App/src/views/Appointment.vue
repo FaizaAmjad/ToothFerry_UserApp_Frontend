@@ -1,10 +1,9 @@
 <template>
-    <div class="reservation">
-      <div class="box">
-        <label>Reservation</label>
-        <div class="content">
-          <div class="left-section">
-            <b-button size="lg" @click="showDateTimePicker">Regular</b-button>
+    <div class="auth-wrapper col-md-6 offset-md-3">
+      <div class="auth-inner">
+        <h3>Reservation</h3>
+        <div>
+          <b-button variant="primary" size="lg" @click="showDateTimePicker">Regular</b-button>
             <b-modal v-model="dateTimePickerVisible" @ok="saveDateTime" title="Select Date and Time">
               <b-container>
                 <b-row>
@@ -20,12 +19,8 @@
                   </b-col>
                 </b-row>
               </b-container>
-            </b-modal>
-          </div>
-          <div class="right-section">
-            <b-button size="lg" href="/questionnaire">Emergency</b-button>
-            
-          </div>
+          </b-modal>
+          <b-button style="float: right;" variant="primary" size="lg" href="/questionnaire">Emergency</b-button>
         </div>
       </div>
     </div>
@@ -111,51 +106,16 @@ function generateDateSlots() {
   
 </script>
 
-  <style>
-  .reservation {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-family: "Jost", sans-serif;
-    background-color: #c4ced6;
-  }
-  
-  .box {
-    display: flex;
-    flex-direction: column;
-    width: 200%; /* Adjust the width as needed */
-    height: 500px;
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 5px 20px 50px #00072D;
-  }
-  
-  label {
-    color: #3f3f3f;
-    font-size: 2.3em;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 20px;
-    text-align: center;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .content {
-    display: flex;
-    flex: 1;
-  }
-  
-  .left-section,
-  .right-section {
-    flex: 1;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  }
 
-  </style>
- #c4ced6; 
+<style scoped>
+
+label {
+  color: #3f3f3f;
+  font-size: 2.3em;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+</style>

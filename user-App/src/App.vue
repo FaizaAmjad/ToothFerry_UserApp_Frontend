@@ -75,12 +75,20 @@ body, html, #app, #root, .auth-wrapper {
     border-color: #167bff;
     box-shadow: none;
 }
-
+.wrapper,
 .auth-wrapper h3 {
     text-align: center;
     margin: 0;
     line-height: 1;
     padding-bottom: 20px;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: left;
+    padding: 40px;
 }
 
 .custom-control-label {

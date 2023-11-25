@@ -4,6 +4,7 @@
             <div class="auth-wrapper">
                 <div class="auth-inner">
                     <div>
+                        <Error v-if="error" :error="error"></Error>
                         <h3>Sign UP</h3>
                         <p>Welcom to sign up page!</p>
                         <hr />
@@ -93,8 +94,13 @@
 
 <script>
 //import axios from 'axios'
+import Error from '../components/Error.vue'
+
 export default {
   name: 'signup-view',
+  components: {
+    Error
+  },
   data() {
     return {
        form: {
@@ -103,27 +109,33 @@ export default {
         socialNumber: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        error: ''
 
        }
     }
   },
   methods: {
     async onSignUp() {
-        console.log(' submitted ' + this.form.email)
-      /*const response = await axios.post('signup', {
-        firstName = this.form.firstName,
-        lastName = this.form.lastName,
-        socialNumber = this.form.socialNumber,
-        email: this.form.email,
-        password: this.form.password,
-        confirmPassword = this.form.confirmPassword
-      })
+        try {
+            console.log(' submitted ' + this.form.email)
+            /*const response = await axios.post('signup', {
+                firstName = this.form.firstName,
+                lastName = this.form.lastName,
+                socialNumber = this.form.socialNumber,
+                email: this.form.email,
+                password: this.form.password,
+                confirmPassword = this.form.confirmPassword
+            })
 
-      
-      localStorage.setItem('token', response.data.token);
-      this.$store.dispatch('user', response.data.user);*/
-      this.$router.push('/login');
+            
+            localStorage.setItem('token', response.data.token);
+            this.$store.dispatch('user', response.data.user);*/
+            this.$router.push('/login');
+        } catch (error) {
+            this.error = 'En error occured.'
+        }
+    
     },
     
   }

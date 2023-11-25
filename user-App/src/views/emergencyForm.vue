@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper inner">
       <div class="explannation">
-        <h4>The following questionnaire is to figure out whether you are an emergency patient or not.<br/> Please answer truthfully, and thoughtfully.</h4><br/>
+        <h4>Please answer following questionnaire.</h4><br/>
       </div>
       <b-form-group label="1. When did you last visit a dentist?" v-slot="{ ariaDescribedby }">
         <b-form-checkbox-group
@@ -138,7 +138,7 @@
         </b-form-checkbox-group>
       </b-form-group>
   
-      <button @click="submitAnswer">Submit</button>
+      <b-button variant="primary" size="lg" @click="submitAnswer">Submit</b-button>
     </div>
   </template>
 

@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     async onLogin() {
-        console.log('Logged in' + this.email)
+        console.log('Logged in' + this.form.email)
       /*const response = await axios.post('login', {
         email: this.email,
         password: this.password

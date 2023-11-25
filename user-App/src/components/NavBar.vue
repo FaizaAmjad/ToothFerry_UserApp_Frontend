@@ -4,17 +4,11 @@
     <RouterLink class="navbar-brand" to="/">
         <span class="app-name"> ToothFerry - <span class="tagline">PROTECTS YOUR TEETH!</span></span>
     </RouterLink>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-  <span class="navbar-toggler-icon"></span>
-</button>
-
-    <button class="navbar-toggler" type="button" data-coreui-toggle="collapse" data-coreui-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    
+    <div >
       <ul class="nav navbar-nav navbar-right" v-if="!user">
         <li class="nav-item">
-          <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
+          <RouterLink class="nav-link active " aria-current="page" to="/">Home</RouterLink>
         </li>
         <li class="nav-item">
           <RouterLink class="nav-link" to="/login"><span class="glyphicon glyphicon-log-in"></span>Login</RouterLink>

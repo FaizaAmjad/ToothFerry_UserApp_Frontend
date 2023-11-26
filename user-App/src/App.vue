@@ -4,6 +4,8 @@
             <NavBar/>
         </header>
         <router-view/>
+
+        <WebFooter/>
     </div>
 </template>
 
@@ -11,10 +13,12 @@
     //import axios from 'axios'
     import "bootstrap/dist/css/bootstrap.min.css"
     import NavBar from './components/NavBar.vue'
+    import WebFooter from "./components/WebFooter.vue"
 
     export default {
         components: {
-            NavBar
+            NavBar,
+            WebFooter,
         },
        // async created() {
          //   const response = await axios.get('user');
@@ -32,7 +36,7 @@
 }
 
 body {
-    background: #1C8EF9 !important;
+    background: #72a3d0 !important;
     min-height: 100VH;
     display: flex;
     font-weight: 400;

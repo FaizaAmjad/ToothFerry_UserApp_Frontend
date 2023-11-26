@@ -2,8 +2,23 @@
   <div class="container-fluid">
     <b-row class="row">
       <!-- Left Section -->
-      <div class="col-md-8 bg-primary">
-        <p>GOOGLE MAPS API STUFF HERE</p>
+      <div class="col-md-8">
+        <div id="gmap-container">
+          <GMapMap
+            class="GMapMap"
+            :center="{ lat: 51.5072, lng: 0.1276 }"
+            :zoom="10" 
+            map-type-id="terrain" 
+            :options="{
+              zoomControl: true,
+              mapTypeControl: true,
+              scaleControl: true,
+              streetViewControl: true,
+              rotateControl: true,
+              fullscreenControl: true
+            }"
+            />
+        </div>
       </div>
 
       <!-- Right Section -->
@@ -164,6 +179,16 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
+}
+
+#gmap-container {
+  height: 100%;
+  width: 100%;
+}
+
+.GMapMap {
+  height: 100%;
+  width: 100%;
 }
 
 #popup-container {

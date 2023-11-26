@@ -17,6 +17,7 @@
           <h3>Accepted Payments</h3>
           <p>Payments are only made at the clinic.</p>
         </div>
+
       </div>
     </footer>
   </template>
@@ -27,8 +28,11 @@
     justify-content: space-around;
     align-items: flex-start;
     padding: 20px;
-    background-color: #333;
+    background-color: #214471;
     color: white;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
   }
   
   .section {

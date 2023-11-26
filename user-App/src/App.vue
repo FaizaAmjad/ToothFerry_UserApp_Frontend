@@ -36,7 +36,7 @@
 }
 
 body {
-    background: #72a3d0 !important;
+    background: #81b1de !important;
     min-height: 100VH;
     display: flex;
     font-weight: 400;

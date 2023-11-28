@@ -29,7 +29,7 @@
     padding: 20px;
     background-color: #214471;
     color: white;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
   }

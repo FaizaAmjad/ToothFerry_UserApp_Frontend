@@ -4,6 +4,7 @@
             <div class="auth-wrapper">
                 <div class="auth-inner">
                     <div>
+                        <Error v-if="error" :error="error"></Error>
                         <h3>Login</h3>
                         <p>Welcome to login page!</p>
                         <hr />
@@ -45,30 +46,38 @@
 
 <script>
 //import axios from 'axios'
+import Error from '../components/Error.vue'
+
 export default {
   name: 'login-view',
+  components: {
+    Error
+  },
   data() {
     return {
         form: {
             email: '',
-            password: ''
+            password: '',
+            error: ''
         }
     }
   },
   methods: {
     async onLogin() {
-        console.log('Logged in' + this.form.email)
-      /*const response = await axios.post('login', {
-        email: this.email,
-        password: this.password
-      })
+        try {
+            console.log('Logged in' + this.form.email)
+            /*const response = await axios.post('login', {
+                email: this.email,
+                password: this.password
+            })
 
-      
-      localStorage.setItem('token', response.data.token);
-      this.$store.dispatch('user', response.data.user);*/
-      this.$router.push('/');
+            localStorage.setItem('token', response.data.token);
+            this.$store.dispatch('user', response.data.user);*/
+            this.$router.push('/');
+        } catch (error) {
+            this.error = 'Invalid email/password.'
+        }
     },
-    
   }
 }
 </script>

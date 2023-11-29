@@ -9,11 +9,12 @@ import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 
 import store from './vuex'
 import './axios'
-app.use(store)
+
 
 import { API_KEY } from './api_key.js';
 const app = createApp(App)
 
+app.use(store)
 app.use(BootstrapVue3)
 app.use(router)
 

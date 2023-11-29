@@ -1,4 +1,10 @@
 <template>
+  <head
+    meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQlD3-cmPiepBAeHB4NYXdN12HIyCjhl4&libraries=places&callback=initMap" async defer
+  ></head>
   <div class="container-fluid">
     <b-row class="row">
       <!-- Left Section -->
@@ -17,7 +23,18 @@
               rotateControl: true,
               fullscreenControl: true
             }"
+          >
+            <!-- Use v-for to loop through markers and create GMapMarker components -->
+            <GMapMarker
+              v-for="marker in markers"
+              :key="marker.id"
+              :position="marker.position"
+              :clickable="true"
+              :draggable="true"
+              @click="onMarkerClicked(marker)"
+              @dragend="onDragEnd"
             />
+          </GMapMap>
         </div>
       </div>
 
@@ -92,6 +109,10 @@ export default {
       unreadMessages: 1,
       isPopupVisible: false,
       popupInfo: {},
+      markers: [
+        { id: 1, position: { lat: 51.5072, lng: 0.1276 } }, // Example marker, replace with your actual data
+        // ... add more markers as needed
+      ],
       bookings: [
         {
           type: 'Checkup',
@@ -140,6 +161,10 @@ export default {
     generatePaginationLink(pageNum) {
       const offset = (pageNum - 1) * CARDS_PER_PAGINATION
       return `${this.$route.path}?offset=${offset}&limit=${CARDS_PER_PAGINATION}`
+    },
+    onMarkerClicked(marker) {
+      console.log('Marker clicked')
+      this.$router.push(`/schedule/${marker.id}`)
     },
     goToInbox() {
       console.log('Go to inbox')

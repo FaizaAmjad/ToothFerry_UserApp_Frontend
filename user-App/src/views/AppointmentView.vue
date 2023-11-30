@@ -24,12 +24,17 @@
         </div>
       </div>
     </div>
+    <AppointmentSchedular/>
   </template>
   
 <script>
-
+import AppointmentSchedular from '../components/AppointmentSchedular.vue'
 
 export default {
+  name : 'appointment-view',
+  components: {
+    AppointmentSchedular
+  },
   data() {
     return {
       selectedDate: null,

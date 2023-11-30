@@ -48,6 +48,19 @@
                         </div>
 
                         <div class="form-group">
+                            <label>postCode</label>
+                            <input
+                                type="text"
+                                minlength="5"
+                                maxlength="5"
+                                class="form-control"
+                                placeholder="54321"
+                                v-model.trim="form.postCode"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
                             <label>Email</label>
                             <input
                                 type="email"
@@ -93,7 +106,7 @@
 </template>
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 import Error from '../components/Error.vue'
 
 export default {
@@ -107,6 +120,7 @@ export default {
         firstName: '',
         lastName: '',
         socialNumber: '',
+        postCode: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -119,18 +133,18 @@ export default {
     async onSignUp() {
         try {
             console.log(' submitted ' + this.form.email)
-            /*const response = await axios.post('signup', {
-                firstName = this.form.firstName,
-                lastName = this.form.lastName,
-                socialNumber = this.form.socialNumber,
+            const response = await axios.post('/v1/users', {
+                firstName: this.form.firstName,
+                lastName: this.form.lastName,
+                socialNumber: this.form.socialNumber,
+                postCode: this.form.postCode,
                 email: this.form.email,
                 password: this.form.password,
-                confirmPassword = this.form.confirmPassword
             })
 
             
             localStorage.setItem('token', response.data.token);
-            this.$store.dispatch('user', response.data.user);*/
+            this.$store.dispatch('user', response.data.user);
             this.$router.push('/login');
         } catch (error) {
             this.error = 'En error occured.'

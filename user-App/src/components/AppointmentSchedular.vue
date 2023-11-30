@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="container">
       <!--:key" is here to force the calendar to update to show changes without page reload since no connection to backend-->
       <Qalendar :key="calendarKey" :events="events" :config="config"
          @delete-event="deleteEvent" @edit-event="storeEvent" />
@@ -238,7 +238,14 @@
   
   }
   </script>
-  <style>
+  <style >
   @import "qalendar/dist/style.css";
+  .container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: left;
+    padding: 40px;
+}
   </style>
   

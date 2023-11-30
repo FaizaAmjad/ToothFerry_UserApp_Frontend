@@ -1,4 +1,4 @@
-<template>
+ <template>
     <footer>
       <div class="footer-content">
         <div class="section">
@@ -29,7 +29,7 @@
     padding: 20px;
     background-color: #214471;
     color: white;
-    position: fixed;
+    position:fixed;
     bottom: 0;
     width: 100%;
   }

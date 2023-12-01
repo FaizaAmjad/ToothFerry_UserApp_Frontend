@@ -3,9 +3,13 @@
         <header>
             <NavBar/>
         </header>
+        
         <router-view/>
 
-        <WebFooter/>
+        <footer>
+            <WebFooter/>
+        </footer>
+        
     </div>
 </template>
 

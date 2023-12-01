@@ -42,7 +42,7 @@
                                 maxlength="11"
                                 class="form-control"
                                 placeholder="987654-4321"
-                                v-model.trim="form.socialNumber"
+                                v-model.trim="form.SSN"
                                 required
                             />
                         </div>
@@ -119,12 +119,13 @@ export default {
        form: {
         firstName: '',
         lastName: '',
-        socialNumber: '',
+        SSN: '',
         postCode: '',
         email: '',
         password: '',
         confirmPassword: '',
-        error: ''
+        error: '',
+        admin: 'false'
 
        }
     }
@@ -133,16 +134,16 @@ export default {
     async onSignUp() {
         try {
             console.log(' submitted ' + this.form.email)
-            const response = await axios.post('/v1/users', {
+            const response = await axios.post('http://localhost:3000/api/v1/users', {
                 firstName: this.form.firstName,
                 lastName: this.form.lastName,
-                socialNumber: this.form.socialNumber,
-                postCode: this.form.postCode,
+                SSN: this.form.socialNumber,
                 email: this.form.email,
                 password: this.form.password,
+                admin: this.admin
             })
 
-            
+            console.log(response)
             localStorage.setItem('token', response.data.token);
             this.$store.dispatch('user', response.data.user);
             this.$router.push('/login');

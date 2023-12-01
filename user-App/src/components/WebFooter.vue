@@ -2,18 +2,18 @@
     <footer>
       <div class="footer-content">
         <div class="section">
-          <h3>Contact Us</h3>
+          <h6>Contact Us</h6>
           <p>Email: info@toothfairydentisthub.com</p>
           <p>Customer Support: +46 1234-56789</p>
         </div>
   
         <div class="section">
-          <h3>About Us</h3>
-          <router-link to="/about">Explore our mission, vision, and values.</router-link>
+          <h6>About Us</h6>
+          <p>Copyright &copy; 2023 | Version 1.0.0 | <router-link to="/AboutUs">About Us</router-link></p>
         </div>
   
         <div class="section">
-          <h3>Accepted Payments</h3>
+          <h6>Accepted Payments</h6>
           <p>Payments are only made at the clinic.</p>
         </div>
 
@@ -28,8 +28,8 @@
     align-items: flex-start;
     padding: 20px;
     background-color: #214471;
+    position: relative;
     color: white;
-    position: absolute;
     bottom: 0;
     width: 100%;
   }
@@ -39,8 +39,7 @@
     margin-right: 20px;
   }
   
-  .section h3 {
-    font-size: 18px;
+  .section h6 {
     margin-bottom: 10px;
   }
   

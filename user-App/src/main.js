@@ -16,7 +16,6 @@ import { API_KEY } from './api_key.js';
 const app = createApp(App)
 
 app.use(store)
-app.use(BootstrapVue3)
 app.use(router)
 app.use(store)
 app.use(BootstrapVue)

@@ -17,7 +17,7 @@
   
   <style scoped>
   .container {
-    background-color: rgb(61, 77, 108);
+    background-color: #214471;
     text-align: center;
     text-shadow: 4px 4px 8px rgb(255, 255, 255);
     width: 100%;

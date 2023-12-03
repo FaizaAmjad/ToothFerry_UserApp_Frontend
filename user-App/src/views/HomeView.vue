@@ -3,7 +3,8 @@
     meta
     name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQlD3-cmPiepBAeHB4NYXdN12HIyCjhl4&libraries=places&callback=initMap" async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQlD3-cmPiepBAeHB4NYXdN12HIyCjhl4&libraries=places&v=3.exp" async defer
+
   ></head>
   <div class="container-fluid">
     <b-row class="row">
@@ -11,6 +12,7 @@
       <div class="col-md-8">
         <div id="gmap-container">
           <GMapMap
+            ref="map"
             class="GMapMap"
             :center="{ lat: 51.5072, lng: 0.1276 }"
             :zoom="10" 
@@ -28,12 +30,25 @@
             <GMapMarker
               v-for="marker in markers"
               :key="marker.id"
+              :ref="marker.id"
               :position="marker.position"
               :clickable="true"
               :draggable="true"
               @click="onMarkerClicked(marker)"
-              @dragend="onDragEnd"
             />
+            <GMapInfoWindow v-if="isInfoWindowVisible"
+              :position="infoWindowPosition"
+              :options="infoWindowOptions"
+              ref="infoWindow"
+              >
+              <!-- Your InfoWindow content goes here -->
+              <div>
+                <h3>{{ infoWindowTitle }}</h3>
+                <p>
+                  Click <router-link :to="infoWindowLink"> here</router-link> for the schedule. {{ infoWindowContent }}
+                </p>
+              </div>
+            </GMapInfoWindow>
           </GMapMap>
         </div>
       </div>
@@ -105,14 +120,25 @@ export default {
   data() {
     return {
       // mock data
+      markers: [
+      {
+        id: 1,
+        position: { lat: 51.5072, lng: 0.1276 },
+        clinicName: 'City Hospital',
+      },
+      
+      // Add more markers with clinic information
+      ],
       numPages: 3,
       unreadMessages: 1,
       isPopupVisible: false,
+      isInfoWindowVisible: false,
+      infoWindowPosition: { lat: 51.5072, lng: 0.1276 },
+      infoWindowOptions: { pixelOffset: { width: 0, height: -30 } },
+      infoWindowTitle: 'InfoWindow Title',
+      infoWindowContent: 'InfoWindow Content',
+      infoWindowLink: '',
       popupInfo: {},
-      markers: [
-        { id: 1, position: { lat: 51.5072, lng: 0.1276 } }, // Example marker, replace with your actual data
-        // ... add more markers as needed
-      ],
       bookings: [
         {
           type: 'Checkup',
@@ -163,8 +189,19 @@ export default {
       return `${this.$route.path}?offset=${offset}&limit=${CARDS_PER_PAGINATION}`
     },
     onMarkerClicked(marker) {
-      console.log('Marker clicked')
-      this.$router.push(`/schedule/${marker.id}`)
+      console.log('Marker clicked ')
+      this.$refs.map.panTo(marker.position);
+      
+      
+      // Set the position and content for the InfoWindow
+      //TODO: Change the content to the clinic information
+      this.infoWindowPosition = marker.position;
+      this.infoWindowTitle = `Marker ${marker.id}`;
+      this.infoWindowContent = `This is the content for Marker ${marker.id}`;
+      this.infoWindowLink = `/schedule/${marker.id}`;
+
+      // Open the InfoWindow
+      this.isInfoWindowVisible = true;
     },
     goToInbox() {
       console.log('Go to inbox')

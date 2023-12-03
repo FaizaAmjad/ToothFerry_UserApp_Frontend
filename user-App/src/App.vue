@@ -40,7 +40,6 @@
 }
 
 
-
 body, html, #app, #root, .auth-wrapper {
     width: 100%;
     height: 100%;

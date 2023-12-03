@@ -26,4 +26,9 @@ app.use(VueGoogleMaps, {
   },
 })
 
+const selectedTheme = localStorage.getItem('selectedTheme')
+if (selectedTheme) {
+  document.documentElement.classList.add(selectedTheme)
+}
+
 app.mount('#app')

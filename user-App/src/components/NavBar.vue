@@ -7,15 +7,15 @@
     
     <div >
       <ul class="nav navbar-nav navbar-right" v-if="!user">
-        <li class="nav-item">
-          <RouterLink class="nav-link active " aria-current="page" to="/">Home</RouterLink>
-        </li>
-        <li class="nav-item">
-          <RouterLink class="nav-link" to="/login"><span class="glyphicon glyphicon-log-in"></span>Login</RouterLink>
-        </li>
-        <li class="nav-item">
-          <RouterLink class="nav-link" to="/signup">Sign up</RouterLink>
-        </li>
+        <b-nav-item-dropdown right>
+          <!-- TODO: Check whether the user is logged in or not and display the information based on that -->
+          <template #button-content>
+            <em>User</em>
+          </template>
+          <b-dropdown-item href="login">Login</b-dropdown-item>
+          <b-dropdown-item href="signup">Sign-up</b-dropdown-item>
+          <b-dropdown-item href="my-page">Account</b-dropdown-item>
+        </b-nav-item-dropdown>
       </ul>
       <ul class="nav navbar-nav navbar-left" v-if="user">
         <li class="nav-item">

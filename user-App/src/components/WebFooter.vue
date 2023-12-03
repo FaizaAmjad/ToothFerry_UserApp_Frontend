@@ -25,7 +25,7 @@
       justify-content: space-around;
       align-items: flex-start;
       padding: 20px;
-      background-color: #214471;
+      background-color: var(--footer-bg);
       color: white;
       bottom: 0;
       width: 100%;

@@ -39,13 +39,7 @@
     box-sizing: border-box;
 }
 
-body {
-    background: #81b1de !important;
-    min-height: 100VH;
-    display: flex;
-    font-weight: 400;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
+
 
 body, html, #app, #root, .auth-wrapper {
     width: 100%;
@@ -54,6 +48,23 @@ body, html, #app, #root, .auth-wrapper {
 
 #app {
     text-align: center;
+}
+
+/* This part is to alter the theme color */
+:root {
+  --account-bg: #81b1de;
+  --button: #1870d5;
+  --letter: white;
+  --background-image-first: url('./assets/Without-Languages.png');
+  --background-image-second: url('./assets/starsBackground.svg');
+
+}
+:root.dark {
+  --account-bg: #051650;
+  --button: #ffb347;
+  --letter: black;
+  --background-image-first: url('./assets/Without-Languages(LM).png');
+  --background-image-second: url('./assets/starsBackground(LM).svg');
 }
 
 .navbar-light {

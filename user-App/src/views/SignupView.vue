@@ -5,7 +5,7 @@
                 <div class="auth-inner">
                     <div>
                         <Error v-if="error" :error="error"></Error>
-                        <h3>Sign UP</h3>
+                        <h3>Sign Up</h3>
                         <p>Welcom to sign up page!</p>
                         <hr />
                     </div>

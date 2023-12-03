@@ -85,7 +85,7 @@ export default {
       newEmail: 'your@email.com',
       email: '',
       password: '',
-      newTheme: 'dark',
+      newTheme: 'light',
       showOtherField: false, // Initialize to false
       selectedTheme: 'dark',
       selectedLanguage: 'english',
@@ -99,7 +99,7 @@ export default {
     }
   },
   async mounted() {
-    await this.getUser()
+    this.selectedTheme = localStorage.getItem('selectedTheme') || 'dark';
   },
   methods: {
     setSelectedTheme(theme) {
@@ -158,7 +158,7 @@ export default {
     align-items: center;
     min-height: 100vh;
     font-family: "Jost", sans-serif;
-    background: var(--account-bg);
+    background: var(--main-bg);
 }
 
 .main-mypage {
@@ -193,7 +193,7 @@ export default {
     margin: 10px auto;
     justify-content: center;
     display: block;
-    color: #fff;
+    color: var(--button-letter);
     background: var(--button);
     font-size: 1em;
     font-weight: bold;
@@ -228,7 +228,7 @@ export default {
 }
 
 .theme {
-    color: white;
+    color: var(--letter);
 }
 
 .image-logo {

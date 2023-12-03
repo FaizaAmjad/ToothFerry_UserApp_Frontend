@@ -141,3 +141,11 @@ export default {
   }
 }
 </script>
+<style scoped>
+button {
+    background-color: var(--button);
+    color: var(--button-letter);
+    border: none;
+    
+}
+</style>

@@ -46,23 +46,33 @@ body, html, #app, #root, .auth-wrapper {
     height: 100%;
 }
 
+body {
+    background: var(--main-bg) !important;
+    min-height: 100VH;
+    display: flex;
+    font-weight: 400;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
 #app {
     text-align: center;
 }
 
 /* This part is to alter the theme color */
 :root {
-  --account-bg: #81b1de;
-  --button: #1870d5;
-  --letter: white;
-  --background-image-first: url('./assets/Without-Languages.png');
-  --background-image-second: url('./assets/starsBackground.svg');
-
+  --main-bg: #81b1de;
+  --secondary-bg: #BBCDE5;
+  --footer-bg: #1C5D99;
+  --button: #F8F4E3;
+  --button-letter: #545863;
+  --letter: #0D1821;
 }
 :root.dark {
-  --account-bg: #051650;
-  --button: #ffb347;
-  --letter: black;
+  --main-bg: #355691;
+  --secondary-bg: #BBCDE5;
+  --footer-bg: #354067;
+  --button: #C6C5B9;
+  --letter: white;
   --background-image-first: url('./assets/Without-Languages(LM).png');
   --background-image-second: url('./assets/starsBackground(LM).svg');
 }
@@ -83,7 +93,7 @@ body, html, #app, #root, .auth-wrapper {
 .auth-inner {
     width: 450px;
     margin: auto;
-    background: #ffffff;
+    background: var(--secondary-bg);
     box-shadow: 0px 14px 80px rgba(34,35,58,0.2);
     padding: 40px;
     border-radius: 15px;

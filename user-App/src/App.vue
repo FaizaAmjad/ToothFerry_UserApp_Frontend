@@ -39,6 +39,7 @@
     box-sizing: border-box;
 }
 
+
 body {
     background: #81b1de !important;
     min-height: 100VH;

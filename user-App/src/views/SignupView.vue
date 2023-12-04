@@ -134,7 +134,7 @@ export default {
     async onSignUp() {
         try {
             console.log(' submitted ' + this.form.email)
-            const response = await axios.post('http://localhost:3000/api/v1/users', {
+            const response = await axios.post('users', {
                 firstName: this.form.firstName,
                 lastName: this.form.lastName,
                 SSN: this.form.socialNumber,

@@ -130,6 +130,7 @@ export default {
         id: 1,
         position: { lat: 51.5072, lng: 0.1276 },
         clinicName: 'City Hospital',
+        about: 'This is the about section for City Hospital',
       },
       
       // Add more markers with clinic information
@@ -216,8 +217,8 @@ export default {
       // Set the position and content for the InfoWindow
       //TODO: Change the content to the clinic information
       this.infoWindowPosition = marker.position;
-      this.infoWindowTitle = `Marker ${marker.id}`;
-      this.infoWindowContent = `This is the content for Marker ${marker.id}`;
+      this.infoWindowTitle = `${marker.clinicName}`;
+      this.infoWindowContent = `${marker.about}`;
       this.infoWindowLink = `/schedule/${marker.id}`;
 
       // Open the InfoWindow

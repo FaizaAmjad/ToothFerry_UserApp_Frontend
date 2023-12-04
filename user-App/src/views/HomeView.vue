@@ -10,6 +10,11 @@
     <b-row class="row">
       <!-- Left Section -->
       <div class="col-md-8">
+        <div class="col-md-4" id="search">
+          <!-- TODO: doesn't look the greatest but actual functionalities are more important -->
+          <button type="searchButton" class="btn btn-primary" @click="Search()">Search</button>
+          <input type="input" v-model="searchInput" class="form-input" id="SearchInput" placeholder="Clinic Name"/>
+        </div>
         <div id="gmap-container">
           <GMapMap
             ref="map"
@@ -138,6 +143,7 @@ export default {
       infoWindowTitle: 'InfoWindow Title',
       infoWindowContent: 'InfoWindow Content',
       infoWindowLink: '',
+      searchInput: '',
       popupInfo: {},
       bookings: [
         {
@@ -187,6 +193,20 @@ export default {
     generatePaginationLink(pageNum) {
       const offset = (pageNum - 1) * CARDS_PER_PAGINATION
       return `${this.$route.path}?offset=${offset}&limit=${CARDS_PER_PAGINATION}`
+    },
+    Search() {
+      try {
+        console.log('Trying to search for ' + this.searchInput)
+        const foundMarker = this.markers.find(marker => marker.clinicName === this.searchInput)
+
+        if (foundMarker) {
+          this.onMarkerClicked(foundMarker)
+        } else {
+          console.log('No marker found')
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     onMarkerClicked(marker) {
       console.log('Marker clicked ')

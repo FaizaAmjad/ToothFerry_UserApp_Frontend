@@ -49,14 +49,14 @@
 
 <style scoped>
 .background{
-  background-color: rgb(108, 167, 226);
+  background-color: var(--main-bg);
   padding: 3%;
   min-height: 100vh;
   box-sizing: border-box;
 
 }
 .container{
-  background-color: rgb(220, 233, 243);
+  background-color: var(--secondary-bg);
   border-radius: 20px;
 }
 .about {

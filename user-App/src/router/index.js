@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Questionnaire from '../views/emergencyForm.vue'
 import AppointmentView from '../views/AppointmentView.vue'
 import LandingView from '../views/LandingView.vue'
+import MyPage from '../views/MyPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,12 @@ const router = createRouter({
       path: '/login',
       name: 'login-view',
       component: () => import('../views/LoginView.vue')
+    },
+    {
+      path: '/my-page',
+      name: 'my-page',
+      component: MyPage
+
     }
   ]
 })

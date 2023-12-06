@@ -1,4 +1,5 @@
 <template>
+    <AppointmentSchedular/>
     <div class="auth-wrapper col-md-6 offset-md-3">
       <div class="auth-inner">
         <h3>Reservation</h3>
@@ -24,7 +25,6 @@
         </div>
       </div>
     </div>
-    <AppointmentSchedular/>
   </template>
   
 <script>

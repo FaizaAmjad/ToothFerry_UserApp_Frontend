@@ -45,7 +45,7 @@
 </template>
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 import Error from '../components/Error.vue'
 
 export default {
@@ -66,13 +66,13 @@ export default {
     async onLogin() {
         try {
             console.log('Logged in' + this.form.email)
-            /*const response = await axios.post('login', {
+            const response = await axios.post('login', {
                 email: this.email,
                 password: this.password
             })
 
             localStorage.setItem('token', response.data.token);
-            this.$store.dispatch('user', response.data.user);*/
+            this.$store.dispatch('user', response.data.user);
             this.$router.push('/');
         } catch (error) {
             this.error = 'Invalid email/password.'

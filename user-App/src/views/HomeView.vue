@@ -1,10 +1,23 @@
 <template>
+  <head
+    meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQlD3-cmPiepBAeHB4NYXdN12HIyCjhl4&libraries=places&v=3.exp" async defer
+
+  ></head>
   <div class="container-fluid">
     <b-row class="row">
       <!-- Left Section -->
       <div class="col-md-8">
+        <div class="col-md-4" id="search">
+          <!-- TODO: doesn't look the greatest but actual functionalities are more important -->
+          <button type="searchButton" class="btn btn-primary" @click="Search()">Search</button>
+          <input type="input" v-model="searchInput" class="form-input" id="SearchInput" placeholder="Clinic Name"/>
+        </div>
         <div id="gmap-container">
           <GMapMap
+            ref="map"
             class="GMapMap"
             :center="{ lat: 51.5072, lng: 0.1276 }"
             :zoom="10" 
@@ -17,7 +30,31 @@
               rotateControl: true,
               fullscreenControl: true
             }"
+          >
+            <!-- Use v-for to loop through markers and create GMapMarker components -->
+            <GMapMarker
+              v-for="marker in markers"
+              :key="marker.id"
+              :ref="marker.id"
+              :position="marker.position"
+              :clickable="true"
+              :draggable="true"
+              @click="onMarkerClicked(marker)"
             />
+            <GMapInfoWindow v-if="isInfoWindowVisible"
+              :position="infoWindowPosition"
+              :options="infoWindowOptions"
+              ref="infoWindow"
+              >
+              <!-- Your InfoWindow content goes here -->
+              <div>
+                <h3>{{ infoWindowTitle }}</h3>
+                <p>
+                  Click <router-link :to="infoWindowLink"> here</router-link> for the schedule. {{ infoWindowContent }}
+                </p>
+              </div>
+            </GMapInfoWindow>
+          </GMapMap>
         </div>
       </div>
 
@@ -88,9 +125,26 @@ export default {
   data() {
     return {
       // mock data
+      markers: [
+      {
+        id: 1,
+        position: { lat: 51.5072, lng: 0.1276 },
+        clinicName: 'City Hospital',
+        about: 'This is the about section for City Hospital',
+      },
+      
+      // Add more markers with clinic information
+      ],
       numPages: 3,
       unreadMessages: 1,
       isPopupVisible: false,
+      isInfoWindowVisible: false,
+      infoWindowPosition: { lat: 51.5072, lng: 0.1276 },
+      infoWindowOptions: { pixelOffset: { width: 0, height: -30 } },
+      infoWindowTitle: 'InfoWindow Title',
+      infoWindowContent: 'InfoWindow Content',
+      infoWindowLink: '',
+      searchInput: '',
       popupInfo: {},
       bookings: [
         {
@@ -140,6 +194,35 @@ export default {
     generatePaginationLink(pageNum) {
       const offset = (pageNum - 1) * CARDS_PER_PAGINATION
       return `${this.$route.path}?offset=${offset}&limit=${CARDS_PER_PAGINATION}`
+    },
+    Search() {
+      try {
+        console.log('Trying to search for ' + this.searchInput)
+        const foundMarker = this.markers.find(marker => marker.clinicName === this.searchInput)
+
+        if (foundMarker) {
+          this.onMarkerClicked(foundMarker)
+        } else {
+          console.log('No marker found')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    onMarkerClicked(marker) {
+      console.log('Marker clicked ')
+      this.$refs.map.panTo(marker.position);
+      
+      
+      // Set the position and content for the InfoWindow
+      //TODO: Change the content to the clinic information
+      this.infoWindowPosition = marker.position;
+      this.infoWindowTitle = `${marker.clinicName}`;
+      this.infoWindowContent = `${marker.about}`;
+      this.infoWindowLink = `/schedule/${marker.id}`;
+
+      // Open the InfoWindow
+      this.isInfoWindowVisible = true;
     },
     goToInbox() {
       console.log('Go to inbox')

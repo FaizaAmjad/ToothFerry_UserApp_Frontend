@@ -93,7 +93,7 @@
 </template>
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 import Error from '../components/Error.vue'
 
 export default {
@@ -119,7 +119,7 @@ export default {
     async onSignUp() {
         try {
             console.log(' submitted ' + this.form.email)
-            /*const response = await axios.post('signup', {
+            const response = await axios.post('signup', {
                 firstName = this.form.firstName,
                 lastName = this.form.lastName,
                 socialNumber = this.form.socialNumber,
@@ -130,7 +130,7 @@ export default {
 
             
             localStorage.setItem('token', response.data.token);
-            this.$store.dispatch('user', response.data.user);*/
+            this.$store.dispatch('user', response.data.user);
             this.$router.push('/login');
         } catch (error) {
             this.error = 'En error occured.'

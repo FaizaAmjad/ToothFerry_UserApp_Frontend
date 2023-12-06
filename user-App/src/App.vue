@@ -7,7 +7,7 @@
         <router-view/>
 
         <footer>
-            <WebFooter/>
+           
         </footer>
         
     </div>
@@ -17,12 +17,11 @@
     import axios from 'axios'
     import "bootstrap/dist/css/bootstrap.min.css"
     import NavBar from './components/NavBar.vue'
-    import WebFooter from "./components/WebFooter.vue"
 
     export default {
         components: {
             NavBar,
-            WebFooter,
+            
         },
        async created() {
           const response = await axios.get('user');

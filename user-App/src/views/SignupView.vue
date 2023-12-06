@@ -48,19 +48,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label>postCode</label>
-                            <input
-                                type="text"
-                                minlength="5"
-                                maxlength="5"
-                                class="form-control"
-                                placeholder="54321"
-                                v-model.trim="form.postCode"
-                                required
-                            />
-                        </div>
-
-                        <div class="form-group">
                             <label>Email</label>
                             <input
                                 type="email"
@@ -120,37 +107,31 @@ export default {
         firstName: '',
         lastName: '',
         SSN: '',
-        postCode: '',
         email: '',
         password: '',
         confirmPassword: '',
         error: '',
-        admin: 'false'
-
        }
     }
   },
   methods: {
     async onSignUp() {
         try {
-            console.log(' submitted ' + this.form.email)
-            const response = await axios.post('users', {
+            console.log(' submitted ' + this.form)
+            await axios.post('users', {
                 firstName: this.form.firstName,
                 lastName: this.form.lastName,
-                SSN: this.form.socialNumber,
+                SSN: this.form.SSN,
                 email: this.form.email,
                 password: this.form.password,
-                admin: this.admin
+                admin:false,
+                theme:"dark"
             })
 
-            console.log(response)
-            localStorage.setItem('token', response.data.token);
-            this.$store.dispatch('user', response.data.user);
             this.$router.push('/login');
         } catch (error) {
-            this.error = 'En error occured.'
+            this.error = 'An error occured'
         }
-    
     },
     
   }

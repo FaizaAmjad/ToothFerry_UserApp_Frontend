@@ -6,7 +6,7 @@
         
         <router-view/>
 
-        <footer>
+        <footer style="padding-top: 100px;">
             <WebFooter/>
         </footer>
         

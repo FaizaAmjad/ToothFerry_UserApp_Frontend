@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 import Error from '../components/Error.vue'
 
 export default {
@@ -116,7 +116,7 @@ export default {
     }
   },
   methods: {
-    async onSignUp() {
+    /*async onSignUp() {
         try {
             console.log(' submitted ' + this.form.email)
             const response = await axios.post('signup', {
@@ -136,7 +136,7 @@ export default {
             this.error = 'En error occured.'
         }
     
-    },
+    },*/
     
   }
 }

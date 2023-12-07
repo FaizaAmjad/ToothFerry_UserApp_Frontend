@@ -55,7 +55,6 @@ export default {
         date: null, 
         time: null 
     });
-   
 
     const generateDateRange = () => {
       const startDate = moment(selectedDate.value).startOf('week');
@@ -63,7 +62,9 @@ export default {
       const dateRange = [];
 
       while (startDate.isSameOrBefore(endDate, 'day')) {
-        dateRange.push(startDate.format('YYYY-MM-DD'));
+        if (startDate.day() !== 6 && startDate.day() !== 0) {
+          dateRange.push(startDate.format('YYYY-MM-DD'));
+        }
         startDate.add(1, 'day');
       }
 
@@ -89,8 +90,11 @@ export default {
   },
 
   computed: {
+    slots() {
+      return this.$store.getters.slots;
+    },
+
     bookedSlots() {
-      // Get booked slots from Vuex store
       return this.$store.getters.bookedSlots;
     }
   },
@@ -102,14 +106,13 @@ export default {
     },
     showEvent(date, time) {
       const isSlotBooked = this.isSlotBooked(date, time);
-
-      if (!isSlotBooked) {
+      const slot_id = this.getSlotID(date, time)
+      if (!isSlotBooked  && slot_id) {
         const user = this.$store.getters.user;
-
         if (user) {
             var userConfirmed = confirm('Do you want to book this slot?');
             if (userConfirmed) {
-                this.$store.dispatch('bookSlot', { date, time, userId: user._id });
+                this.$store.dispatch('bookSlot', { date, time, userId: user._id, slot_id });
                 alert('Slot booked!');
             } else {
                 alert('Slot not booked.');
@@ -118,7 +121,7 @@ export default {
           alert('User data not available. Please log in.');
         }
       } else {
-        alert(`Slot at ${date}, ${time} is already booked.`);
+        alert(`Slot at ${date}, ${time} is currently unavailable.`);
       }
     },
     isSlotBooked(date, time) {
@@ -127,8 +130,15 @@ export default {
     bookSlot(date, time) {
         const user = this.$store.getters.user;
       if (user) {
-        this.$store.dispatch('bookSlot', { date, time, userId: user._id });
+        const slot_id = this.getSlotID(date, time)
+        if(slot_id) {
+          this.$store.dispatch('bookSlot', {userId: user._id, slot_id});
+        }
       }
+    },
+    getSlotID(date, time) {
+      const slot = this.slots.find(s => s.date === date && s.time === time);
+      return slot ? slot._id : null;
     },
     highlightCell(date, time, isHovered) {
         this.highlightedCell = isHovered ? { date, time } : { date: null, time: null };

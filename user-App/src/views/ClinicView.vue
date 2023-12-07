@@ -1,10 +1,9 @@
 <template>
-    <h1>Welcome to "Clinic Name" {{ Clinic }}</h1>
+    <h1>Welcome to Clinic... {{ clinicObject }}</h1>
     <AppointmentSchedular/>
 </template>
 
 <script>
-import { mapSate } from 'vuex';
 import AppointmentSchedular from '../components/AppointmentSchedular.vue'
 
 export default {
@@ -13,7 +12,9 @@ export default {
         AppointmentSchedular
     },
     computed: {
-        ...mapSate(['clinic'])
+        clinicObject() {
+            return this.$store.getters['getClinicObject'];
+        }
     }
 }
 

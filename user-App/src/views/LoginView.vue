@@ -73,7 +73,7 @@ export default {
 
             localStorage.setItem('token', response.data.token);
             this.$store.dispatch('user', response.data.user);
-            this.$store.dispatch('fetchBookedSlots');
+            this.$store.dispatch('fetchSlots');
             this.$router.push('/');
         } catch (error) {
             this.error = 'Invalid email/password.'

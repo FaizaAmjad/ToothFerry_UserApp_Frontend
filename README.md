@@ -1,37 +1,71 @@
-## Introduction
+# vue-project
 
-Imagine you are a child who just pulled out a baby tooth. <br>
-In excitement, you place your tooth under the pillow, hoping for a small gift from the tooth fariy. <br>
-You wake up the next morning, however instead of a small gift, you see nothing but a note written from the tooth fairy saying <br>
+This template should help get you started developing with Vue 3 in Vite.
 
-**'WE DON'T ACCEPT ROTTEN TOOTH!'**
+## Recommended IDE Setup
 
-This probably won't happen since tooth fairy is fake just like Santa Clause, and unicorns. <br>
-However, rotten teeth due to a bad management is a nonfiction. <br>
-Moving to a new country is difficult for the majority of people but of all the difficulties, dental care may especially be frustrating. <br>
-As a software engineering students of the Gothenburg, our team presents an easier way for dental care. <br>
-Introducing the...... <br>
-**Tooth Fairy!**
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Description
+## Type Support for `.vue` Imports in TS
 
-## Purpose and Benefits
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
 
-**Unlike** the people familiar to the Swedish reservation system, people who do not may have difficulties. <br>
-**Unlike** the people familiar to the Gothenburg district, people who do not may have difficulties finding the near dentist. <br>
-**Unlike** the people who speak either English or Swedish, people who do not speak these two languages may have difficulties. <br>
+If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
 
-However... <br>
-**Unlike** all the other services, our team would like to help the people who are unlike the other people.
+1. Disable the built-in TypeScript Extension
+    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
+    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
+2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-Our team sees a future where dental care is distributed equally regardless of intellectuality, language barriers, and etc.
+## Customize configuration
 
-## System Description
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-**Entity Relationship(ER) Diagram**
+## Project Setup
 
-![ER Diagram](./img/ER%20diagram.jpg)
+```sh
+npm install
+```
 
-**Deployment Diagram**
+### Compile and Hot-Reload for Development
 
-![Deployment Diagram](./img/Deployment%20Diagram.jpg)
+```sh
+npm run dev
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Run Unit Tests with [Vitest](https://vitest.dev/)
+
+```sh
+npm run test:unit
+```
+
+### Run End-to-End Tests with [Playwright](https://playwright.dev)
+
+```sh
+# Install browsers for the first run
+npx playwright install
+
+# When testing on CI, must build the project first
+npm run build
+
+# Runs the end-to-end tests
+npm run test:e2e
+# Runs the tests only on Chromium
+npm run test:e2e -- --project=chromium
+# Runs the tests of a specific file
+npm run test:e2e -- tests/example.spec.ts
+# Runs the tests in debug mode
+npm run test:e2e -- --debug
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```

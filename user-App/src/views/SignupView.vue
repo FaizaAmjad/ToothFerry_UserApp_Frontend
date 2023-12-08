@@ -42,7 +42,7 @@
                                 maxlength="11"
                                 class="form-control"
                                 placeholder="987654-4321"
-                                v-model.trim="form.socialNumber"
+                                v-model.trim="form.SSN"
                                 required
                             />
                         </div>
@@ -93,7 +93,7 @@
 </template>
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 import Error from '../components/Error.vue'
 
 export default {
@@ -106,36 +106,32 @@ export default {
        form: {
         firstName: '',
         lastName: '',
-        socialNumber: '',
+        SSN: '',
         email: '',
         password: '',
         confirmPassword: '',
-        error: ''
-
+        error: '',
        }
     }
   },
   methods: {
     async onSignUp() {
         try {
-            console.log(' submitted ' + this.form.email)
-            /*const response = await axios.post('signup', {
-                firstName = this.form.firstName,
-                lastName = this.form.lastName,
-                socialNumber = this.form.socialNumber,
+            console.log(' submitted ' + this.form)
+            await axios.post('users', {
+                firstName: this.form.firstName,
+                lastName: this.form.lastName,
+                SSN: this.form.SSN,
                 email: this.form.email,
                 password: this.form.password,
-                confirmPassword = this.form.confirmPassword
+                admin:false,
+                theme:"dark"
             })
 
-            
-            localStorage.setItem('token', response.data.token);
-            this.$store.dispatch('user', response.data.user);*/
             this.$router.push('/login');
         } catch (error) {
-            this.error = 'En error occured.'
+            this.error = 'An error occured'
         }
-    
     },
     
   }

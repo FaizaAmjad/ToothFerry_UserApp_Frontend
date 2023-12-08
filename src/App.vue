@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    //import axios from 'axios'
+    
     import "bootstrap/dist/css/bootstrap.min.css"
     import NavBar from './components/NavBar.vue'
     import WebFooter from "./components/WebFooter.vue"

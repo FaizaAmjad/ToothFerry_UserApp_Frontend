@@ -23,11 +23,10 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue')
     },
-    { 
+    {
       path: '/appointment',
       name: 'appointment',
       component: AppointmentView
-
     },
     {
       path: '/questionnaire',
@@ -48,7 +47,6 @@ const router = createRouter({
       path: '/my-page',
       name: 'my-page',
       component: MyPage
-
     }
   ]
 })

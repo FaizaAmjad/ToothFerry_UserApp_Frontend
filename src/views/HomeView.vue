@@ -71,7 +71,7 @@
               v-model="currentPage"
               :link-gen="generatePaginationLink"
               :total-rows="numPages"
-              align="center"
+              :align="center"
             ></b-pagination>
           </div>
         </div>

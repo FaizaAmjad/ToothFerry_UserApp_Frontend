@@ -14,6 +14,7 @@ const store = new Vuex.Store({
     },
     actions: {
         user(context, user) {
+            
             context.commit('user', user)
         }
     },

@@ -16,15 +16,16 @@
             </template>
             <b-dropdown-item href="login">Login</b-dropdown-item>
             <b-dropdown-item href="signup">Sign-up</b-dropdown-item>
-            <b-dropdown-item href="my-page">Account</b-dropdown-item>
+            <!--<b-dropdown-item href="my-page">Account</b-dropdown-item>-->
           </b-nav-item-dropdown>
         </ul>
+
         <ul class="nav navbar-nav navbar-left" v-if="user">
           <li class="nav-item">
-            <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
+            <RouterLink class="nav-link active" aria-current="page" to="/home">Home</RouterLink>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" to="#">Features</RouterLink>
+            <RouterLink class="nav-link" to="/my-page">Profile</RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" to="/about">About Us</RouterLink>
@@ -44,13 +45,28 @@ import { useRouter } from 'vue-router'
 
 export default {
   name: 'nav-bar',
+  async mounted() {
+    const router = useRouter()
+    this.user = localStorage.getItem('token') != null
+   /*  if (this.user) {
+      router.push('/home')
+    } else if (!this.user) {
+      router.push('/login')
+    } */
+  },
+  data: function () {
+    return {
+      user: null
+    }
+  },
   setup() {
     const store = useStore()
     const router = useRouter()
     const handleLogout = () => {
       localStorage.removeItem('token')
       store.dispatch('user', null)
-      router.push('/')
+      this.user = null
+      router.push('/login')
     }
 
     return { handleLogout }

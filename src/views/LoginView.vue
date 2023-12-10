@@ -59,20 +59,29 @@ export default {
       }
     }
   },
+  async mounted(){
+    const notLoggedIn = localStorage.getItem('token') == null;
+    if (!notLoggedIn) {
+      this.$router.push('/home')
+  }else if(notLoggedIn){
+    this.$router.push('/login')
+  }
+  },
   methods: {
     async onLogin() {
       try {
         console.log('Logged in' + this.form.email)
-       
+
         const token = await login(undefined, this.form.email, this.form.password)
         localStorage.setItem('token', token)
 
         const userDetails = await getUserInfo()
         this.$store.dispatch('user', userDetails)
-        this.$router.push('/')
+        
+        this.$router.push('/home')
       } catch (error) {
         this.error = 'Invalid email/password.'
-      } 
+      }
     }
   }
 }

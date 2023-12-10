@@ -19,7 +19,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-left" v-if="user">
         <li class="nav-item">
-          <RouterLink class="nav-link active" aria-current="page" to="/">Home</RouterLink>
+          <RouterLink class="nav-link active" aria-current="page" to="/home">Home</RouterLink>
         </li>
         <li class="nav-item">
           <RouterLink class="nav-link" to="#">Features</RouterLink>
@@ -41,13 +41,15 @@
 
   export default {
     name: 'nav-bar',
-    handleLogout() {
+    computed: {
+      ...mapGetters(['user'])
+    },
+    methods: {
+      handleLogout() {
       localStorage.removeItem('token');
       this.$store.dispatch('user', null)
       this.$router.push('/');
     },
-    computed: {
-      ...mapGetters(['user'])
     }
   }
 </script>

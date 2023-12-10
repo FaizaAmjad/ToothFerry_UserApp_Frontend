@@ -120,8 +120,6 @@
 </template>
 
 <script>
-import { mapGetters, useStore } from 'vuex'
-import { useRouter } from 'vue-router'
 import { deleteUser, getUserInfo, updateUser } from '../apis/users'
 
 export default {
@@ -160,17 +158,25 @@ export default {
     this.lastName = this.userDetails.lastName
   },
   methods: {
-    editAccount() {
-      updateUser(this.userDetails.id, this.firstName, this.lastName, this.email, this.password)
+    async editAccount() {
+      await updateUser(
+        this.userDetails.id,
+        this.firstName,
+        this.lastName,
+        this.email,
+        this.password
+      )
+
+      localStorage.removeItem('token')
+      this.$store.dispatch('user', null)
+      this.$router.push('/login')
     },
     async deleteAccount() {
       await deleteUser(this.userDetails.id)
-      const store = await useStore()
-      const router = await useRouter()
+
       localStorage.removeItem('token')
-      store.dispatch('user', null)
-      this.user = null
-      router.push('/login')
+      this.$store.dispatch('user', null)
+      this.$router.push('/login')
     },
     setSelectedTheme(theme) {
       this.selectedTheme = theme

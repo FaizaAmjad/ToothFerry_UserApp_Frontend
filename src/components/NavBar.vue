@@ -14,8 +14,8 @@
             <template #button-content>
               <em>User</em>
             </template>
-            <b-dropdown-item href="login">Login</b-dropdown-item>
-            <b-dropdown-item href="signup">Sign-up</b-dropdown-item>
+            <b-dropdown-item href="/login">Login</b-dropdown-item>
+            <b-dropdown-item href="/signup">Sign-up</b-dropdown-item>
             <!--<b-dropdown-item href="my-page">Account</b-dropdown-item>-->
           </b-nav-item-dropdown>
         </ul>
@@ -41,31 +41,30 @@
 
 <script>
 import { mapGetters, useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { onMounted } from 'vue'
 
 export default {
   name: 'nav-bar',
-  async mounted() {
-    const router = useRouter()
-    this.user = localStorage.getItem('token') != null
-   /*  if (this.user) {
-      router.push('/home')
-    } else if (!this.user) {
-      router.push('/login')
-    } */
-  },
-  data: function () {
-    return {
-      user: null
-    }
-  },
+
   setup() {
+    onMounted(() => {
+      const store = useStore()
+      const router = useRouter()
+      const route = useRoute()
+      debugger
+      if (store.user && ['/', '/login', '/signup'].includes(route.path)) {
+        router.push('/home')
+      } else if (!store.user && !['/', '/login', '/signup'].includes(route.path)) {
+        router.push('/login')
+      }
+      debugger
+    })
     const store = useStore()
     const router = useRouter()
     const handleLogout = () => {
       localStorage.removeItem('token')
       store.dispatch('user', null)
-      this.user = null
       router.push('/login')
     }
 

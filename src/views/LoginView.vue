@@ -10,6 +10,7 @@
             <hr />
           </div>
 
+          <div class="alert alert-danger" v-if="!!error">{{ error }}</div>
           <form @submit.prevent="onLogin()">
             <div class="form-group">
               <label>Email</label>
@@ -54,19 +55,12 @@ export default {
     return {
       form: {
         email: '',
-        password: '',
-        error: ''
-      }
+        password: ''
+      },
+      error: ''
     }
   },
-  async mounted(){
-    const notLoggedIn = localStorage.getItem('token') == null;
-    if (!notLoggedIn) {
-      this.$router.push('/home')
-  }else if(notLoggedIn){
-    this.$router.push('/login')
-  }
-  },
+  
   methods: {
     async onLogin() {
       try {
@@ -77,7 +71,7 @@ export default {
 
         const userDetails = await getUserInfo()
         this.$store.dispatch('user', userDetails)
-        
+
         this.$router.push('/home')
       } catch (error) {
         this.error = 'Invalid email/password.'

@@ -1,7 +1,7 @@
 <!-- eslint-disable no-undef -->
 <template>
   <div>
-    <h3>Choose a dentist to see schedule.</h3>
+    <h6>Choose a dentist to see schedule.</h6>
     <select v-model="selectedDentist" @change="onDentistChange">
       <option v-for="dentist in dentists" :key="dentist.id" :value="dentist.id">
         {{ dentist.name }}
@@ -136,21 +136,25 @@ export default {
     },
     showEvent(date, time) {
       const isSlotBooked = this.isSlotBooked(date, time);
-      if (!isSlotBooked ) {
-        const user = this.$store.getters.user;
-        if (user) {
-            var userConfirmed = confirm('Do you want to book this slot?');
-            if (userConfirmed) {
-                this.$store.dispatch('bookSlot', { date, time, userId: user._id, slotId: this.getSlotID(date, time)});
-                alert('Slot booked!');
-            } else {
-                alert('Slot not booked.');
-            }
+      if(this.selectedDentist){
+        if (!isSlotBooked ) {
+          const user = this.$store.getters.user;
+          if (user) {
+              var userConfirmed = confirm('Do you want to book this slot?');
+              if (userConfirmed) {
+                  this.$store.dispatch('bookSlot', { date, time, userId: user._id, slotId: this.getSlotID(date, time)});
+                  alert('Slot booked!');
+              } else {
+                  alert('Slot not booked.');
+              }
+          } else {
+            alert('User data not available. Please log in.');
+          }
         } else {
-          alert('User data not available. Please log in.');
+          alert(`Slot at ${date}, ${time} is currently unavailable.`);
         }
       } else {
-        alert(`Slot at ${date}, ${time} is currently unavailable.`);
+        alert(`Please select a dentist.`);
       }
     },
     isSlotBooked(date, time) {
@@ -210,7 +214,7 @@ export default {
 }
 .appointment-scheduler-container {
   max-width: 800px;
-  margin: 60px;
+  margin: 60px auto;
   padding: 40px;
   background-color: #ffffff;
   display: flex;

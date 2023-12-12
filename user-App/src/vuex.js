@@ -4,10 +4,13 @@ import axios from 'axios';
 const state = {
   user: null,
   clinics: [],
-  clinicObject: null,
+  dentists: [],
+  selectedClinic: null,
+  selectedDentist: null,
   slots: [],
   bookedSlots: [],
-  clinicSlots: []
+  clinicDentists: [],
+  dentistSlots: []
 };
 
 const store = new Vuex.Store({
@@ -15,10 +18,13 @@ const store = new Vuex.Store({
   getters: {
     user: (state) => state.user,
     clinics: (state) => state.clinics,
-    getClinicObject: state => state.clinicObject,
+    dentists: (state) => state.dentists,
     slots: (state) => state.slots,
+    getSelectedClinic: (state) => state.selectedClinic,
+    getSelectedDentist: (state) => state.selectedDentist,
     bookedSlots: (state) => state.bookedSlots,
-    clinicSlots: (state) => state.clinicSlots,
+    clinicDentists: (state) => state.clinicDentists,
+    dentistSlots: (state) => state.dentistSlots,
   },
   actions: {
     setUser(context, user) {
@@ -32,9 +38,23 @@ const store = new Vuex.Store({
           const clinics = response.data;
   
           // Update the clinic state
-          commit('SET_CLINICs', clinics);
+          commit('SET_CLINICS', clinics);
+          this.dispatch('fetchDentists')
         } catch (error) {
           console.error('Error fetching clinic information:', error);
+        }
+      },
+
+      async fetchDentists({ commit }) {
+        try {
+          // Make an API request to fetch all clinics information
+          const response = await axios.get('dentists');
+          const dentists = response.data;
+  
+          // Update the dentist state
+          commit('SET_DENTISTS', dentists);
+        } catch (error) {
+          console.error('Error fetching dentists information:', error);
         }
       },
 
@@ -51,21 +71,42 @@ const store = new Vuex.Store({
         }
       },
     
-    ClinicSlots({ commit }) {
-        const clinicSlots = []
-        state.slots.forEach(slot => {
-          if (slot.clinicName === state.clinicObject.clinicName){
-            clinicSlots.push(slot)
+      clinicDentists ({ commit }) {
+        const clinicDentists = []
+        state.dentists.forEach(dentist => {
+          if (dentist.clinic_id === state.selectedClinic._id){
+            clinicDentists.push(dentist)
           }
         })
-        commit('SET_CLINIC_SLOTS', clinicSlots)
+        commit('SET_CLINIC_DENTISTS', clinicDentists)
+    },
+
+    dentistSlots({ commit }) {
+      const dentistSlots = []
+      state.slots.forEach(slot => {
+        if (slot.dentist_id === state.selectedDentist._id){
+          dentistSlots.push(slot)
+        }
+      })
+      commit('SET_DENTIST_SLOTS', dentistSlots)
+  },
+
+    selectClinic({ commit, dispatch }, clinic) {
+      commit('SET_SELECTED_CLINIC', clinic);
+      dispatch('clinicDentists')
+    },
+
+    selectDentist({ commit, dispatch }, dentist) {
+      commit('SET_SELECTED_DENTIST', dentist);
+      dispatch('dentistSlots')
     },
     
     updateBookedSlots({ commit }) {
         const booked = []
-
+        this.dispatch('fetchSlots')
+        this.dispatch('dentistSlots')
         // Update the bookedSlots state
-        state.slots.forEach(slot => {
+        state.dentistSlots.forEach(slot => {
             if (slot.booked){
                 booked.push(slot)
             }
@@ -83,6 +124,17 @@ const store = new Vuex.Store({
         console.error('Error booking slot:', error);
       }
     },
+
+    async unBookSlot({ dispatch }, {userId, slot_id}) {
+      try {
+        // Make an API request to book a slot
+        await axios.post('slots/' + slot_id + '/unbook', {userId });
+        console.log(`Slot unbooked: by User ID ${userId}`);
+        dispatch('updateBookedSlots');
+      } catch (error) {
+        console.error('Error booking slot:', error);
+      }
+    },
   },
   mutations: {
     SET_USER(state, user) {
@@ -91,17 +143,26 @@ const store = new Vuex.Store({
     SET_CLINICS(state, clinics) {
         state.clinics = clinics;
     },
-    SET_CLINIC_Object(state, clinicObject) {
-        state.clinicObject = clinicObject;
+    SET_DENTISTS(state, dentists) {
+      state.dentists = dentists;
     },
     SET_SLOTS(state, slots) {
-        state.slots = slots;
+      state.slots = slots;
     },
+    SET_SELECTED_CLINIC(state, clinic) {
+      state.selectedClinic = clinic;
+    },
+    SET_SELECTED_DENTIST(state, dentist) {
+      state.selectedDentist = dentist;
+    },
+    SET_CLINIC_DENTISTS(state, clinicDentists) {
+      state.clinicDentists = clinicDentists
+    },
+    SET_DENTIST_SLOTS(state, dentistSlots) {
+      state.dentistSlots = dentistSlots
+    },    
     SET_BOOKED_SLOTS(state, booked) {
         state.bookedSlots = booked;
-    },
-    SET_CLINIC_SLOTS(state, clinicSlots) {
-      state.clinicSlots = clinicSlots
     }
   },
 });

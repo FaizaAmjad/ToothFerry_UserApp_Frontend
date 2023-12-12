@@ -1,7 +1,16 @@
 <!-- eslint-disable no-undef -->
 <template>
+  <div>
+    <h3>Choose a dentist to see schedule.</h3>
+    <select v-model="selectedDentist" @change="onDentistChange">
+      <option v-for="dentist in dentists" :key="dentist.id" :value="dentist.id">
+        {{ dentist.name }}
+      </option>
+    </select>
+    <br/>
   <div class="appointment-scheduler-container">
     <Datepicker v-model="selectedDate" @input="onDateChange" placeholder="Choose date" />
+    <br/>
     <table class="schedule-table">
       <thead>
         <tr>
@@ -25,6 +34,7 @@
       </tbody>
     </table>
   </div>
+</div>
 </template>
 
 <script>
@@ -50,11 +60,8 @@ export default {
       { time: '16:00' },
       { time: '17:00' },
     ]);
-
-    const highlightedCell = ref({ 
-        date: null, 
-        time: null 
-    });
+    const slots = ref([]);
+    const bookedSlots = ref([]);
 
     const generateDateRange = () => {
       const startDate = moment(selectedDate.value).startOf('week');
@@ -73,6 +80,34 @@ export default {
 
     const dates = computed(() => generateDateRange(selectedDate.value));
 
+    const selectedDentist = ref(null);
+
+    /*const dentists = computed(() => {
+      return this.$store.getters.clinicDentists || [];
+    });*/
+
+    const dentists = ref([
+      { id: 1, name: 'Dentist 1' },
+      { id: 2, name: 'Dentist 2' },
+      // ... add more dentists as needed ...
+    ]);
+
+    const onDentistChange = async () => {
+    
+    if (selectedDentist.value) {
+      await this.$store.dispatch('selectDentist', selectedDentist.value);
+      await this.$store.dispatch('dentistSlots');
+      this.slots = this.$store.getters.dentistSlots || [];
+      this.bookedSlots = this.$store.getters.bookedSlots || [];
+    }
+  };
+
+    const highlightedCell = ref({ 
+        date: null, 
+        time: null 
+    });
+
+
     const onDateChange = (newDate) => {
       // update the displayed slots
       selectedDate.value = newDate;
@@ -82,21 +117,16 @@ export default {
     return {
       selectedDate,
       timeSlots,
+      slots,
+      bookedSlots,
       dates,
       onDateChange,
       highlightedCell,
+      selectedDentist,
+      dentists,
+      onDentistChange,
     
     };
-  },
-
-  computed: {
-    slots() {
-      return this.$store.getters.slots;
-    },
-
-    bookedSlots() {
-      return this.$store.getters.bookedSlots;
-    }
   },
 
   methods: {
@@ -106,13 +136,12 @@ export default {
     },
     showEvent(date, time) {
       const isSlotBooked = this.isSlotBooked(date, time);
-      const slot_id = this.getSlotID(date, time)
-      if (!isSlotBooked  && slot_id) {
+      if (!isSlotBooked ) {
         const user = this.$store.getters.user;
         if (user) {
             var userConfirmed = confirm('Do you want to book this slot?');
             if (userConfirmed) {
-                this.$store.dispatch('bookSlot', { date, time, userId: user._id, slot_id });
+                this.$store.dispatch('bookSlot', { date, time, userId: user._id, slotId: this.getSlotID(date, time)});
                 alert('Slot booked!');
             } else {
                 alert('Slot not booked.');
@@ -136,8 +165,18 @@ export default {
         }
       }
     },
+    unBookSlot(date, time) {
+        const user = this.$store.getters.user;
+      if (user) {
+        const slot_id = this.getSlotID(date, time)
+        if(slot_id) {
+          this.$store.dispatch('unBookSlot', {userId: user._id, slot_id});
+        }
+      }
+    },
     getSlotID(date, time) {
-      const slot = this.slots.find(s => s.date === date && s.time === time);
+      const combineDateTime = new Date(date + 'T' + time) ;
+      const slot = this.slots.find(s => s.date === combineDateTime);
       return slot ? slot._id : null;
     },
     highlightCell(date, time, isHovered) {

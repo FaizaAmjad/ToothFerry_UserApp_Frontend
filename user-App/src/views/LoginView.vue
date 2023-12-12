@@ -89,6 +89,7 @@ export default {
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token);
                 this.$store.dispatch('user', this.form.SSN);
+                this.$store.dispatch('fetchClinics')
                 this.$router.push('/home');
             }else if (response.status === 400 || response.status === 403) {
                 this.error = 'Invalid email/password.'

@@ -6,7 +6,7 @@
           <div>
             <Error v-if="error" :error="error"></Error>
             <h3>Sign Up</h3>
-            <p>Welcom to sign up page!</p>
+            <p>Welcome to sign up page!</p>
             <hr />
           </div>
 
@@ -38,8 +38,8 @@
               <label>SSN</label>
               <input
                 type="text"
-                minlength="10"
-                maxlength="11"
+                minlength="5"
+                maxlength="12"
                 class="form-control"
                 placeholder="987654-4321"
                 v-model.trim="form.socialNumber"
@@ -80,6 +80,12 @@
               />
             </div>
 
+             <!--  <b-form-group label="Clinic" label-for="clinicDropdown" label-cols-md="2">
+            <b-dropdown id="clinicDropdown" text="Select clinic" block variant="primary" lazy>
+              <b-dropdown-item-button v-for="clinic in clinics" :key="allClinics" @click="clinic = clinic">{{ clinic.name }}</b-dropdown-item-button>
+            </b-dropdown>
+          </b-form-group> -->
+          
             <div class="my-3">
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
@@ -91,7 +97,7 @@
 </template>
 
 <script>
-//import axios from 'axios'
+
 import Error from '../components/Error.vue'
 import { createUser } from '../apis/users'
 export default {
@@ -108,8 +114,9 @@ export default {
         email: '',
         password: '',
         confirmPassword: '',
-        error: ''
-      }
+        
+      },
+      error: ''
     }
   },
   methods: {

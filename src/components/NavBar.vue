@@ -52,13 +52,13 @@ export default {
       const store = useStore()
       const router = useRouter()
       const route = useRoute()
-      debugger
+      
       if (store.user && ['/', '/login', '/signup'].includes(route.path)) {
         router.push('/home')
       } else if (!store.user && !['/', '/login', '/signup'].includes(route.path)) {
         router.push('/login')
       }
-      debugger
+      
     })
     const store = useStore()
     const router = useRouter()

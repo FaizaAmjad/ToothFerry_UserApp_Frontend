@@ -43,6 +43,7 @@
 import { mapGetters, useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
+import { getUserInfo } from '../apis/users'
 
 export default {
   name: 'nav-bar',
@@ -52,13 +53,19 @@ export default {
       const store = useStore()
       const router = useRouter()
       const route = useRoute()
-      
-      if (store.user && ['/', '/login', '/signup'].includes(route.path)) {
-        router.push('/home')
-      } else if (!store.user && !['/', '/login', '/signup'].includes(route.path)) {
-        router.push('/login')
-      }
-      
+
+      defineUser()
+        .then(() => {
+          const token = localStorage.getItem('token')
+          if (token && ['/', '/login', '/signup'].includes(route.path)) {
+            router.push('/home')
+          } else if (!token && !['/', '/login', '/signup'].includes(route.path)) {
+            router.push('/login')
+          }
+        })
+        .catch(() => {
+          router.push('/login')
+        })
     })
     const store = useStore()
     const router = useRouter()
@@ -66,6 +73,11 @@ export default {
       localStorage.removeItem('token')
       store.dispatch('user', null)
       router.push('/login')
+    }
+
+    const defineUser = async () => {
+      const userDetails = await getUserInfo()
+      return store.dispatch('user', userDetails)
     }
 
     return { handleLogout }

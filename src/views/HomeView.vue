@@ -228,6 +228,7 @@ export default {
     },
     onMarkerClicked(marker) {
       console.log('Marker clicked ')
+      this.$store.dispatch('selectClinic', marker)
       this.$refs.map.panTo(marker.position)
 
       // Set the position and content for the InfoWindow
@@ -239,6 +240,7 @@ export default {
 
       // Open the InfoWindow
       this.isInfoWindowVisible = true
+      this.$router.push({ path: '/clinic' })
     },
     goToInbox() {
       console.log('Go to inbox')

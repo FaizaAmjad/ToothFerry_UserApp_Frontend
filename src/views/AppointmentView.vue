@@ -1,4 +1,5 @@
 <template>
+    <AppointmentSchedular/>
     <div class="auth-wrapper col-md-6 offset-md-3">
       <div class="auth-inner">
         <h3>Reservation</h3>
@@ -27,9 +28,13 @@
   </template>
   
 <script>
-
+import AppointmentSchedular from '../components/AppointmentSchedular.vue'
 
 export default {
+  name : 'appointment-view',
+  components: {
+    AppointmentSchedular
+  },
   data() {
     return {
       selectedDate: null,

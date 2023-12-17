@@ -12,9 +12,9 @@ import { API_KEY } from './api_key.js'
 
 const app = createApp(App)
 
-app.use(store)
 app.use(router)
 app.use(BootstrapVue)
+app.use(store)
 
 app.use(VueGoogleMaps, {
   load: {

@@ -21,7 +21,10 @@
     </footer>
   </div>
 </template>
-
+<script>
+export default {
+  name: 'web-footer',}
+</script>
 <style scoped>
 .footer-content {
   display: flex;

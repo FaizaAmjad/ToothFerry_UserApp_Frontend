@@ -129,7 +129,7 @@
 <script>
 import BookingListElement from '../components/BookingListElement.vue'
 import NotificationListElement from '../components/NotificationListElement.vue'
-import NotificationListElement from '../components/.vue'
+
 //import axios from 'axios'
 
 const CARDS_PER_PAGINATION = 1

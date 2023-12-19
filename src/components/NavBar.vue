@@ -63,9 +63,9 @@ export default {
             router.push('/login')
           }
         })
-        .catch(() => {
+       /*  .catch(() => {
           router.push('/login')
-        })
+        }) */
     })
     const store = useStore()
     const router = useRouter()

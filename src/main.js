@@ -1,28 +1,25 @@
-import { createApp } from 'vue';
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue-3'
-import VueGoogleMaps from '@fawmi/vue-google-maps';
+import VueGoogleMaps from '@fawmi/vue-google-maps'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 
 import store from './vuex'
-import './axios'
 
-
-import { API_KEY } from './api_key.js';
-
+import { API_KEY } from './api_key.js'
 
 const app = createApp(App)
 
 app.use(router)
-app.use(store)
 app.use(BootstrapVue)
+app.use(store)
 
 app.use(VueGoogleMaps, {
   load: {
-    key: API_KEY,
-  },
+    key: API_KEY
+  }
 })
 
 const selectedTheme = localStorage.getItem('selectedTheme')

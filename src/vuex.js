@@ -1,5 +1,30 @@
-import Vuex from 'vuex';
-import axios from 'axios';
+/* import Vuex from 'vuex'
+
+const state = {
+  user: null
+}
+
+const store = new Vuex.Store({
+  state,
+  getters: {
+    user: (state) => {
+      return state.user
+    }
+  },
+  actions: {
+    user(context, user) {
+      context.commit('user', user)
+    }
+  },
+  mutations: {
+    user(state, user) {
+      state.user = user
+    }
+  }
+}) */
+
+import Vuex from 'vuex'
+import axios from 'axios'
 
 const state = {
   user: null,
@@ -11,7 +36,7 @@ const state = {
   bookedSlots: [],
   clinicDentists: [],
   dentistSlots: []
-};
+}
 
 const store = new Vuex.Store({
   state,
@@ -24,147 +49,150 @@ const store = new Vuex.Store({
     getSelectedDentist: (state) => state.selectedDentist,
     bookedSlots: (state) => state.bookedSlots,
     clinicDentists: (state) => state.clinicDentists,
-    dentistSlots: (state) => state.dentistSlots,
+    dentistSlots: (state) => state.dentistSlots
   },
   actions: {
-    setUser(context, user) {
-      context.commit('SET_USER', user);
+    user(context, user) {
+      context.commit('user', user)
     },
 
     async fetchClinics({ commit }) {
-        try {
-          // Make an API request to fetch all clinics information
-          const response = await axios.get('clinics');
-          const clinics = response.data;
-  
-          // Update the clinic state
-          commit('SET_CLINICS', clinics);
-          this.dispatch('fetchDentists')
-        } catch (error) {
-          console.error('Error fetching clinic information:', error);
-        }
-      },
+      try {
+        // Make an API request to fetch all clinics information
+        const response = await axios.get('clinics')
+        const clinics = response.data
 
-      async fetchDentists({ commit }) {
-        try {
-          // Make an API request to fetch all clinics information
-          const response = await axios.get('dentists');
-          const dentists = response.data;
-  
-          // Update the dentist state
-          commit('SET_DENTISTS', dentists);
-        } catch (error) {
-          console.error('Error fetching dentists information:', error);
-        }
-      },
+        // Update the clinic state
+        commit('SET_CLINICS', clinics)
+        this.dispatch('fetchDentists')
+      } catch (error) {
+        console.error('Error fetching clinic information:', error)
+      }
+    },
+
+    async fetchDentists({ commit }) {
+      try {
+        // Make an API request to fetch all clinics information
+        const response = await axios.get('dentists')
+        const dentists = response.data
+
+        // Update the dentist state
+        commit('SET_DENTISTS', dentists)
+      } catch (error) {
+        console.error('Error fetching dentists information:', error)
+      }
+    },
 
     async fetchSlots({ commit }) {
-        try {
-          // Make an API request to fetch slots
-          const response = await axios.get('/slots');
-          const slots = response.data;
-  
-          // Update the slots state
-          commit('SET_SLOTS', slots);
-        } catch (error) {
-          console.error('Error fetching slots:', error);
+      try {
+        // Make an API request to fetch slots
+        const response = await axios.get('/slots')
+        const slots = response.data
+
+        // Update the slots state
+        commit('SET_SLOTS', slots)
+      } catch (error) {
+        console.error('Error fetching slots:', error)
+      }
+    },
+
+    clinicDentists({ commit }) {
+      const clinicDentists = []
+      state.dentists.forEach((dentist) => {
+        if (dentist.clinic_id === state.selectedClinic._id) {
+          clinicDentists.push(dentist)
         }
-      },
-    
-      clinicDentists ({ commit }) {
-        const clinicDentists = []
-        state.dentists.forEach(dentist => {
-          if (dentist.clinic_id === state.selectedClinic._id){
-            clinicDentists.push(dentist)
-          }
-        })
-        commit('SET_CLINIC_DENTISTS', clinicDentists)
+      })
+      commit('SET_CLINIC_DENTISTS', clinicDentists)
     },
 
     dentistSlots({ commit }) {
       const dentistSlots = []
-      state.slots.forEach(slot => {
-        if (slot.dentist_id === state.selectedDentist._id){
+      state.slots.forEach((slot) => {
+        if (slot.dentist_id === state.selectedDentist._id) {
           dentistSlots.push(slot)
         }
       })
       commit('SET_DENTIST_SLOTS', dentistSlots)
-  },
+    },
 
     selectClinic({ commit, dispatch }, clinic) {
-      commit('SET_SELECTED_CLINIC', clinic);
+      commit('SET_SELECTED_CLINIC', clinic)
       dispatch('clinicDentists')
     },
 
     selectDentist({ commit, dispatch }, dentist) {
-      commit('SET_SELECTED_DENTIST', dentist);
+      commit('SET_SELECTED_DENTIST', dentist)
       dispatch('dentistSlots')
     },
-    
+
     updateBookedSlots({ commit }) {
-        const booked = []
-        this.dispatch('fetchSlots')
-        this.dispatch('dentistSlots')
-        // Update the bookedSlots state
-        state.dentistSlots.forEach(slot => {
-            if (slot.booked){
-                booked.push(slot)
-            }
-        });
-        commit('SET_BOOKED_SLOTS', booked);
+      const booked = []
+      this.dispatch('fetchSlots')
+      this.dispatch('dentistSlots')
+      // Update the bookedSlots state
+      state.dentistSlots.forEach((slot) => {
+        if (slot.booked) {
+          booked.push(slot)
+        }
+      })
+      commit('SET_BOOKED_SLOTS', booked)
     },
 
-    async bookSlot({ dispatch }, {userId, slot_id}) {
+    async bookSlot({ dispatch }, { userId, slot_id }) {
       try {
         // Make an API request to book a slot
-        await axios.post('slots/' + slot_id + '/book', {userId });
-        console.log(`Slot booked: by User ID ${userId}`);
-        dispatch('updateBookedSlots');
+        await axios.post('slots/' + slot_id + '/book', { userId })
+        console.log(`Slot booked: by User ID ${userId}`)
+        dispatch('updateBookedSlots')
       } catch (error) {
-        console.error('Error booking slot:', error);
+        console.error('Error booking slot:', error)
       }
     },
 
-    async unBookSlot({ dispatch }, {userId, slot_id}) {
+    async unBookSlot({ dispatch }, { userId, slot_id }) {
       try {
         // Make an API request to book a slot
-        await axios.post('slots/' + slot_id + '/unbook', {userId });
-        console.log(`Slot unbooked: by User ID ${userId}`);
-        dispatch('updateBookedSlots');
+        await axios.post('slots/' + slot_id + '/unbook', { userId })
+        console.log(`Slot unbooked: by User ID ${userId}`)
+        dispatch('updateBookedSlots')
       } catch (error) {
-        console.error('Error booking slot:', error);
+        console.error('Error booking slot:', error)
       }
-    },
+    }
   },
   mutations: {
+    user(state, user) {
+      state.user = user
+    },
     SET_USER(state, user) {
-        state.user = user;
+      state.user = user
     },
     SET_CLINICS(state, clinics) {
-        state.clinics = clinics;
+      state.clinics = clinics
     },
     SET_DENTISTS(state, dentists) {
-      state.dentists = dentists;
+      state.dentists = dentists
     },
     SET_SLOTS(state, slots) {
-      state.slots = slots;
+      state.slots = slots
     },
     SET_SELECTED_CLINIC(state, clinic) {
-      state.selectedClinic = clinic;
+      state.selectedClinic = clinic
     },
     SET_SELECTED_DENTIST(state, dentist) {
-      state.selectedDentist = dentist;
+      state.selectedDentist = dentist
     },
     SET_CLINIC_DENTISTS(state, clinicDentists) {
       state.clinicDentists = clinicDentists
     },
     SET_DENTIST_SLOTS(state, dentistSlots) {
       state.dentistSlots = dentistSlots
-    },    
+    },
     SET_BOOKED_SLOTS(state, booked) {
-        state.bookedSlots = booked;
+      state.bookedSlots = booked
     }
-  },
-});
+  }
+})
 
-export default store;
+export default store

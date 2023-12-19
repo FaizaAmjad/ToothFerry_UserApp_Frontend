@@ -3,8 +3,9 @@
     meta
     name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQlD3-cmPiepBAeHB4NYXdN12HIyCjhl4&libraries=places&v=3.exp" async defer
-
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQlD3-cmPiepBAeHB4NYXdN12HIyCjhl4&libraries=places&v=3.exp"
+    async
+    defer
   ></head>
   <div class="container-fluid">
     <b-row class="row">
@@ -13,15 +14,21 @@
         <div class="col-md-4" id="search">
           <!-- TODO: doesn't look the greatest but actual functionalities are more important -->
           <button type="searchButton" class="btn btn-primary" @click="Search()">Search</button>
-          <input type="input" v-model="searchInput" class="form-input" id="SearchInput" placeholder="Clinic Name"/>
+          <input
+            type="input"
+            v-model="searchInput"
+            class="form-input"
+            id="SearchInput"
+            placeholder="Clinic Name"
+          />
         </div>
         <div id="gmap-container">
           <GMapMap
             ref="map"
             class="GMapMap"
             :center="{ lat: 51.5072, lng: 0.1276 }"
-            :zoom="10" 
-            map-type-id="terrain" 
+            :zoom="10"
+            map-type-id="terrain"
             :options="{
               zoomControl: true,
               mapTypeControl: true,
@@ -41,16 +48,18 @@
               :draggable="true"
               @click="onMarkerClicked(marker)"
             />
-            <GMapInfoWindow v-if="isInfoWindowVisible"
+            <GMapInfoWindow
+              v-if="isInfoWindowVisible"
               :position="infoWindowPosition"
               :options="infoWindowOptions"
               ref="infoWindow"
-              >
+            >
               <!-- Your InfoWindow content goes here -->
               <div>
                 <h3>{{ infoWindowTitle }}</h3>
                 <p>
-                  Click <router-link :to="infoWindowLink"> here</router-link> for the schedule. {{ infoWindowContent }}
+                  Click <router-link :to="infoWindowLink"> here</router-link> for the schedule.
+                  {{ infoWindowContent }}
                 </p>
               </div>
             </GMapInfoWindow>
@@ -64,31 +73,39 @@
         <div class="bg-light p-5">
           <div class="card">
             <h5 class="bookingsHeader">My Bookings</h5>
-            <br>
-            <BookingListElement v-for="booking in bookings" :booking="booking" :key="booking.id" @click="showPopup(booking)"/>
+            <br />
+            <BookingListElement
+              v-for="booking in bookings"
+              :booking="booking"
+              :key="booking.id"
+              @click="showPopup(booking)"
+            />
             <b-pagination
               class="pagination"
               v-model="currentPage"
               :link-gen="generatePaginationLink"
               :total-rows="numPages"
-              align="center"
+              :align="center"
             ></b-pagination>
           </div>
         </div>
-        
 
         <!-- Inbox -->
         <div class="bg-light p-5">
           <div class="card">
             <h5 class="card-header" @click="goToInbox">Inbox</h5>
-            <br>
-            <NotificationListElement v-for="notification in notifications" :notification="notification" :key="notification.id"/>
+            <br />
+            <NotificationListElement
+              v-for="notification in notifications"
+              :notification="notification"
+              :key="notification.id"
+            />
             <p :style="{ color: unreadMessages > 0 ? 'red' : 'black' }">
-            {{ unreadMessages }} unread messages
+              {{ unreadMessages }} unread messages
             </p>
           </div>
         </div>
-      </div>  
+      </div>
     </b-row>
   </div>
 
@@ -112,6 +129,7 @@
 <script>
 import BookingListElement from '../components/BookingListElement.vue'
 import NotificationListElement from '../components/NotificationListElement.vue'
+
 //import axios from 'axios'
 
 const CARDS_PER_PAGINATION = 1
@@ -126,14 +144,14 @@ export default {
     return {
       // mock data
       markers: [
-      {
-        id: 1,
-        position: { lat: 51.5072, lng: 0.1276 },
-        clinicName: 'City Hospital',
-        about: 'This is the about section for City Hospital',
-      },
-      
-      // Add more markers with clinic information
+        {
+          id: 1,
+          position: { lat: 51.5072, lng: 0.1276 },
+          clinicName: 'City Hospital',
+          about: 'This is the about section for City Hospital'
+        }
+
+        // Add more markers with clinic information
       ],
       numPages: 3,
       unreadMessages: 1,
@@ -166,7 +184,7 @@ export default {
           date: '2023-12-05',
           time: '2:00 PM'
           // Add more details based on your booking data structure
-        },
+        }
         // Add more mock bookings as needed
       ],
       notifications: [
@@ -185,7 +203,7 @@ export default {
           },
           date: '2023-12-05',
           content: 'Your appointment has been confirmed.'
-        },
+        }
         // Add more mock notifications as needed
       ]
     }
@@ -198,7 +216,7 @@ export default {
     Search() {
       try {
         console.log('Trying to search for ' + this.searchInput)
-        const foundMarker = this.markers.find(marker => marker.clinicName === this.searchInput)
+        const foundMarker = this.markers.find((marker) => marker.clinicName === this.searchInput)
 
         if (foundMarker) {
           this.onMarkerClicked(foundMarker)
@@ -211,20 +229,19 @@ export default {
     },
     onMarkerClicked(marker) {
       console.log('Marker clicked ')
-      this.$store.dispatch('selectClinic', marker);
-      this.$refs.map.panTo(marker.position);
-      
-      
+      this.$store.dispatch('selectClinic', marker)
+      this.$refs.map.panTo(marker.position)
+
       // Set the position and content for the InfoWindow
       //TODO: Change the content to the clinic information
-      this.infoWindowPosition = marker.position;
-      this.infoWindowTitle = `${marker.clinicName}`;
-      this.infoWindowContent = `${marker.about}`;
-      this.infoWindowLink = `/schedule/${marker.id}`;
+      this.infoWindowPosition = marker.position
+      this.infoWindowTitle = `${marker.clinicName}`
+      this.infoWindowContent = `${marker.about}`
+      this.infoWindowLink = `/schedule/${marker.id}`
 
       // Open the InfoWindow
-      this.isInfoWindowVisible = true;
-      this.$router.push({ path: '/clinic' });
+      this.isInfoWindowVisible = true
+      this.$router.push({ path: '/clinic' })
     },
     goToInbox() {
       console.log('Go to inbox')
@@ -241,9 +258,9 @@ export default {
     },
     cancelBooking() {
       console.log('TODO: Cancel booking using api call')
-      //we have the _id of the selected booking in this.popupInfo._id  
+      //we have the _id of the selected booking in this.popupInfo._id
     }
-  },
+  }
   /*
   ,
   async created() {
@@ -259,8 +276,8 @@ export default {
 </script>
 
 <style scoped>
-
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -326,5 +343,8 @@ body, html {
 .card-header:hover {
   background-color: rgba(0, 0, 0, 0.1); /* Darken the background color on hover */
   cursor: pointer; /* Change cursor to indicate interactivity */
+}
+button.page-link {
+  z-index: 0 !important;
 }
 </style>

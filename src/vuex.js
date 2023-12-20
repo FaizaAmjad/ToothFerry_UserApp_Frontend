@@ -24,7 +24,8 @@ const store = new Vuex.Store({
 }) */
 
 import Vuex from 'vuex'
-import axios from 'axios'
+import { getClinics, getDentists } from './apis/clinic'
+import { getSlots, book, unBook } from './apis/booking'
 
 const state = {
   user: null,
@@ -59,8 +60,7 @@ const store = new Vuex.Store({
     async fetchClinics({ commit }) {
       try {
         // Make an API request to fetch all clinics information
-        const response = await axios.get('clinics')
-        const clinics = response.data
+        const clinics = await getClinics()
 
         // Update the clinic state
         commit('SET_CLINICS', clinics)
@@ -73,8 +73,7 @@ const store = new Vuex.Store({
     async fetchDentists({ commit }) {
       try {
         // Make an API request to fetch all clinics information
-        const response = await axios.get('dentists')
-        const dentists = response.data
+        const dentists = await getDentists()
 
         // Update the dentist state
         commit('SET_DENTISTS', dentists)
@@ -86,8 +85,7 @@ const store = new Vuex.Store({
     async fetchSlots({ commit }) {
       try {
         // Make an API request to fetch slots
-        const response = await axios.get('/slots')
-        const slots = response.data
+        const slots = await getSlots()
 
         // Update the slots state
         commit('SET_SLOTS', slots)
@@ -126,6 +124,17 @@ const store = new Vuex.Store({
       dispatch('dentistSlots')
     },
 
+    bookedSlots({ commit }) {
+      const booked = []
+      // get bookedSlots
+      state.dentistSlots.forEach((slot) => {
+        if (slot.booked) {
+          booked.push(slot)
+        }
+      })
+      commit('SET_BOOKED_SLOTS', booked)
+    },
+
     updateBookedSlots({ commit }) {
       const booked = []
       this.dispatch('fetchSlots')
@@ -142,7 +151,7 @@ const store = new Vuex.Store({
     async bookSlot({ dispatch }, { userId, slot_id }) {
       try {
         // Make an API request to book a slot
-        await axios.post('slots/' + slot_id + '/book', { userId })
+        await book(slot_id, userId)
         console.log(`Slot booked: by User ID ${userId}`)
         dispatch('updateBookedSlots')
       } catch (error) {
@@ -153,7 +162,7 @@ const store = new Vuex.Store({
     async unBookSlot({ dispatch }, { userId, slot_id }) {
       try {
         // Make an API request to book a slot
-        await axios.post('slots/' + slot_id + '/unbook', { userId })
+        await unBook(slot_id)
         console.log(`Slot unbooked: by User ID ${userId}`)
         dispatch('updateBookedSlots')
       } catch (error) {

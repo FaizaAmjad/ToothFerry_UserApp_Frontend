@@ -145,14 +145,7 @@ export default {
   data() {
     return {
       userPosition: { lat: 51.5072, lng: 0.1276 },
-      markers: [
-        {
-          id: 1,
-          position: { lat: 51.5072, lng: 0.1276 },
-          clinicName: 'City Hospital',
-          about: 'This is the about section for City Hospital'
-        }
-      ],
+      markers: [],
       numPages: 3,
       unreadMessages: 1,
       isPopupVisible: false,

@@ -19,8 +19,8 @@
         <!-- Map component -->
         <MapComponent
           :markers="markers"
-          :center="{ lat: 51.5072, lng: 0.1276 }"
-          :zoom="10"
+          :center="userPosition"
+          :zoom="12"
           :mapOptions="{
             zoomControl: true,
             mapTypeControl: true,
@@ -111,11 +111,48 @@ export default {
     NotificationListElement
   },
   mounted() {
-    this.markers = this.computeMarkers()
+    // Try to get the user's current location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Successfully obtained the user's current position
+          const latitude = position.coords.latitude
+          const longitude = position.coords.longitude
+
+          console.log('Latitude:', latitude)
+          console.log('Longitude:', longitude)
+
+          if (!isNaN(latitude) && !isNaN(longitude)) {
+            this.userPosition = { lat: latitude, lng: longitude }
+            this.setMapCenter(this.userPosition)
+            this.markers = this.computeMarkers()
+          } else {
+            console.error('Invalid geolocation data:', position)
+            this.useDefaultPosition()
+          }
+        },
+        (error) => {
+          console.error('Error getting user location:', error)
+          this.useDefaultPosition()
+        }
+      )
+    } else {
+      // Geolocation is not supported by the browser
+      console.error('Geolocation is not supported by your browser.')
+      this.useDefaultPosition()
+    }
   },
   data() {
     return {
-      markers: [],
+      userPosition: { lat: 51.5072, lng: 0.1276 },
+      markers: [
+        {
+          id: 1,
+          position: { lat: 51.5072, lng: 0.1276 },
+          clinicName: 'City Hospital',
+          about: 'This is the about section for City Hospital'
+        }
+      ],
       numPages: 3,
       unreadMessages: 1,
       isPopupVisible: false,
@@ -172,15 +209,50 @@ export default {
     }
   },
   methods: {
-    computeMarkers() {
+    useDefaultPosition() {
+      const defaultPosition = { lat: 51.5072, lng: 0.1276 }
+      this.userPosition = defaultPosition
+      this.setMapCenter(defaultPosition)
+      this.markers = this.computeMarkers()
+    },
+    setMapCenter(position) {
+      this.infoWindowPosition = position
+      if (this.$refs.map) {
+        this.$refs.map.panTo(position)
+      }
+    },
+    computeMarkers(userPosition) {
       const clinics = this.$store.getters.clinics || []
-      return clinics.map((clinic) => {
+      const markers = clinics.map((clinic) => {
         return {
-          id: clinic.id,
+          id: clinic._id,
           position: { lat: clinic.lat, lng: clinic.lng },
-          clinicName: clinic.clinicName
+          clinicName: clinic.clinicName,
+          distance: this.calculateDistance(userPosition, { lat: clinic.lat, lng: clinic.lng })
         }
       })
+
+      // Sort the markers by distance (nearest first)
+      markers.sort((a, b) => a.distance - b.distance)
+
+      return markers
+    },
+    calculateDistance(pos1, pos2) {
+      // Implement a function to calculate the distance between two positions
+      // You can use the Haversine formula or any other suitable method
+      // Here's a simple example using Haversine formula:
+      const R = 6371 // Radius of the Earth in kilometers
+      const dLat = (pos2.lat - pos1.lat) * (Math.PI / 180)
+      const dLon = (pos2.lng - pos1.lng) * (Math.PI / 180)
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(pos1.lat * (Math.PI / 180)) *
+          Math.cos(pos2.lat * (Math.PI / 180)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2)
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+      const distance = R * c
+      return distance
     },
     generatePaginationLink(pageNum) {
       const offset = (pageNum - 1) * CARDS_PER_PAGINATION

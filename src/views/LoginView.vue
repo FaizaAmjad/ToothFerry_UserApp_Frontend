@@ -66,7 +66,7 @@ export default {
 
         const userDetails = await getUserInfo()
         this.$store.dispatch('user', userDetails)
-
+        this.$store.dispatch('fetchClinics')
         this.$router.push('/home')
       } catch (error) {
         this.error = 'Invalid email/password.'

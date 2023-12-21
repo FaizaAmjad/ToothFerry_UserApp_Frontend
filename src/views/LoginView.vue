@@ -4,7 +4,6 @@
       <div class="auth-wrapper">
         <div class="auth-inner">
           <div>
-            <Error v-if="error" :error="error"></Error>
             <h3>Login</h3>
             <p>Welcome to login page!</p>
             <hr />
@@ -44,13 +43,9 @@
 </template>
 
 <script>
-import Error from '../components/Error.vue'
 import { login, getUserInfo } from '../apis/users'
 export default {
   name: 'login-view',
-  components: {
-    Error
-  },
   data() {
     return {
       form: {

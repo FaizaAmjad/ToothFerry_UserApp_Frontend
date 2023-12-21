@@ -6,6 +6,12 @@ export const getSlots = async () => {
   return response.data
 }
 
+export const getSlot = async (slot_id) => {
+  const response = await Api().get(`slots/${slot_id}`)
+
+  return response.data
+}
+
 export const book = async (slot_id, userId) => {
   const response = await Api().post(`slots/${slot_id}/book`, { userId, booked: true })
 

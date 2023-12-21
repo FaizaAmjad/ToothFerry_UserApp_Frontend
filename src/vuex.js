@@ -1,28 +1,3 @@
-/* import Vuex from 'vuex'
-
-const state = {
-  user: null
-}
-
-const store = new Vuex.Store({
-  state,
-  getters: {
-    user: (state) => {
-      return state.user
-    }
-  },
-  actions: {
-    user(context, user) {
-      context.commit('user', user)
-    }
-  },
-  mutations: {
-    user(state, user) {
-      state.user = user
-    }
-  }
-}) */
-
 import Vuex from 'vuex'
 import { getClinics, getDentists } from './apis/clinic'
 import { getSlots, book, unBook } from './apis/booking'
@@ -53,30 +28,31 @@ const store = new Vuex.Store({
     dentistSlots: (state) => state.dentistSlots
   },
   actions: {
-    user(context, user) {
-      context.commit('user', user)
+    user({ commit }, user) {
+      commit('SET_USER', user)
     },
 
-    async fetchClinics({ commit }) {
+    async fetchClinics({ commit, dispatch }) {
       try {
         // Make an API request to fetch all clinics information
         const clinics = await getClinics()
 
         // Update the clinic state
         commit('SET_CLINICS', clinics)
-        this.dispatch('fetchDentists')
+        dispatch('fetchDentists')
       } catch (error) {
         console.error('Error fetching clinic information:', error)
       }
     },
 
-    async fetchDentists({ commit }) {
+    async fetchDentists({ commit, dispatch }) {
       try {
         // Make an API request to fetch all clinics information
         const dentists = await getDentists()
 
         // Update the dentist state
         commit('SET_DENTISTS', dentists)
+        dispatch('fetchSlots')
       } catch (error) {
         console.error('Error fetching dentists information:', error)
       }
@@ -94,6 +70,11 @@ const store = new Vuex.Store({
       }
     },
 
+    selectClinic({ commit, dispatch }, clinic) {
+      commit('SET_SELECTED_CLINIC', clinic)
+      dispatch('clinicDentists')
+    },
+
     clinicDentists({ commit }) {
       const clinicDentists = []
       state.dentists.forEach((dentist) => {
@@ -104,7 +85,12 @@ const store = new Vuex.Store({
       commit('SET_CLINIC_DENTISTS', clinicDentists)
     },
 
-    dentistSlots({ commit }) {
+    selectDentist({ commit, dispatch }, dentist) {
+      commit('SET_SELECTED_DENTIST', dentist)
+      dispatch('dentistSlots')
+    },
+
+    dentistSlots({ commit, dispatch }) {
       const dentistSlots = []
       state.slots.forEach((slot) => {
         if (slot.dentist_id === state.selectedDentist._id) {
@@ -112,16 +98,7 @@ const store = new Vuex.Store({
         }
       })
       commit('SET_DENTIST_SLOTS', dentistSlots)
-    },
-
-    selectClinic({ commit, dispatch }, clinic) {
-      commit('SET_SELECTED_CLINIC', clinic)
-      dispatch('clinicDentists')
-    },
-
-    selectDentist({ commit, dispatch }, dentist) {
-      commit('SET_SELECTED_DENTIST', dentist)
-      dispatch('dentistSlots')
+      dispatch('bookedSlots')
     },
 
     bookedSlots({ commit }) {
@@ -135,17 +112,9 @@ const store = new Vuex.Store({
       commit('SET_BOOKED_SLOTS', booked)
     },
 
-    updateBookedSlots({ commit }) {
-      const booked = []
-      this.dispatch('fetchSlots')
-      this.dispatch('dentistSlots')
-      // Update the bookedSlots state
-      state.dentistSlots.forEach((slot) => {
-        if (slot.booked) {
-          booked.push(slot)
-        }
-      })
-      commit('SET_BOOKED_SLOTS', booked)
+    updateBookedSlots({ dispatch }) {
+      dispatch('fetchSlots')
+      dispatch('dentistSlots')
     },
 
     async bookSlot({ dispatch }, { userId, slot_id }) {
@@ -161,7 +130,7 @@ const store = new Vuex.Store({
 
     async unBookSlot({ dispatch }, { userId, slot_id }) {
       try {
-        // Make an API request to book a slot
+        // Make an API request to unbook a slot
         await unBook(slot_id)
         console.log(`Slot unbooked: by User ID ${userId}`)
         dispatch('updateBookedSlots')

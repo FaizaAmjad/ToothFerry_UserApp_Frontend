@@ -40,6 +40,7 @@
 import { ref, computed } from 'vue'
 import Datepicker from 'vue3-datepicker'
 import moment from 'moment'
+import { getSlot } from '../apis/booking'
 
 export default {
   components: {
@@ -59,8 +60,16 @@ export default {
       { time: '16:00' },
       { time: '17:00' }
     ])
-    const slots = ref([])
+    /*const slots = computed(() => {
+      return this.$store.getters.dentistSlots || []
+    })
+
+    const bookedSlots = computed(() => {
+      return this.$store.getters.bookedSlots || []
+    })*/
+
     const bookedSlots = ref([])
+    const slots = ref([])
 
     const generateDateRange = () => {
       const startDate = moment(selectedDate.value).startOf('week')
@@ -94,9 +103,7 @@ export default {
     const onDentistChange = async () => {
       if (selectedDentist.value) {
         await this.$store.dispatch('selectDentist', selectedDentist.value)
-        await this.$store.dispatch('dentistSlots')
-        this.slots = this.$store.getters.dentistSlots || []
-        this.bookedSlots = this.$store.getters.bookedSlots || []
+        generateDateRange(selectedDate.value)
       }
     }
 
@@ -130,43 +137,55 @@ export default {
       // eslint-disable-next-line no-undef
       return moment(date).format('MMM D, YYYY')
     },
-    showEvent(date, time) {
-      const isSlotBooked = this.isSlotBooked(date, time)
-      if (this.selectedDentist) {
-        if (!isSlotBooked) {
+    async showEvent(date, time) {
+      try {
+        const isSlotBooked = this.isSlotBooked(date, time)
+
+        if (this.selectedDentist) {
           const user = this.$store.getters.user
+
           if (user) {
-            var userConfirmed = confirm('Do you want to book this slot?')
-            if (userConfirmed) {
-              this.$store.dispatch('bookSlot', {
-                date,
-                time,
-                userId: user._id,
-                slotId: this.getSlotID(date, time)
-              })
-              alert('Slot booked!')
+            const userId = user._id
+            const slotId = this.getSlotID(date, time)
+
+            const checkSlotAvailable = await getSlot(slotId)
+
+            if (!isSlotBooked && checkSlotAvailable.booked) {
+              var userConfirmed = confirm('Do you want to book this slot?')
+
+              if (userConfirmed) {
+                await this.$store.dispatch('bookSlot', { userId, slotId })
+                alert('Slot booked!')
+              } else {
+                alert('Slot not booked.')
+              }
             } else {
-              alert('Slot not booked.')
+              alert(`Slot at ${date}, ${time} is currently unavailable.`)
             }
           } else {
             alert('User data not available. Please log in.')
           }
         } else {
-          alert(`Slot at ${date}, ${time} is currently unavailable.`)
+          alert('Please select a dentist.')
         }
-      } else {
-        alert(`Please select a dentist.`)
+      } catch (error) {
+        // Handle the error here and inform the user
+        console.error('Error in showEvent:', error)
+        alert('An error occurred while processing your request. Please try again.')
       }
     },
+
     isSlotBooked(date, time) {
-      return this.bookedSlots.some((slot) => slot.date === date && slot.time === time)
+      const combineDateTime = new Date(date + 'T' + time)
+      return this.bookedSlots.some((slot) => slot.date === combineDateTime)
+      //return this.bookedSlots.some((slot) => slot.date === date && slot.time === time)
     },
     bookSlot(date, time) {
       const user = this.$store.getters.user
       if (user) {
         const slot_id = this.getSlotID(date, time)
         if (slot_id) {
-          this.$store.dispatch('bookSlot', { userId: user._id, slot_id })
+          this.$store.dispatch('bookSlot', { slot_id, userId: user._id })
         }
       }
     },
@@ -175,7 +194,7 @@ export default {
       if (user) {
         const slot_id = this.getSlotID(date, time)
         if (slot_id) {
-          this.$store.dispatch('unBookSlot', { userId: user._id, slot_id })
+          this.$store.dispatch('unBookSlot', { slot_id })
         }
       }
     },

@@ -26,7 +26,7 @@
           <GMapMap
             ref="map"
             class="GMapMap"
-            :center="{ lat: 51.5072, lng: 0.1276 }"
+            :center="{ lat: 57.7089, lng: 11.9746 }"
             :zoom="10"
             map-type-id="terrain"
             :options="{

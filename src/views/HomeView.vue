@@ -29,7 +29,7 @@
             mapTypeControl: true,
             scaleControl: true,
             streetViewControl: true,
-            rotateControl: true,
+            rotateControl: false,
             fullscreenControl: true
           }"
           :isInfoWindowVisible="isInfoWindowVisible"

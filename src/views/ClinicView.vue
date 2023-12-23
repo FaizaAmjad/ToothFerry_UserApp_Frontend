@@ -1,33 +1,33 @@
 <template>
-    <h1>Welcome to Clinic  </h1>
+  <div>
+    <h1 v-if="clinic">Welcome to {{ clinic.clinicName }}</h1>
     <p></p>
-    <AppointmentSchedular/>
+    <AppointmentSchedular />
+  </div>
 </template>
 
 <script>
-//import { ref, computed } from 'vue';
-import AppointmentSchedular from '../components/AppointmentSchedular.vue';
+import { ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import AppointmentSchedular from '../components/AppointmentSchedular.vue'
 
 export default {
   name: 'clinic-view',
   components: {
-    AppointmentSchedular,
+    AppointmentSchedular
   },
-  /*setup() {
-    const clinic = ref(null);
+  setup() {
+    const store = useStore()
+    const clinic = ref(null)
 
-    const formattedClinic = computed(() => {
-      return clinic.value ? {
-        name: clinic.value.name,
-        address: clinic.value.address,
-      } : null;
-    });
-
-    clinic.value = this.$store.getters.getSelectedClinic;
+    onMounted(() => {
+      console.log('onMounted in clinic view ')
+      clinic.value = store.getters.getSelectedClinic
+    })
 
     return {
-      clinic: formattedClinic,
-    };
-  },*/
-};
+      clinic
+    }
+  }
+}
 </script>

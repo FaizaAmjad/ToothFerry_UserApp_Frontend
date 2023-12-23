@@ -108,38 +108,55 @@ const store = new Vuex.Store({
       }
     },
 
-    selectClinic({ commit, dispatch }, clinic) {
+    selectClinic({ commit, dispatch, state }, clinic) {
+      console.log('selected clinic ' + clinic.clinicName)
       commit('SET_SELECTED_CLINIC', clinic)
       dispatch('clinicDentists')
+      console.log('Updated state:', state.selectedClinic)
     },
 
-    clinicDentists({ commit }) {
-      const clinicDentists = []
-      state.dentists.forEach((dentist) => {
-        if (dentist.clinic_id === state.selectedClinic._id) {
-          clinicDentists.push(dentist)
-        }
-      })
+    clinicDentists({ commit, state }) {
+      if (!state.selectedClinic) {
+        // Handle the error, maybe by returning early or setting a default value
+        console.log('selected clinic not set yet. ')
+        return
+      }
+
+      const clinicDentists = state.dentists.filter(
+        (dentist) => dentist.clinic_id === state.selectedClinic.id
+      )
+      console.log('selectedClinic: ' + state.selectedClinic._id)
+      console.log('All clinic dentists: ' + clinicDentists)
       commit('SET_CLINIC_DENTISTS', clinicDentists)
+      console.log('Updated clinic dentists list:', state.clinicDentists)
     },
 
-    selectDentist({ commit, dispatch }, dentist) {
-      commit('SET_SELECTED_DENTIST', dentist)
-      dispatch('dentistSlots')
+    selectDentist({ commit, dispatch, state }, dentistId) {
+      const selectedDentist = state.clinicDentists.find((d) => d._id === dentistId)
+      if (selectedDentist) {
+        console.log('selected dentist name: ' + selectedDentist.firstName)
+        console.log('selected dentist id: ' + selectedDentist._id)
+        commit('SET_SELECTED_DENTIST', selectedDentist)
+        dispatch('dentistSlots')
+      } else {
+        console.error('Dentist not found with id:', dentistId)
+      }
     },
 
-    dentistSlots({ commit, dispatch }) {
-      const dentistSlots = []
-      state.slots.forEach((slot) => {
-        if (slot.dentist_id === state.selectedDentist._id) {
-          dentistSlots.push(slot)
-        }
-      })
+    dentistSlots({ commit, dispatch, state }) {
+      if (!state.selectedDentist) {
+        // Handle the error, maybe by returning early or setting a default value
+        return
+      }
+
+      const dentistSlots = state.slots.filter(
+        (slot) => slot.dentist_id === state.selectedDentist._id
+      )
       commit('SET_DENTIST_SLOTS', dentistSlots)
       dispatch('bookedSlots')
     },
 
-    bookedSlots({ commit }) {
+    bookedSlots({ commit, state }) {
       const booked = []
       // get bookedSlots
       state.dentistSlots.forEach((slot) => {
@@ -235,7 +252,7 @@ const store = new Vuex.Store({
       state.bookedSlots = booked
     },
     SET_ERROR(state, errorMessage) {
-      state.error = errorMessage
+      state.errorMessage = errorMessage
     }
   }
 })

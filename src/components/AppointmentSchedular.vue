@@ -3,8 +3,8 @@
   <div>
     <h6>Choose a dentist to see schedule.</h6>
     <select v-model="selectedDentist" @change="onDentistChange">
-      <option v-for="dentist in dentists" :key="dentist.id" :value="dentist.id">
-        {{ dentist.name }}
+      <option v-for="dentist in dentists" :key="dentist._id" :value="dentist._id">
+        {{ dentist.firstName + ' ' + dentist.lastName }}
       </option>
     </select>
     <br />
@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import Datepicker from 'vue3-datepicker'
 import moment from 'moment'
 import { getSlot } from '../apis/booking'
@@ -47,6 +48,13 @@ export default {
     Datepicker
   },
   setup() {
+    const store = useStore()
+    const dentists = ref([])
+
+    onMounted(() => {
+      dentists.value = store.getters.clinicDentists
+    })
+
     const selectedDate = ref(new Date())
     const timeSlots = ref([
       { time: '08:00' },
@@ -60,13 +68,6 @@ export default {
       { time: '16:00' },
       { time: '17:00' }
     ])
-    /*const slots = computed(() => {
-      return this.$store.getters.dentistSlots || []
-    })
-
-    const bookedSlots = computed(() => {
-      return this.$store.getters.bookedSlots || []
-    })*/
 
     const bookedSlots = ref([])
     const slots = ref([])
@@ -87,22 +88,24 @@ export default {
     }
 
     const dates = computed(() => generateDateRange(selectedDate.value))
-
     const selectedDentist = ref(null)
 
-    /*const dentists = computed(() => {
-      return this.$store.getters.clinicDentists || [];
-    });*/
-
-    const dentists = ref([
+    /*const dentists = ref([
       { id: 1, name: 'Dentist 1' },
       { id: 2, name: 'Dentist 2' }
       // ... add more dentists as needed ...
-    ])
+    ])*/
 
     const onDentistChange = async () => {
+      console.log('Dentist change triggered')
+      console.log(selectedDentist.value)
       if (selectedDentist.value) {
-        await this.$store.dispatch('selectDentist', selectedDentist.value)
+        console.log('user selected a new dentist: ' + selectedDentist.value)
+        await store.dispatch('selectDentist', selectedDentist.value)
+
+        slots.value = store.getters.dentistSlots || []
+        console.log('dentists all slots: ' + slots.value)
+        bookedSlots.value = store.getters.bookedSlots || []
         generateDateRange(selectedDate.value)
       }
     }
@@ -139,34 +142,34 @@ export default {
     },
     async showEvent(date, time) {
       try {
-        const isSlotBooked = this.isSlotBooked(date, time)
-
-        if (this.selectedDentist) {
-          const user = this.$store.getters.user
-
-          if (user) {
-            const userId = user._id
+        const user = this.$store.getters.user
+        if (user) {
+          const userId = user._id
+          if (this.selectedDentist) {
             const slotId = this.getSlotID(date, time)
-
-            const checkSlotAvailable = await getSlot(slotId)
-
-            if (!isSlotBooked && checkSlotAvailable.booked) {
-              var userConfirmed = confirm('Do you want to book this slot?')
-
-              if (userConfirmed) {
-                await this.$store.dispatch('bookSlot', { userId, slotId })
-                alert('Slot booked!')
+            if (slotId) {
+              console.log('slot id: ' + slotId)
+              const checkSlotAvailable = await getSlot(slotId)
+              const isSlotBooked = this.isSlotBooked(date, time)
+              if (!isSlotBooked && !checkSlotAvailable.booked) {
+                var userConfirmed = confirm('Do you want to book this slot?')
+                if (userConfirmed) {
+                  await this.$store.dispatch('bookSlot', { userId, slotId })
+                  alert('Slot booked!')
+                } else {
+                  alert('Slot not booked.')
+                }
               } else {
-                alert('Slot not booked.')
+                alert(`Slot at ${date}, ${time} is already booked.`)
               }
             } else {
               alert(`Slot at ${date}, ${time} is currently unavailable.`)
             }
           } else {
-            alert('User data not available. Please log in.')
+            alert('Please select a dentist.')
           }
         } else {
-          alert('Please select a dentist.')
+          alert('User data not available. Please log in.')
         }
       } catch (error) {
         console.error('Error fetching solt information', error)
@@ -208,8 +211,27 @@ export default {
       }
     },
     getSlotID(date, time) {
-      const combineDateTime = new Date(date + 'T' + time)
-      const slot = this.slots.find((s) => s.start === combineDateTime)
+      const combineDateTimeString = `${date}T${time}`
+      console.log('combineDateTimeString: ' + combineDateTimeString)
+      // Create a Date object from the combined date and time string
+      const combineDateTime = new Date(combineDateTimeString)
+      console.log('combineDateTime in date type: ' + combineDateTime)
+      console.log('Number of slots:', this.slots.length)
+      // Iterate through slots and find the one with the same date and time
+      const slot = this.slots.find((s) => {
+        // Create a Date object from the start attribute of each slot
+        const slotDateTime = new Date(s.start)
+        console.log('slotDateTime: ' + slotDateTime)
+        // Compare the time portion (hours and minutes)
+        return (
+          slotDateTime.getFullYear() === combineDateTime.getFullYear() &&
+          slotDateTime.getMonth() === combineDateTime.getMonth() &&
+          slotDateTime.getDate() === combineDateTime.getDate() &&
+          slotDateTime.getHours() === combineDateTime.getHours() &&
+          slotDateTime.getMinutes() === combineDateTime.getMinutes()
+        )
+      })
+      console.log('found a slot:')
       return slot ? slot._id : null
     },
     highlightCell(date, time, isHovered) {

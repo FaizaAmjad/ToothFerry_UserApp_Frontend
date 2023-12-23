@@ -239,10 +239,19 @@ export default {
     },
     computeMarkers(userPosition) {
       const clinics = this.$store.getters.clinics || []
+      console.log('Got clinics from vuex in computMarkers')
+      clinics.forEach((clinic) => {
+        console.log('clinics for markers' + clinic.clinicName)
+        console.log('clinics for markers' + clinic.position.lat + clinic.position.lng)
+      })
+
       const markers = clinics.map((clinic) => {
         return {
           id: clinic._id,
-          position: { lat: clinic.position.lat, lng: clinic.position.lng },
+          position: {
+            lat: clinic.position.lat,
+            lng: clinic.position.lng
+          },
           clinicName: clinic.clinicName,
           distance: this.calculateDistance(userPosition, {
             lat: clinic.position.lat,

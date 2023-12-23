@@ -77,7 +77,6 @@ export default {
       // Set the position and content for the InfoWindow based on the hovered marker
       this.infoWindowPosition = marker.position
       this.infoWindowTitle = `${marker.clinicName}`
-      this.infoWindowLink = `/schedule/${marker.id}`
 
       // Open the InfoWindow
       this.isInfoWindowVisible = true

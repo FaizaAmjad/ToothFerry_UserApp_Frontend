@@ -1,6 +1,9 @@
 <template>
   <div class="container-fluid">
     <b-row class="row">
+      <div v-if="error" class="alert alert-danger">
+        {{ error }}
+      </div>
       <!-- Left Section -->
       <b-col md="8">
         <div id="search">
@@ -110,41 +113,61 @@ export default {
     BookingListElement,
     NotificationListElement
   },
+  computed: {
+    error() {
+      return this.$store.state.error
+    }
+  },
+  created() {
+    this.$store.commit('SET_ERROR', null)
+  },
+  unmounted() {
+    this.$store.commit('SET_ERROR', null)
+  },
   mounted() {
-    // Try to get the user's current location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // Successfully obtained the user's current position
-          const latitude = position.coords.latitude
-          const longitude = position.coords.longitude
+    try {
+      this.$store.dispatch('fetchClinics').then(() => {
+        // Try to get the user's current location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              // Successfully obtained the user's current position
+              const latitude = position.coords.latitude
+              const longitude = position.coords.longitude
 
-          console.log('Latitude:', latitude)
-          console.log('Longitude:', longitude)
+              console.log('user position: Latitude:', latitude)
+              console.log('user position: Longitude:', longitude)
 
-          if (!isNaN(latitude) && !isNaN(longitude)) {
-            this.userPosition = { lat: latitude, lng: longitude }
-            this.setMapCenter(this.userPosition)
-            this.markers = this.computeMarkers()
-          } else {
-            console.error('Invalid geolocation data:', position)
-            this.useDefaultPosition()
-          }
-        },
-        (error) => {
-          console.error('Error getting user location:', error)
+              if (!isNaN(latitude) && !isNaN(longitude)) {
+                this.userPosition = { lat: latitude, lng: longitude }
+                this.setMapCenter(this.userPosition)
+                this.markers = this.computeMarkers(this.userPosition)
+                this.markers.forEach((marker) => {
+                  console.log('List of markers: ' + marker.position)
+                })
+              } else {
+                console.error('Invalid geolocation data:', position)
+                this.useDefaultPosition()
+              }
+            },
+            (error) => {
+              console.error('Error getting user location:', error)
+              this.useDefaultPosition()
+            }
+          )
+        } else {
+          // Geolocation is not supported by the browser
+          console.error('Geolocation is not supported by your browser.')
           this.useDefaultPosition()
         }
-      )
-    } else {
-      // Geolocation is not supported by the browser
-      console.error('Geolocation is not supported by your browser.')
-      this.useDefaultPosition()
+      })
+    } catch (error) {
+      console.error('Error in mounted hook:', error)
     }
   },
   data() {
     return {
-      userPosition: { lat: 51.5072, lng: 0.1276 },
+      userPosition: {},
       markers: [],
       numPages: 3,
       unreadMessages: 1,
@@ -219,9 +242,12 @@ export default {
       const markers = clinics.map((clinic) => {
         return {
           id: clinic._id,
-          position: { lat: clinic.lat, lng: clinic.lng },
+          position: { lat: clinic.position.lat, lng: clinic.position.lng },
           clinicName: clinic.clinicName,
-          distance: this.calculateDistance(userPosition, { lat: clinic.lat, lng: clinic.lng })
+          distance: this.calculateDistance(userPosition, {
+            lat: clinic.position.lat,
+            lng: clinic.position.lng
+          })
         }
       })
 
@@ -286,12 +312,12 @@ export default {
   /*
   ,
   async created() {
-    
+
     const response = await axios.get('bookings');
     this.bookings = response.data;
     const response2 = await axios.get('messages');
     this.messages = response2.data;
-    
+
   }
   */
 }

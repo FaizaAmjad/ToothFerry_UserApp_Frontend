@@ -59,17 +59,26 @@ export default {
   methods: {
     async onLogin() {
       try {
-        console.log('Logged in' + this.form.email)
-
         const token = await login(undefined, this.form.email, this.form.password)
         localStorage.setItem('token', token)
 
         const userDetails = await getUserInfo()
         this.$store.dispatch('user', userDetails)
-        this.$store.dispatch('fetchClinics')
+        console.log('Loggedin: ' + userDetails)
         this.$router.push('/home')
       } catch (error) {
-        this.error = 'Invalid email/password.'
+        if (error.response) {
+          console.log('Error status code:', error.response.status)
+          if (error.response.status === 401) {
+            this.error = 'Invalid email/password.'
+          } else if (error.response.status === 500) {
+            this.error = 'Server error'
+          } else {
+            this.error = 'An error occurred during login.'
+          }
+        } else {
+          this.error = 'An unexpected error occurred.'
+        }
       }
     }
   }

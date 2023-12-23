@@ -169,15 +169,24 @@ export default {
           alert('Please select a dentist.')
         }
       } catch (error) {
-        // Handle the error here and inform the user
-        console.error('Error in showEvent:', error)
-        alert('An error occurred while processing your request. Please try again.')
+        console.error('Error fetching solt information', error)
+        let errorMessage = 'An unexpected error occurred.'
+
+        if (error.response) {
+          console.log('Error status code:', error.response.status)
+          if (error.response.status === 500) {
+            errorMessage = 'Server error in getting solt information.'
+          } else {
+            errorMessage = 'An error occurred during fetching solt information.'
+          }
+        }
+        this.$store.dispatch('errorMessage', errorMessage)
       }
     },
 
     isSlotBooked(date, time) {
       const combineDateTime = new Date(date + 'T' + time)
-      return this.bookedSlots.some((slot) => slot.date === combineDateTime)
+      return this.bookedSlots.some((slot) => slot.start === combineDateTime)
       //return this.bookedSlots.some((slot) => slot.date === date && slot.time === time)
     },
     bookSlot(date, time) {
@@ -200,7 +209,7 @@ export default {
     },
     getSlotID(date, time) {
       const combineDateTime = new Date(date + 'T' + time)
-      const slot = this.slots.find((s) => s.date === combineDateTime)
+      const slot = this.slots.find((s) => s.start === combineDateTime)
       return slot ? slot._id : null
     },
     highlightCell(date, time, isHovered) {

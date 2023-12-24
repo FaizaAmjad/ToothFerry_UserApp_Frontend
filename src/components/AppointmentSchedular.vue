@@ -153,7 +153,7 @@ export default {
       // eslint-disable-next-line no-undef
       return moment(date).format('MMM D, YYYY')
     },
-    async showEvent(date, time, selectedDate) {
+    async showEvent(date, time) {
       try {
         const user = this.$store.getters.user
         if (user) {
@@ -176,7 +176,6 @@ export default {
                     alert('Slot booked!')
                     this.slots.value = this.$store.getters.dentistSlots || []
                     this.bookedSlots.value = this.$store.getters.bookedSlots || []
-                    this.generateDateRange(selectedDate.value)
                     this.highlightedCell = { date, time }
                   } catch (error) {
                     console.error('Error booking slot', error)

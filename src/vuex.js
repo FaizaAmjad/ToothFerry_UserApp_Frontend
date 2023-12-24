@@ -199,11 +199,12 @@ const store = new Vuex.Store({
       }
     },
 
-    async unBookSlot({ commit, dispatch }, { slot_id, userId }) {
+    async unBookSlot({ commit, dispatch, state }, slot_id) {
       try {
         // Make an API request to unbook a slot
+        console.log('check slot id in vuex for unbooking: ' + slot_id)
         await unBook(slot_id)
-        console.log(`Slot unbooked: by User ID ${userId}`)
+        console.log(`Slot unbooked: by User ID: ` + state.user.id)
         dispatch('updateBookedSlots')
       } catch (error) {
         console.error('Error unbooking slot', error)

@@ -28,7 +28,18 @@
               @mouseenter="highlightCell(date, timeSlot.time, true)"
               @mouseleave="highlightCell(date, timeSlot.time, false)"
               :style="{ backgroundColor: getBackgroundColor(date, timeSlot.time) }"
-            ></td>
+              style="position: relative"
+            >
+              <div
+                v-if="
+                  isSlotBooked(date, timeSlot.time) && isBookedByCurrentUser(date, timeSlot.time)
+                "
+                @click="unbookSlot(date, timeSlot.time, $event)"
+                class="unbook-cell"
+              >
+                <span class="unbook-icon">unbook</span>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -46,6 +57,9 @@ import { getSlot } from '../apis/booking'
 export default {
   components: {
     Datepicker
+  },
+  watch: {
+    bookedSlots: 'generateDateRange'
   },
   setup() {
     const store = useStore()
@@ -221,15 +235,31 @@ export default {
         }
       }
     },
-    unBookSlot(date, time) {
-      const user = this.$store.getters.user
-      if (user) {
-        const slot_id = this.getSlotID(date, time)
-        if (slot_id) {
-          this.$store.dispatch('unBookSlot', { slot_id })
+
+    async unbookSlot(date, time, event) {
+      event.stopPropagation()
+      const slotId = this.getSlotID(date, time)
+      if (slotId) {
+        console.log('check slotId in unbooking method: ' + slotId)
+        const userConfirmed = confirm('Do you want to unbook this slot?')
+        if (userConfirmed) {
+          try {
+            await this.$store.dispatch('unBookSlot', slotId)
+            alert('Slot is now unbooked!')
+            this.slots.value = this.$store.getters.dentistSlots || []
+            this.bookedSlots.value = this.$store.getters.bookedSlots || []
+          } catch (error) {
+            console.error('Error unbooking slot', error)
+            alert('An error occurred while unbooking the slot.')
+          }
+        } else {
+          alert('Slot not unbooked.')
         }
+      } else {
+        alert(`Slot at ${date}, ${time} is currently unavailable.`)
       }
     },
+
     getSlotID(date, time) {
       const combineDateTime = new Date(`${date}T${time}`)
       console.log('combineDateTime in date type: ' + combineDateTime)
@@ -253,7 +283,7 @@ export default {
       this.highlightedCell = isHovered ? { date, time } : { date: null, time: null }
     },
     getBackgroundColor(date, time) {
-      return this.isSlotBooked(date, time) ? '#df2050' : '#80a659'
+      return this.isSlotBooked(date, time) ? '#5a5a5a' : '#5a743e'
     },
 
     isSlotBooked(date, time) {
@@ -267,6 +297,16 @@ export default {
           bookedDateTime.getHours() === combineDateTime.getHours() &&
           bookedDateTime.getMinutes() === combineDateTime.getMinutes()
         )
+      })
+    },
+
+    isBookedByCurrentUser(date, time) {
+      const combineDateTime = new Date(`${date}T${time}`)
+      const user = this.$store.getters.user
+      console.log('check current user id: ' + user.id)
+      return this.bookedSlots.some((slot) => {
+        const bookedDateTime = new Date(slot.start)
+        return bookedDateTime.getTime() === combineDateTime.getTime() && slot.patient_id === user.id
       })
     }
   }
@@ -299,5 +339,18 @@ export default {
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+.unbook-cell {
+  position: relative;
+  cursor: pointer;
+}
+
+.unbook-icon {
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  color: #000000;
+  margin: 5px;
 }
 </style>

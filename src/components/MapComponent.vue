@@ -30,7 +30,8 @@
         <div>
           <h3>{{ infoWindowTitle }}</h3>
           <p>
-            Click <router-link :to="infoWindowLink"> here</router-link> for the schedule.
+            Click to visit clinic page and dentists schedule.
+            <!--Click <router-link :to="infoWindowLink"> here</router-link> for the schedule.-->
             {{ infoWindowContent }}
           </p>
         </div>
@@ -74,11 +75,14 @@ export default {
       this.hideInfoWindow()
     },
     showInfoWindow(marker) {
-      // Set the position and content for the InfoWindow based on the hovered marker
-      this.infoWindowPosition = marker.position
-      this.infoWindowTitle = `${marker.clinicName}`
+      const markerPosition = marker.position
+      const slideOffset = { lat: 0.005, lng: 0.005 }
+      this.infoWindowPosition = {
+        lat: markerPosition.lat + slideOffset.lat,
+        lng: markerPosition.lng + slideOffset.lng
+      }
 
-      // Open the InfoWindow
+      this.infoWindowTitle = `${marker.clinicName}`
       this.isInfoWindowVisible = true
     },
     hideInfoWindow() {

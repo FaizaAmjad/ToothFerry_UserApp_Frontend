@@ -135,18 +135,11 @@ export default {
               const latitude = position.coords.latitude
               const longitude = position.coords.longitude
 
-              console.log('user position: Latitude:', latitude)
-              console.log('user position: Longitude:', longitude)
-
               if (!isNaN(latitude) && !isNaN(longitude)) {
                 this.userPosition = { lat: latitude, lng: longitude }
                 this.setMapCenter(this.userPosition)
                 this.markers = this.computeMarkers(this.userPosition)
-                this.markers.forEach((marker) => {
-                  console.log('List of markers: ' + marker.position)
-                })
               } else {
-                console.error('Invalid geolocation data:', position)
                 this.useDefaultPosition()
               }
             },
@@ -239,12 +232,6 @@ export default {
     },
     computeMarkers(userPosition) {
       const clinics = this.$store.getters.clinics || []
-      console.log('Got clinics from vuex in computMarkers')
-      clinics.forEach((clinic) => {
-        console.log('clinics for markers' + clinic.clinicName)
-        console.log('clinics for markers' + clinic.position.lat + clinic.position.lng)
-      })
-
       const markers = clinics.map((clinic) => {
         return {
           id: clinic._id,
@@ -318,17 +305,6 @@ export default {
       //we have the _id of the selected booking in this.popupInfo._id
     }
   }
-  /*
-  ,
-  async created() {
-
-    const response = await axios.get('bookings');
-    this.bookings = response.data;
-    const response2 = await axios.get('messages');
-    this.messages = response2.data;
-
-  }
-  */
 }
 </script>
 

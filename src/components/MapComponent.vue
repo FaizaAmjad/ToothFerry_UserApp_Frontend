@@ -61,7 +61,6 @@ export default {
   },
   methods: {
     onMarkerClicked(marker) {
-      console.log('Marker clicked ')
       this.$store.dispatch('selectClinic', marker)
       this.$refs.map.panTo(marker.position)
       this.$router.push({ path: '/clinic' })

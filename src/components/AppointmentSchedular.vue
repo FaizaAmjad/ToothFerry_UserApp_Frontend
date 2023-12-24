@@ -104,21 +104,11 @@ export default {
     const dates = computed(() => generateDateRange(selectedDate.value))
     const selectedDentist = ref(null)
 
-    /*const dentists = ref([
-      { id: 1, name: 'Dentist 1' },
-      { id: 2, name: 'Dentist 2' }
-      // ... add more dentists as needed ...
-    ])*/
-
     const onDentistChange = async () => {
-      console.log('Dentist change triggered')
-      console.log(selectedDentist.value)
       if (selectedDentist.value) {
-        console.log('user selected a new dentist: ' + selectedDentist.value)
         await store.dispatch('selectDentist', selectedDentist.value)
 
         slots.value = store.getters.dentistSlots || []
-        console.log('dentists all slots: ' + slots.value)
         bookedSlots.value = store.getters.bookedSlots || []
         generateDateRange(selectedDate.value)
       }
@@ -128,19 +118,6 @@ export default {
       date: null,
       time: null
     })
-
-    /*const highlightCell = (date, time, isHovered) => {
-      if (isHovered) {
-        highlightedCell.value = { date, time };
-      } else {
-        highlightedCell.value = { date: null, time: null };
-      }
-    };*/
-
-    /*const getBackgroundColor = computed(() => {
-      const { date, time } = highlightedCell.value
-      return isSlotBooked(date, time) ? '#df2050' : '#80a659'
-    })*/
 
     const onDateChange = (newDate) => {
       // update the displayed slots
@@ -172,21 +149,16 @@ export default {
         const user = this.$store.getters.user
         if (user) {
           const userId = user.id
-          console.log('user id: ' + userId)
-          console.log('user first name: ' + user.firstName)
           if (this.selectedDentist) {
             const slotId = this.getSlotID(date, time)
             if (slotId) {
               const checkSlotAvailable = await getSlot(slotId)
-              console.log('checkSlotAvailable:', checkSlotAvailable)
               const isSlotBooked = this.isSlotBooked(date, time)
               if (!isSlotBooked && !checkSlotAvailable.booked) {
                 var userConfirmed = confirm('Do you want to book this slot?')
                 if (userConfirmed) {
-                  console.log('slot id: ' + slotId)
                   try {
                     this.$store.dispatch('bookSlot', { slotId, userId })
-                    console.log('slot id again: ' + slotId)
                     alert('Slot booked!')
                     this.slots.value = this.$store.getters.dentistSlots || []
                     this.bookedSlots.value = this.$store.getters.bookedSlots || []
@@ -240,7 +212,6 @@ export default {
       event.stopPropagation()
       const slotId = this.getSlotID(date, time)
       if (slotId) {
-        console.log('check slotId in unbooking method: ' + slotId)
         const userConfirmed = confirm('Do you want to unbook this slot?')
         if (userConfirmed) {
           try {
@@ -262,12 +233,10 @@ export default {
 
     getSlotID(date, time) {
       const combineDateTime = new Date(`${date}T${time}`)
-      console.log('combineDateTime in date type: ' + combineDateTime)
       console.log('Number of slots:', this.slots.length)
       // Iterate through slots and find the one with the same date and time
       const slot = this.slots.find((s) => {
         const slotDateTime = new Date(s.start)
-        console.log('slotDateTime: ' + slotDateTime)
         return (
           slotDateTime.getFullYear() === combineDateTime.getFullYear() &&
           slotDateTime.getMonth() === combineDateTime.getMonth() &&
@@ -276,7 +245,6 @@ export default {
           slotDateTime.getMinutes() === combineDateTime.getMinutes()
         )
       })
-      console.log('found a slot:')
       return slot ? slot._id : null
     },
     highlightCell(date, time, isHovered) {
@@ -303,7 +271,6 @@ export default {
     isBookedByCurrentUser(date, time) {
       const combineDateTime = new Date(`${date}T${time}`)
       const user = this.$store.getters.user
-      console.log('check current user id: ' + user.id)
       return this.bookedSlots.some((slot) => {
         const bookedDateTime = new Date(slot.start)
         return bookedDateTime.getTime() === combineDateTime.getTime() && slot.patient_id === user.id

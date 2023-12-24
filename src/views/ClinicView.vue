@@ -21,7 +21,6 @@ export default {
     const clinic = ref(null)
 
     onMounted(() => {
-      console.log('onMounted in clinic view ')
       clinic.value = store.getters.getSelectedClinic
     })
 

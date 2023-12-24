@@ -34,28 +34,16 @@ const store = new Vuex.Store({
       commit('SET_USER', user)
     },
 
-    async fetchClinics({ commit, dispatch, state }) {
+    async fetchClinics({ commit, dispatch }) {
       try {
-        console.log('check if user is set. ' + state.user)
-        console.log('check if user is set. ' + state.user.firstName)
-        console.log('check if user is set. ' + state.user.id)
-        console.log('check if user is set. ' + state.user.SSN)
-        console.log('check if user is set. ' + state.user.email)
         // Make an API request to fetch all clinics information
         const clinics = await getClinics()
-        clinics.forEach((clinic) => {
-          console.log('Clinic name:' + clinic.clinicName)
-        })
-        console.log('All clinics' + clinics)
         // Update the clinic state
         commit('SET_CLINICS', clinics)
         dispatch('fetchDentists')
       } catch (error) {
-        console.error('Error fetching clinic information:', error)
         let errorMessage = 'An unexpected error occurred.'
-
         if (error.response) {
-          console.log('Error status code:', error.response.status)
           if (error.response.status === 500) {
             errorMessage = 'Server error in getting clinics.'
           } else {
@@ -70,14 +58,11 @@ const store = new Vuex.Store({
       try {
         // Make an API request to fetch all clinics information
         const dentists = await getDentists()
-        console.log('All dentists' + dentists)
         // Update the dentist state
         commit('SET_DENTISTS', dentists)
         dispatch('fetchSlots')
       } catch (error) {
-        console.error('Error fetching dentists information:', error)
         let errorMessage = 'An unexpected error occurred.'
-
         if (error.response) {
           console.log('Error status code:', error.response.status)
           if (error.response.status === 500) {
@@ -94,15 +79,11 @@ const store = new Vuex.Store({
       try {
         // Make an API request to fetch slots
         const slots = await getSlots()
-
         // Update the slots state
         commit('SET_SLOTS', slots)
       } catch (error) {
-        console.error('Error fetching slots information:', error)
         let errorMessage = 'An unexpected error occurred.'
-
         if (error.response) {
-          console.log('Error status code:', error.response.status)
           if (error.response.status === 500) {
             errorMessage = 'Server error in getting slots.'
           } else {
@@ -113,16 +94,14 @@ const store = new Vuex.Store({
       }
     },
 
-    selectClinic({ commit, dispatch, state }, clinic) {
+    selectClinic({ commit, dispatch }, clinic) {
       console.log('selected clinic ' + clinic.clinicName)
       commit('SET_SELECTED_CLINIC', clinic)
       dispatch('clinicDentists')
-      console.log('Updated state:', state.selectedClinic)
     },
 
     clinicDentists({ commit, state }) {
       if (!state.selectedClinic) {
-        // Handle the error, maybe by returning early or setting a default value
         console.log('selected clinic not set yet. ')
         return
       }
@@ -130,17 +109,12 @@ const store = new Vuex.Store({
       const clinicDentists = state.dentists.filter(
         (dentist) => dentist.clinic_id === state.selectedClinic.id
       )
-      console.log('selected Clinic id: ' + state.selectedClinic._id)
-      console.log('All clinic dentists: ' + clinicDentists)
       commit('SET_CLINIC_DENTISTS', clinicDentists)
-      console.log('Updated clinic dentists list:', state.clinicDentists)
     },
 
     selectDentist({ commit, dispatch, state }, dentistId) {
       const selectedDentist = state.clinicDentists.find((d) => d._id === dentistId)
       if (selectedDentist) {
-        console.log('selected dentist name: ' + selectedDentist.firstName)
-        console.log('selected dentist id: ' + selectedDentist._id)
         commit('SET_SELECTED_DENTIST', selectedDentist)
         dispatch('dentistSlots')
       } else {
@@ -149,11 +123,6 @@ const store = new Vuex.Store({
     },
 
     dentistSlots({ commit, dispatch, state }) {
-      if (!state.selectedDentist) {
-        // Handle the error, maybe by returning early or setting a default value
-        return
-      }
-
       const dentistSlots = state.slots.filter(
         (slot) => slot.dentist_id === state.selectedDentist._id
       )
@@ -179,14 +148,11 @@ const store = new Vuex.Store({
 
     async bookSlot({ commit, dispatch }, { slotId, userId }) {
       try {
-        console.log('slotId in vuex for booking: ' + slotId)
         await book(slotId, userId)
         console.log(`Slot booked: by User ID ${userId}`)
         dispatch('updateBookedSlots')
       } catch (error) {
-        console.error('Error booking slot', error)
         let errorMessage = 'An unexpected error occurred.'
-
         if (error.response) {
           console.log('Error status code:', error.response.status)
           if (error.response.status === 500) {
@@ -202,14 +168,12 @@ const store = new Vuex.Store({
     async unBookSlot({ commit, dispatch, state }, slot_id) {
       try {
         // Make an API request to unbook a slot
-        console.log('check slot id in vuex for unbooking: ' + slot_id)
         await unBook(slot_id)
         console.log(`Slot unbooked: by User ID: ` + state.user.id)
         dispatch('updateBookedSlots')
       } catch (error) {
         console.error('Error unbooking slot', error)
         let errorMessage = 'An unexpected error occurred.'
-
         if (error.response) {
           console.log('Error status code:', error.response.status)
           if (error.response.status === 500) {

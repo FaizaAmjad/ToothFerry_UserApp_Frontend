@@ -7,12 +7,14 @@ export const getSlots = async () => {
 }
 
 export const getSlot = async (slot_id) => {
+  console.log('slotId in booking.js to get slot:  ' + slot_id)
   const response = await Api().get(`slots/${slot_id}`)
 
   return response.data
 }
 
 export const book = async (slot_id, userId) => {
+  console.log('slotId in booking.js for booking: ' + slot_id)
   const response = await Api().post(`slots/${slot_id}/book`, { userId, booked: true })
 
   return response.data

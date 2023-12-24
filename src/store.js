@@ -1,21 +1,9 @@
 import Vuex from 'vuex'
 import { getClinics, getDentists } from './apis/clinic'
 import { getSlots, book, unBook } from './apis/booking'
+import { state } from './vuex'
 
-const state = {
-  user: null,
-  clinics: [],
-  dentists: [],
-  selectedClinic: null,
-  selectedDentist: null,
-  slots: [],
-  bookedSlots: [],
-  clinicDentists: [],
-  dentistSlots: [],
-  errorMessage: null
-}
-
-const store = new Vuex.Store({
+export const store = new Vuex.Store({
   state,
   getters: {
     user: (state) => state.user,
@@ -34,13 +22,8 @@ const store = new Vuex.Store({
       commit('SET_USER', user)
     },
 
-    async fetchClinics({ commit, dispatch, state }) {
+    async fetchClinics({ commit, dispatch }) {
       try {
-        console.log('check if user is set. ' + state.user)
-        console.log('check if user is set. ' + state.user.firstName)
-        console.log('check if user is set. ' + state.user.id)
-        console.log('check if user is set. ' + state.user.SSN)
-        console.log('check if user is set. ' + state.user.email)
         // Make an API request to fetch all clinics information
         const clinics = await getClinics()
         clinics.forEach((clinic) => {
@@ -113,55 +96,41 @@ const store = new Vuex.Store({
       }
     },
 
-    selectClinic({ commit, dispatch, state }, clinic) {
+    selectClinic({ commit, dispatch }, clinic) {
       console.log('selected clinic ' + clinic.clinicName)
       commit('SET_SELECTED_CLINIC', clinic)
       dispatch('clinicDentists')
-      console.log('Updated state:', state.selectedClinic)
     },
 
     clinicDentists({ commit, state }) {
       if (!state.selectedClinic) {
         // Handle the error, maybe by returning early or setting a default value
-        console.log('selected clinic not set yet. ')
         return
       }
 
       const clinicDentists = state.dentists.filter(
-        (dentist) => dentist.clinic_id === state.selectedClinic.id
+        (dentist) => dentist.clinic_id === state.selectedClinic._id
       )
-      console.log('selected Clinic id: ' + state.selectedClinic._id)
-      console.log('All clinic dentists: ' + clinicDentists)
       commit('SET_CLINIC_DENTISTS', clinicDentists)
-      console.log('Updated clinic dentists list:', state.clinicDentists)
     },
 
-    selectDentist({ commit, dispatch, state }, dentistId) {
-      const selectedDentist = state.clinicDentists.find((d) => d._id === dentistId)
-      if (selectedDentist) {
-        console.log('selected dentist name: ' + selectedDentist.firstName)
-        console.log('selected dentist id: ' + selectedDentist._id)
-        commit('SET_SELECTED_DENTIST', selectedDentist)
-        dispatch('dentistSlots')
-      } else {
-        console.error('Dentist not found with id:', dentistId)
-      }
+    selectDentist({ commit, dispatch }, dentist) {
+      commit('SET_SELECTED_DENTIST', dentist)
+      dispatch('dentistSlots')
     },
 
-    dentistSlots({ commit, dispatch, state }) {
-      if (!state.selectedDentist) {
-        // Handle the error, maybe by returning early or setting a default value
-        return
-      }
-
-      const dentistSlots = state.slots.filter(
-        (slot) => slot.dentist_id === state.selectedDentist._id
-      )
+    dentistSlots({ commit, dispatch }) {
+      const dentistSlots = []
+      state.slots.forEach((slot) => {
+        if (slot.dentist_id === state.selectedDentist._id) {
+          dentistSlots.push(slot)
+        }
+      })
       commit('SET_DENTIST_SLOTS', dentistSlots)
       dispatch('bookedSlots')
     },
 
-    bookedSlots({ commit, state }) {
+    bookedSlots({ commit }) {
       const booked = []
       // get bookedSlots
       state.dentistSlots.forEach((slot) => {
@@ -177,10 +146,10 @@ const store = new Vuex.Store({
       dispatch('dentistSlots')
     },
 
-    async bookSlot({ commit, dispatch }, { slotId, userId }) {
+    async bookSlot({ commit, dispatch }, { userId, slot_id }) {
       try {
-        console.log('slotId in vuex for booking: ' + slotId)
-        await book(slotId, userId)
+        // Make an API request to book a slot
+        await book(slot_id, userId)
         console.log(`Slot booked: by User ID ${userId}`)
         dispatch('updateBookedSlots')
       } catch (error) {
@@ -199,7 +168,7 @@ const store = new Vuex.Store({
       }
     },
 
-    async unBookSlot({ commit, dispatch }, { slot_id, userId }) {
+    async unBookSlot({ commit, dispatch }, { userId, slot_id }) {
       try {
         // Make an API request to unbook a slot
         await unBook(slot_id)
@@ -261,5 +230,3 @@ const store = new Vuex.Store({
     }
   }
 })
-
-export default store

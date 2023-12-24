@@ -115,6 +115,19 @@ export default {
       time: null
     })
 
+    /*const highlightCell = (date, time, isHovered) => {
+      if (isHovered) {
+        highlightedCell.value = { date, time };
+      } else {
+        highlightedCell.value = { date: null, time: null };
+      }
+    };*/
+
+    /*const getBackgroundColor = computed(() => {
+      const { date, time } = highlightedCell.value
+      return isSlotBooked(date, time) ? '#df2050' : '#80a659'
+    })*/
+
     const onDateChange = (newDate) => {
       // update the displayed slots
       selectedDate.value = newDate
@@ -140,22 +153,35 @@ export default {
       // eslint-disable-next-line no-undef
       return moment(date).format('MMM D, YYYY')
     },
-    async showEvent(date, time) {
+    async showEvent(date, time, selectedDate) {
       try {
         const user = this.$store.getters.user
         if (user) {
-          const userId = user._id
+          const userId = user.id
+          console.log('user id: ' + userId)
+          console.log('user first name: ' + user.firstName)
           if (this.selectedDentist) {
             const slotId = this.getSlotID(date, time)
             if (slotId) {
-              console.log('slot id: ' + slotId)
               const checkSlotAvailable = await getSlot(slotId)
+              console.log('checkSlotAvailable:', checkSlotAvailable)
               const isSlotBooked = this.isSlotBooked(date, time)
               if (!isSlotBooked && !checkSlotAvailable.booked) {
                 var userConfirmed = confirm('Do you want to book this slot?')
                 if (userConfirmed) {
-                  await this.$store.dispatch('bookSlot', { userId, slotId })
-                  alert('Slot booked!')
+                  console.log('slot id: ' + slotId)
+                  try {
+                    this.$store.dispatch('bookSlot', { slotId, userId })
+                    console.log('slot id again: ' + slotId)
+                    alert('Slot booked!')
+                    this.slots.value = this.$store.getters.dentistSlots || []
+                    this.bookedSlots.value = this.$store.getters.bookedSlots || []
+                    this.generateDateRange(selectedDate.value)
+                    this.highlightedCell = { date, time }
+                  } catch (error) {
+                    console.error('Error booking slot', error)
+                    alert('An error occurred while booking the slot.')
+                  }
                 } else {
                   alert('Slot not booked.')
                 }
@@ -187,11 +213,6 @@ export default {
       }
     },
 
-    isSlotBooked(date, time) {
-      const combineDateTime = new Date(date + 'T' + time)
-      return this.bookedSlots.some((slot) => slot.start === combineDateTime)
-      //return this.bookedSlots.some((slot) => slot.date === date && slot.time === time)
-    },
     bookSlot(date, time) {
       const user = this.$store.getters.user
       if (user) {
@@ -211,18 +232,13 @@ export default {
       }
     },
     getSlotID(date, time) {
-      const combineDateTimeString = `${date}T${time}`
-      console.log('combineDateTimeString: ' + combineDateTimeString)
-      // Create a Date object from the combined date and time string
-      const combineDateTime = new Date(combineDateTimeString)
+      const combineDateTime = new Date(`${date}T${time}`)
       console.log('combineDateTime in date type: ' + combineDateTime)
       console.log('Number of slots:', this.slots.length)
       // Iterate through slots and find the one with the same date and time
       const slot = this.slots.find((s) => {
-        // Create a Date object from the start attribute of each slot
         const slotDateTime = new Date(s.start)
         console.log('slotDateTime: ' + slotDateTime)
-        // Compare the time portion (hours and minutes)
         return (
           slotDateTime.getFullYear() === combineDateTime.getFullYear() &&
           slotDateTime.getMonth() === combineDateTime.getMonth() &&
@@ -239,6 +255,20 @@ export default {
     },
     getBackgroundColor(date, time) {
       return this.isSlotBooked(date, time) ? '#df2050' : '#80a659'
+    },
+
+    isSlotBooked(date, time) {
+      const combineDateTime = new Date(`${date}T${time}`)
+      return this.bookedSlots.some((slot) => {
+        const bookedDateTime = new Date(slot.start)
+        return (
+          bookedDateTime.getFullYear() === combineDateTime.getFullYear() &&
+          bookedDateTime.getMonth() === combineDateTime.getMonth() &&
+          bookedDateTime.getDate() === combineDateTime.getDate() &&
+          bookedDateTime.getHours() === combineDateTime.getHours() &&
+          bookedDateTime.getMinutes() === combineDateTime.getMinutes()
+        )
+      })
     }
   }
 }

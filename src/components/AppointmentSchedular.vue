@@ -216,9 +216,14 @@ export default {
         if (userConfirmed) {
           try {
             await this.$store.dispatch('unBookSlot', slotId)
-            alert('Slot is now unbooked!')
-            this.slots.value = this.$store.getters.dentistSlots || []
-            this.bookedSlots.value = this.$store.getters.bookedSlots || []
+            if (!this.$store.errorMessage) {
+              console.log('checking error message in ubooking method')
+              alert('An error occurred while unbooking the slot.')
+            } else {
+              alert('Slot is now unbooked!')
+              this.slots.value = this.$store.getters.dentistSlots || []
+              this.bookedSlots.value = this.$store.getters.bookedSlots || []
+            }
           } catch (error) {
             console.error('Error unbooking slot', error)
             alert('An error occurred while unbooking the slot.')

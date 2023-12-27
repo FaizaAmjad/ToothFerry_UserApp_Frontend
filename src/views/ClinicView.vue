@@ -2,12 +2,15 @@
   <div>
     <h1 v-if="clinic">Welcome to {{ clinic.clinicName }}</h1>
     <p></p>
+    <div v-if="error" class="alert alert-danger">
+      {{ error }}
+    </div>
     <AppointmentSchedular />
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
 import AppointmentSchedular from '../components/AppointmentSchedular.vue'
 
@@ -22,10 +25,20 @@ export default {
 
     onMounted(() => {
       clinic.value = store.getters.getSelectedClinic
+      store.dispatch('fetchDentists')
+    })
+
+    const error = computed(() => {
+      return store.state.errorMessage
+    })
+
+    onBeforeUnmount(() => {
+      error.value = null
     })
 
     return {
-      clinic
+      clinic,
+      error
     }
   }
 }

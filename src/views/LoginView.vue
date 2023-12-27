@@ -63,10 +63,6 @@ export default {
         localStorage.setItem('token', token)
 
         const userDetails = await getUserInfo()
-        console.log('user name: ' + userDetails.firstName)
-        console.log('user id: ' + userDetails.id)
-        console.log('user email: ' + userDetails.email)
-        console.log('user SSN: ' + userDetails.SSN)
         this.$store.dispatch('user', userDetails)
         console.log('Loggedin: ' + userDetails)
         this.$router.push('/home')

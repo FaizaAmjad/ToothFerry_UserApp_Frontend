@@ -115,14 +115,14 @@ export default {
   },
   computed: {
     error() {
-      return this.$store.state.error
+      return this.$store.state.errorMessage
     }
   },
   created() {
     this.$store.commit('SET_ERROR', null)
   },
   unmounted() {
-    this.$store.commit('SET_ERROR', null)
+    //this.$store.commit('SET_ERROR', null)
   },
   mounted() {
     try {

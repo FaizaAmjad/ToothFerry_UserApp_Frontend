@@ -34,23 +34,24 @@ const store = new Vuex.Store({
       commit('SET_USER', user)
     },
 
-    async fetchClinics({ commit, dispatch }) {
+    async fetchClinics({ commit }) {
       try {
         // Make an API request to fetch all clinics information
         const clinics = await getClinics()
         // Update the clinic state
         commit('SET_CLINICS', clinics)
-        dispatch('fetchDentists')
+        //dispatch('fetchDentists')
       } catch (error) {
         let errorMessage = 'An unexpected error occurred.'
         if (error.response) {
           if (error.response.status === 500) {
-            errorMessage = 'Server error in getting clinics.'
+            errorMessage = 'Server error in getting clinics. Please try again later.'
           } else {
-            errorMessage = 'An error occurred during fetching clinics.'
+            errorMessage = 'An error occurred during fetching clinics. Please try again.'
           }
         }
         commit('SET_ERROR', errorMessage)
+        console.log('Error message committed to store:', errorMessage)
       }
     },
 
@@ -222,6 +223,7 @@ const store = new Vuex.Store({
       state.bookedSlots = booked
     },
     SET_ERROR(state, errorMessage) {
+      console.log('Setting error message:', errorMessage)
       state.errorMessage = errorMessage
     }
   }

@@ -47,7 +47,7 @@ import { mapGetters, useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import { getUserInfo } from '../apis/users'
-
+import { disConnect } from '../ws'
 export default {
   name: 'nav-bar',
 
@@ -57,16 +57,15 @@ export default {
       const router = useRouter()
       const route = useRoute()
 
-      defineUser()
-        .then(() => {
-          const token = localStorage.getItem('token')
-          if (token && ['/', '/login', '/signup'].includes(route.path)) {
-            router.push('/home')
-          } else if (!token && !['/', '/login', '/signup'].includes(route.path)) {
-            router.push('/login')
-          }
-        })
-       /*  .catch(() => {
+      defineUser().then(() => {
+        const token = localStorage.getItem('token')
+        if (token && ['/', '/login', '/signup'].includes(route.path)) {
+          router.push('/home')
+        } else if (!token && !['/', '/login', '/signup'].includes(route.path)) {
+          router.push('/login')
+        }
+      })
+      /*  .catch(() => {
           router.push('/login')
         }) */
     })
@@ -74,6 +73,7 @@ export default {
     const router = useRouter()
     const handleLogout = () => {
       localStorage.removeItem('token')
+      disConnect()
       store.dispatch('user', null)
       router.push('/login')
     }

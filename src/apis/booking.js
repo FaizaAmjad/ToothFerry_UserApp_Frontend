@@ -1,19 +1,25 @@
 import { Api } from './api'
 
+export const getSlots = async () => {
+  const response = await Api().get('slots')
 
-export const book=async(slot_id)=>{
-    
-    const response = await Api().post(`slots/${slot_id}/book`, {
-        booked:true
-      })
-    
-    return response.data}
+  return response.data
+}
 
-    
-export const unBook=async(slot_id)=>{
-    
-    const response = await Api().post(`slots/${slot_id}/unbook`, {
-       booked:false 
-      })
-    
-    return response.data}
+export const getSlot = async (slot_id) => {
+  const response = await Api().get(`slots/${slot_id}`)
+
+  return response.data
+}
+
+export const book = async (slot_id, userId) => {
+  const response = await Api().post(`slots/${slot_id}/book`, { userId, booked: true })
+
+  return response.data
+}
+
+export const unBook = async (slot_id) => {
+  const response = await Api().post(`slots/${slot_id}/unbook`, { userId: null, booked: false })
+
+  return response.data
+}

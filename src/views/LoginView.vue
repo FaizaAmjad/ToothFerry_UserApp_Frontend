@@ -44,6 +44,7 @@
 
 <script>
 import { login, getUserInfo } from '../apis/users'
+import { connect } from '../ws'
 export default {
   name: 'login-view',
   data() {
@@ -63,6 +64,7 @@ export default {
         localStorage.setItem('token', token)
 
         const userDetails = await getUserInfo()
+        connect(userDetails.id)
         this.$store.dispatch('user', userDetails)
         console.log('Loggedin: ' + userDetails)
         this.$router.push('/home')

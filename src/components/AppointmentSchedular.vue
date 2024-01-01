@@ -3,8 +3,8 @@
   <div>
     <h6>Choose a dentist to see schedule.</h6>
     <select v-model="selectedDentist" @change="onDentistChange">
-      <option v-for="dentist in dentists" :key="dentist.id" :value="dentist.id">
-        {{ dentist.name }}
+      <option v-for="dentist in dentists" :key="dentist._id" :value="dentist._id">
+        {{ dentist.firstName + ' ' + dentist.lastName }}
       </option>
     </select>
     <br />
@@ -28,7 +28,18 @@
               @mouseenter="highlightCell(date, timeSlot.time, true)"
               @mouseleave="highlightCell(date, timeSlot.time, false)"
               :style="{ backgroundColor: getBackgroundColor(date, timeSlot.time) }"
-            ></td>
+              style="position: relative"
+            >
+              <div
+                v-if="
+                  isSlotBooked(date, timeSlot.time) && isBookedByCurrentUser(date, timeSlot.time)
+                "
+                @click="unbookSlot(date, timeSlot.time, $event)"
+                class="unbook-cell"
+              >
+                <span class="unbook-icon">unbook</span>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -37,15 +48,27 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import Datepicker from 'vue3-datepicker'
 import moment from 'moment'
+import { getSlot } from '../apis/booking'
 
 export default {
   components: {
     Datepicker
   },
+  watch: {
+    bookedSlots: 'generateDateRange'
+  },
   setup() {
+    const store = useStore()
+    const dentists = ref([])
+
+    onMounted(() => {
+      dentists.value = store.getters.clinicDentists
+    })
+
     const selectedDate = ref(new Date())
     const timeSlots = ref([
       { time: '08:00' },
@@ -59,8 +82,9 @@ export default {
       { time: '16:00' },
       { time: '17:00' }
     ])
-    const slots = ref([])
+
     const bookedSlots = ref([])
+    const slots = ref([])
 
     const generateDateRange = () => {
       const startDate = moment(selectedDate.value).startOf('week')
@@ -78,25 +102,15 @@ export default {
     }
 
     const dates = computed(() => generateDateRange(selectedDate.value))
-
     const selectedDentist = ref(null)
-
-    /*const dentists = computed(() => {
-      return this.$store.getters.clinicDentists || [];
-    });*/
-
-    const dentists = ref([
-      { id: 1, name: 'Dentist 1' },
-      { id: 2, name: 'Dentist 2' }
-      // ... add more dentists as needed ...
-    ])
 
     const onDentistChange = async () => {
       if (selectedDentist.value) {
-        await this.$store.dispatch('selectDentist', selectedDentist.value)
-        await this.$store.dispatch('dentistSlots')
-        this.slots = this.$store.getters.dentistSlots || []
-        this.bookedSlots = this.$store.getters.bookedSlots || []
+        await store.dispatch('selectDentist', selectedDentist.value)
+
+        slots.value = store.getters.dentistSlots || []
+        bookedSlots.value = store.getters.bookedSlots || []
+        generateDateRange(selectedDate.value)
       }
     }
 
@@ -130,65 +144,142 @@ export default {
       // eslint-disable-next-line no-undef
       return moment(date).format('MMM D, YYYY')
     },
-    showEvent(date, time) {
-      const isSlotBooked = this.isSlotBooked(date, time)
-      if (this.selectedDentist) {
-        if (!isSlotBooked) {
-          const user = this.$store.getters.user
-          if (user) {
-            var userConfirmed = confirm('Do you want to book this slot?')
-            if (userConfirmed) {
-              this.$store.dispatch('bookSlot', {
-                date,
-                time,
-                userId: user._id,
-                slotId: this.getSlotID(date, time)
-              })
-              alert('Slot booked!')
+    async showEvent(date, time) {
+      try {
+        const user = this.$store.getters.user
+        if (user) {
+          const userId = user.id
+          if (this.selectedDentist) {
+            const slotId = this.getSlotID(date, time)
+            if (slotId) {
+              const checkSlotAvailable = await getSlot(slotId)
+              const isSlotBooked = this.isSlotBooked(date, time)
+              if (!isSlotBooked && !checkSlotAvailable.booked) {
+                var userConfirmed = confirm('Do you want to book this slot?')
+                if (userConfirmed) {
+                  try {
+                    this.$store.dispatch('bookSlot', { slotId, userId })
+                    alert('Slot booked!')
+                    this.slots.value = this.$store.getters.dentistSlots || []
+                    this.bookedSlots.value = this.$store.getters.bookedSlots || []
+                    this.highlightedCell = { date, time }
+                  } catch (error) {
+                    console.error('Error booking slot', error)
+                    alert('An error occurred while booking the slot.')
+                  }
+                } else {
+                  alert('Slot not booked.')
+                }
+              } else {
+                alert(`Slot at ${date}, ${time} is already booked.`)
+              }
             } else {
-              alert('Slot not booked.')
+              alert(`Slot at ${date}, ${time} is currently unavailable.`)
             }
           } else {
-            alert('User data not available. Please log in.')
+            alert('Please select a dentist.')
           }
         } else {
-          alert(`Slot at ${date}, ${time} is currently unavailable.`)
+          alert('User data not available. Please log in.')
         }
-      } else {
-        alert(`Please select a dentist.`)
+      } catch (error) {
+        console.error('Error fetching solt information', error)
+        let errorMessage = 'An unexpected error occurred.'
+
+        if (error.response) {
+          console.log('Error status code:', error.response.status)
+          if (error.response.status === 500) {
+            errorMessage = 'Server error in getting solt information.'
+          } else {
+            errorMessage = 'An error occurred during fetching solt information.'
+          }
+        }
+        this.$store.dispatch('errorMessage', errorMessage)
       }
     },
-    isSlotBooked(date, time) {
-      return this.bookedSlots.some((slot) => slot.date === date && slot.time === time)
-    },
+
     bookSlot(date, time) {
       const user = this.$store.getters.user
       if (user) {
         const slot_id = this.getSlotID(date, time)
         if (slot_id) {
-          this.$store.dispatch('bookSlot', { userId: user._id, slot_id })
+          this.$store.dispatch('bookSlot', { slot_id, userId: user._id })
         }
       }
     },
-    unBookSlot(date, time) {
-      const user = this.$store.getters.user
-      if (user) {
-        const slot_id = this.getSlotID(date, time)
-        if (slot_id) {
-          this.$store.dispatch('unBookSlot', { userId: user._id, slot_id })
+
+    async unbookSlot(date, time, event) {
+      event.stopPropagation()
+      const slotId = this.getSlotID(date, time)
+      if (slotId) {
+        const userConfirmed = confirm('Do you want to unbook this slot?')
+        if (userConfirmed) {
+          try {
+            await this.$store.dispatch('unBookSlot', slotId)
+            if (!this.$store.errorMessage) {
+              console.log('checking error message in ubooking method')
+              alert('An error occurred while unbooking the slot.')
+            } else {
+              alert('Slot is now unbooked!')
+              this.slots.value = this.$store.getters.dentistSlots || []
+              this.bookedSlots.value = this.$store.getters.bookedSlots || []
+            }
+          } catch (error) {
+            console.error('Error unbooking slot', error)
+            alert('An error occurred while unbooking the slot.')
+          }
+        } else {
+          alert('Slot not unbooked.')
         }
+      } else {
+        alert(`Slot at ${date}, ${time} is currently unavailable.`)
       }
     },
+
     getSlotID(date, time) {
-      const combineDateTime = new Date(date + 'T' + time)
-      const slot = this.slots.find((s) => s.date === combineDateTime)
+      const combineDateTime = new Date(`${date}T${time}`)
+      console.log('Number of slots:', this.slots.length)
+      // Iterate through slots and find the one with the same date and time
+      const slot = this.slots.find((s) => {
+        const slotDateTime = new Date(s.start)
+        return (
+          slotDateTime.getFullYear() === combineDateTime.getFullYear() &&
+          slotDateTime.getMonth() === combineDateTime.getMonth() &&
+          slotDateTime.getDate() === combineDateTime.getDate() &&
+          slotDateTime.getHours() === combineDateTime.getHours() &&
+          slotDateTime.getMinutes() === combineDateTime.getMinutes()
+        )
+      })
       return slot ? slot._id : null
     },
     highlightCell(date, time, isHovered) {
       this.highlightedCell = isHovered ? { date, time } : { date: null, time: null }
     },
     getBackgroundColor(date, time) {
-      return this.isSlotBooked(date, time) ? '#df2050' : '#80a659'
+      return this.isSlotBooked(date, time) ? '#5a5a5a' : '#5a743e'
+    },
+
+    isSlotBooked(date, time) {
+      const combineDateTime = new Date(`${date}T${time}`)
+      return this.bookedSlots.some((slot) => {
+        const bookedDateTime = new Date(slot.start)
+        return (
+          bookedDateTime.getFullYear() === combineDateTime.getFullYear() &&
+          bookedDateTime.getMonth() === combineDateTime.getMonth() &&
+          bookedDateTime.getDate() === combineDateTime.getDate() &&
+          bookedDateTime.getHours() === combineDateTime.getHours() &&
+          bookedDateTime.getMinutes() === combineDateTime.getMinutes()
+        )
+      })
+    },
+
+    isBookedByCurrentUser(date, time) {
+      const combineDateTime = new Date(`${date}T${time}`)
+      const user = this.$store.getters.user
+      return this.bookedSlots.some((slot) => {
+        const bookedDateTime = new Date(slot.start)
+        return bookedDateTime.getTime() === combineDateTime.getTime() && slot.patient_id === user.id
+      })
     }
   }
 }
@@ -220,5 +311,18 @@ export default {
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+.unbook-cell {
+  position: relative;
+  cursor: pointer;
+}
+
+.unbook-icon {
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  color: #000000;
+  margin: 5px;
 }
 </style>

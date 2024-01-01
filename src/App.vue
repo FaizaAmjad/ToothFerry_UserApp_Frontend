@@ -15,10 +15,11 @@
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css'
 import NavBar from './components/NavBar.vue'
-
+import WebFooter from './components/WebFooter.vue'
 export default {
   components: {
-    NavBar
+    NavBar,
+    WebFooter
   }
 }
 </script>

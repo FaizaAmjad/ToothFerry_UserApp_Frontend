@@ -53,7 +53,7 @@ export default {
 
   setup() {
     onMounted(() => {
-      const store = useStore()
+      //const store = useStore()
       const router = useRouter()
       const route = useRoute()
 

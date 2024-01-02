@@ -66,7 +66,7 @@
         <!-- Inbox -->
         <div class="bg-light p-5">
           <div class="card">
-            <h5 class="card-header" @click="goToInbox">Inbox</h5>
+            <h5 class="card-header" @click="goToInbox">Notifications</h5>
             <br />
             <NotificationListElement
               v-for="notification in notifications"
@@ -289,7 +289,7 @@ export default {
     },
     goToInbox() {
       console.log('Go to inbox')
-      this.$router.push('/inbox')
+      this.$router.push('/notifications')
     },
     showPopup(booking) {
       this.isPopupVisible = true
@@ -361,22 +361,11 @@ html {
   /* Add more styles as needed */
 }
 
-.card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-  /* Add more styles as needed */
-}
-
 .bookingsHeader {
   text-align: center;
   margin-top: 10px;
 }
 
-.card-header:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Darken the background color on hover */
-  cursor: pointer; /* Change cursor to indicate interactivity */
-}
 button.page-link {
   z-index: 0 !important;
 }

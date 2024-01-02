@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import { getClinics, getDentists } from './apis/clinic'
 import { getSlots, book, unBook } from './apis/booking'
+import { getNotifications } from './apis/notifications'
 
 const state = {
   user: null,
@@ -12,7 +13,9 @@ const state = {
   bookedSlots: [],
   clinicDentists: [],
   dentistSlots: [],
-  errorMessage: null
+  errorMessage: null,
+  notifications: [],
+  newNotifications: false
 }
 
 const store = new Vuex.Store({
@@ -27,7 +30,9 @@ const store = new Vuex.Store({
     bookedSlots: (state) => state.bookedSlots,
     clinicDentists: (state) => state.clinicDentists,
     dentistSlots: (state) => state.dentistSlots,
-    errorMessage: (state) => state.errorMessage
+    errorMessage: (state) => state.errorMessage,
+    notifications: (state) => state.notifications,
+    hasNewNotifications: (state) => state.newNotifications
   },
   actions: {
     user({ commit }, user) {
@@ -187,6 +192,23 @@ const store = new Vuex.Store({
       }
     },
 
+    async fetchNotifications({ commit }) {
+      try {
+        // Fetch notifications from your API or another source
+        const notifications = await getNotifications()
+        commit('setNotifications', notifications)
+      } catch (error) {
+        console.error('Error fetching notifications:', error)
+        // Handle error
+      }
+    },
+
+    markNotificationsAsRead({ commit }) {
+      // Assuming you have an API call or logic to mark notifications as read
+      // Adjust as needed
+      commit('setNewNotifications', false)
+    },
+
     errorMessage({ commit }, errorMessage) {
       commit('SET_ERROR', errorMessage)
     }
@@ -225,6 +247,12 @@ const store = new Vuex.Store({
     SET_ERROR(state, errorMessage) {
       console.log('Setting error message:', errorMessage)
       state.errorMessage = errorMessage
+    },
+    SET_NOTIFICATIONS(state, notifications) {
+      state.notifications = notifications
+    },
+    SET_NEW_NOTIFICATIONS(state, hasNewNotifications) {
+      state.newNotifications = hasNewNotifications
     }
   }
 })

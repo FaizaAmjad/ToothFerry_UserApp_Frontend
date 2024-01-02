@@ -131,4 +131,16 @@ body {
   max-width: 800px;
   margin: 0 auto;
 }
+
+.card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  /* Add more styles as needed */
+}
+
+.card-header:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Darken the background color on hover */
+  cursor: pointer; /* Change cursor to indicate interactivity */
+}
 </style>

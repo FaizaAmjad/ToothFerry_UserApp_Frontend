@@ -1,23 +1,22 @@
 <template>
   <b-card @click="expand" class="card">
-    <div>   
+    <div>
       <b-card-text>
-        <b-card-title>{{notification.sender.name}}</b-card-title>
-        <b-card-sub-title>{{notification.date}}</b-card-sub-title>
-        <b-card-text>{{notification.content}}</b-card-text>
+        <b-card-title>{{ notification.sender.name }}</b-card-title>
+        <b-card-sub-title>{{ notification.date }}</b-card-sub-title>
+        <b-card-text>{{ notification.content }}</b-card-text>
       </b-card-text>
     </div>
   </b-card>
 </template>
-  
+
 <script>
 export default {
   name: 'NotificationListElement',
   props: {
     notification: {
-      sender: Object,
-      Date: String,
-      content: String
+      type: Object,
+      required: true
     }
   },
   methods: {
@@ -30,7 +29,6 @@ export default {
 </script>
 
 <style scoped>
-
 .time {
   text-align: right;
 }

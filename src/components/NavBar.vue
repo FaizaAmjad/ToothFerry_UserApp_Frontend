@@ -47,7 +47,8 @@ import { mapGetters, useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import { getUserInfo } from '../apis/users'
-import { disConnect } from '../ws'
+import { disConnect,connect } from '../ws'
+
 export default {
   name: 'nav-bar',
 
@@ -57,7 +58,9 @@ export default {
       const router = useRouter()
       const route = useRoute()
 
-      defineUser().then(() => {
+      defineUser().then((userDetails) => {
+       
+        connect(userDetails.id) 
         const token = localStorage.getItem('token')
         if (token && ['/', '/login', '/signup'].includes(route.path)) {
           router.push('/home')
@@ -80,7 +83,8 @@ export default {
 
     const defineUser = async () => {
       const userDetails = await getUserInfo()
-      return store.dispatch('user', userDetails)
+       store.dispatch('user', userDetails)
+       return userDetails;
     }
 
     return { handleLogout }

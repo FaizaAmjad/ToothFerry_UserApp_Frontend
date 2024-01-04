@@ -5,6 +5,7 @@ import BootstrapVue from 'bootstrap-vue-3'
 import VueGoogleMaps from '@fawmi/vue-google-maps'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 import store from './vuex'
 

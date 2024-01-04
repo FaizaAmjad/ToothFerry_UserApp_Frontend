@@ -216,7 +216,7 @@ export default {
         if (userConfirmed) {
           try {
             await this.$store.dispatch('unBookSlot', slotId)
-            if (!this.$store.errorMessage) {
+            if (this.$store.errorMessage) {
               console.log('checking error message in ubooking method')
               alert('An error occurred while unbooking the slot.')
             } else {

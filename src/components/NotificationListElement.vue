@@ -1,10 +1,9 @@
 <template>
   <b-card class="card">
     <div>
+      <span @click="removeNotification" class="close-icon">x</span>
       <b-card-text>
-        <b-card-title>{{ notification.sender.name }}</b-card-title>
-        <b-card-sub-title>{{ notification.date }}</b-card-sub-title>
-        <b-card-text>{{ notification.content }}</b-card-text>
+        {{ notification.note }}
       </b-card-text>
     </div>
   </b-card>
@@ -14,24 +13,38 @@
 export default {
   name: 'NotificationListElement',
   props: {
-    notification: {
-      sender: Object,
-      Date: String,
-      content: String
-    }
+    notification: Object
   },
-  methods: {}
-  // Add methods or lifecycle hooks as needed
+  methods: {
+    removeNotification() {
+      this.$emit('remove-notification', this.notification._id)
+    }
+  }
 }
 </script>
 
 <style scoped>
-.time {
-  text-align: right;
+.card {
+  margin-bottom: 8px;
+  position: relative;
 }
 
 .card:hover {
   background-color: rgba(0, 0, 0, 0.1); /* Darken the background color on hover */
-  cursor: pointer; /* Change cursor to indicate interactivity */
+}
+
+.close-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: red;
+  padding: 3px;
+  border: 1px solid red;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.close-icon:hover {
+  background-color: lightcoral; /* Highlight background on hover */
 }
 </style>

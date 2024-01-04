@@ -39,6 +39,13 @@ export const updateUser = async (user_id, firstName, lastName, email, password) 
   return response.data
 }
 
+export const getUserNotifications = async (offset, limit) => {
+  // should respond with an array of notifications and the total number of notifications
+  const response = await Api().get(`notifications?offset=${offset}&limit=${limit}`)
+
+  return response.data
+}
+
 export const deleteUser = async (user_id) => {
   const response = await Api().delete(`users/${user_id}`)
   return response.data

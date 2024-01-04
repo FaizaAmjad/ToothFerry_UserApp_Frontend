@@ -19,6 +19,12 @@ html {
   overflow: hidden; /* Hide overflow to prevent scrolling */
 }
 
+.img-responsive {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .container-fluid {
   background-color: #214471;
   text-align: center;
@@ -37,5 +43,11 @@ img.img-fluid {
   height: 100%;
   object-fit: cover;
   overflow: hidden; /* Hide overflow to prevent scrolling */
+}
+</style>
+
+<style scoped media="(max-width: 767px)">
+.img-responsive {
+  height: auto;
 }
 </style>

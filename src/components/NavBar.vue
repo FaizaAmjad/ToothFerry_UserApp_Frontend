@@ -31,9 +31,6 @@
             <RouterLink class="nav-link" to="/my-page">Profile</RouterLink>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" to="/clinic">Cinic</RouterLink>
-          </li>
-          <li class="nav-item">
             <RouterLink class="nav-link" to="/about">About Us</RouterLink>
           </li>
           <li class="nav-item">

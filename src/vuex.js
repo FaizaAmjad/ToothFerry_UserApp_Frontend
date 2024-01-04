@@ -13,7 +13,8 @@ const state = {
   bookedSlots: [],
   clinicDentists: [],
   dentistSlots: [],
-  errorMessage: null
+  errorMessage: null,
+  showNotifications: false
 }
 
 const store = new Vuex.Store({
@@ -28,20 +29,22 @@ const store = new Vuex.Store({
     bookedSlots: (state) => state.bookedSlots,
     clinicDentists: (state) => state.clinicDentists,
     dentistSlots: (state) => state.dentistSlots,
-    errorMessage: (state) => state.errorMessage
+    errorMessage: (state) => state.errorMessage,
+    showNotifications: (state) => state.showNotifications
   },
   actions: {
-    user({ commit }, user) {
+    user({ commit, dispatch }, user) {
       commit('SET_USER', user)
+      dispatch('getNotifications')
     },
 
-    async fetchClinics({ commit }) {
+    async fetchClinics({ commit, dispatch }) {
       try {
         // Make an API request to fetch all clinics information
         const clinics = await getClinics()
         // Update the clinic state
         commit('SET_CLINICS', clinics)
-        //dispatch('fetchDentists')
+        dispatch('fetchDentists')
       } catch (error) {
         let errorMessage = 'An unexpected error occurred.'
         if (error.response) {
@@ -79,17 +82,17 @@ const store = new Vuex.Store({
 
     async fetchSlots({ commit }) {
       try {
-        // Make an API request to fetch notifications
-        const notifications = await getSlots()
-        // Update the notifications state
-        commit('SET_SLOTS', notifications)
+        // Make an API request to fetch slots
+        const slots = await getSlots()
+        // Update the slots state
+        commit('SET_SLOTS', slots)
       } catch (error) {
         let errorMessage = 'An unexpected error occurred.'
         if (error.response) {
           if (error.response.status === 500) {
-            errorMessage = 'Server error in getting notifications.'
+            errorMessage = 'Server error in getting slots.'
           } else {
-            errorMessage = 'An error occurred during fetching notifications.'
+            errorMessage = 'An error occurred during fetching slots.'
           }
         }
         commit('SET_ERROR', errorMessage)
@@ -196,6 +199,9 @@ const store = new Vuex.Store({
       try {
         // Make an API request to fetch notifications
         const notifications = await getNotifications()
+        notifications.forEach((notification) => {
+          console.log('checking notifications' + notification.note)
+        })
         // Update the notifications state
         commit('SET_NOTIFICATIONS', notifications)
       } catch (error) {
@@ -231,8 +237,8 @@ const store = new Vuex.Store({
     SET_DENTISTS(state, dentists) {
       state.dentists = dentists
     },
-    SET_SLOTS(state, notifications) {
-      state.notifications = notifications
+    SET_SLOTS(state, slots) {
+      state.slots = slots
     },
     SET_SELECTED_CLINIC(state, clinic) {
       state.selectedClinic = clinic
@@ -261,6 +267,9 @@ const store = new Vuex.Store({
     },
     REMOVE_NOTIFICATION(state, index) {
       state.notifications.splice(index, 1)
+    },
+    TOGGLE_SHOW_NOTIFICATIONS(state) {
+      state.showNotifications = !state.showNotifications
     }
   }
 })

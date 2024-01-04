@@ -4,7 +4,7 @@
     <div v-if="notifications.length > 0" class="notification-badge">{{ notifications.length }}</div>
 
     <div v-if="showNotifications" class="notification-dropdown">
-      <notification-list-element
+      <NotificationListElement
         v-for="(notification, index) in notifications"
         :key="index"
         :notification="notification"
@@ -25,9 +25,9 @@ export default {
     ...mapGetters(['notifications', 'showNotifications'])
   },
   methods: {
-    ...mapMutations(['toggleShowNotifications']),
+    ...mapMutations(['TOGGLE_SHOW_NOTIFICATIONS']),
     toggleNotifications() {
-      this.toggleShowNotifications()
+      this.TOGGLE_SHOW_NOTIFICATIONS()
     }
   }
 }
@@ -48,8 +48,8 @@ export default {
   background-color: red;
   color: white;
   border-radius: 50%;
-  padding: 4px 8px;
-  font-size: 12px;
+  padding: 2px 6px;
+  font-size: 8px;
 }
 
 .notification-dropdown {
@@ -62,5 +62,6 @@ export default {
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 10px;
+  z-index: 1000;
 }
 </style>

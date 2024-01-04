@@ -2,9 +2,7 @@
   <b-card class="card">
     <div>
       <b-card-text>
-        <b-card-title>{{ notification.sender.name }}</b-card-title>
-        <b-card-sub-title>{{ notification.date }}</b-card-sub-title>
-        <b-card-text>{{ notification.content }}</b-card-text>
+        {{ notification.note }}
       </b-card-text>
     </div>
   </b-card>
@@ -14,11 +12,7 @@
 export default {
   name: 'NotificationListElement',
   props: {
-    notification: {
-      sender: Object,
-      Date: String,
-      content: String
-    }
+    notification: Object
   },
   methods: {}
   // Add methods or lifecycle hooks as needed

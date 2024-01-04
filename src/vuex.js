@@ -9,11 +9,12 @@ const state = {
   dentists: [],
   selectedClinic: null,
   selectedDentist: null,
-  notifications: [],
+  slots: [],
   bookedSlots: [],
   clinicDentists: [],
   dentistSlots: [],
   errorMessage: null,
+  notifications: [],
   showNotifications: false
 }
 
@@ -23,13 +24,14 @@ const store = new Vuex.Store({
     user: (state) => state.user,
     clinics: (state) => state.clinics,
     dentists: (state) => state.dentists,
-    notifications: (state) => state.notifications,
+    slots: (state) => state.slots,
     getSelectedClinic: (state) => state.selectedClinic,
     getSelectedDentist: (state) => state.selectedDentist,
     bookedSlots: (state) => state.bookedSlots,
     clinicDentists: (state) => state.clinicDentists,
     dentistSlots: (state) => state.dentistSlots,
     errorMessage: (state) => state.errorMessage,
+    notifications: (state) => state.notifications,
     showNotifications: (state) => state.showNotifications
   },
   actions: {
@@ -128,7 +130,7 @@ const store = new Vuex.Store({
     },
 
     dentistSlots({ commit, dispatch, state }) {
-      const dentistSlots = state.notifications.filter(
+      const dentistSlots = state.slots.filter(
         (slot) => slot.dentist_id === state.selectedDentist._id
       )
       commit('SET_DENTIST_SLOTS', dentistSlots)

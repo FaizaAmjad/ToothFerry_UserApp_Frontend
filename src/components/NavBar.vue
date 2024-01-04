@@ -21,14 +21,14 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-left" v-if="user">
+          <li class="nav-item notify">
+            <notification-bell />
+          </li>
           <li class="nav-item">
             <RouterLink class="nav-link active" aria-current="page" to="/home">Home</RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" to="/my-page">Profile</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/clinic">Cinic</RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" to="/about">About Us</RouterLink>
@@ -47,11 +47,14 @@ import { mapGetters, useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import { getUserInfo } from '../apis/users'
-import { disConnect,connect } from '../ws'
+import { disConnect, connect } from '../ws'
+import NotificationBell from './NotificationBell.vue'
 
 export default {
   name: 'nav-bar',
-
+  components: {
+    NotificationBell
+  },
   setup() {
     onMounted(() => {
       //const store = useStore()
@@ -59,8 +62,7 @@ export default {
       const route = useRoute()
 
       defineUser().then((userDetails) => {
-       
-        connect(userDetails.id) 
+        connect(userDetails.id)
         const token = localStorage.getItem('token')
         if (token && ['/', '/login', '/signup'].includes(route.path)) {
           router.push('/home')
@@ -83,8 +85,8 @@ export default {
 
     const defineUser = async () => {
       const userDetails = await getUserInfo()
-       store.dispatch('user', userDetails)
-       return userDetails;
+      store.dispatch('user', userDetails)
+      return userDetails
     }
 
     return { handleLogout }

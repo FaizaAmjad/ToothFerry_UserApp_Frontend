@@ -21,6 +21,9 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-left" v-if="user">
+          <li class="nav-item notify">
+            <notification-bell />
+          </li>
           <li class="nav-item">
             <RouterLink class="nav-link active" aria-current="page" to="/home">Home</RouterLink>
           </li>
@@ -48,12 +51,15 @@ import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import { getUserInfo } from '../apis/users'
 import { disConnect } from '../ws'
+import NotificationBell from './NotificationBell.vue'
 export default {
   name: 'nav-bar',
-
+  components: {
+    NotificationBell
+  },
   setup() {
     onMounted(() => {
-      const store = useStore()
+      //const store = useStore()
       const router = useRouter()
       const route = useRoute()
 

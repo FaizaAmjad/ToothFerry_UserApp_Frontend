@@ -222,8 +222,8 @@ const store = new Vuex.Store({
     addNotification({ commit }, notification) {
       commit('ADD_NOTIFICATION', notification)
     },
-    removeNotification({ commit }, index) {
-      commit('REMOVE_NOTIFICATION', index)
+    removeNotification({ commit }, notificationId) {
+      commit('REMOVE_NOTIFICATION', notificationId)
     }
   },
   mutations: {
@@ -267,8 +267,10 @@ const store = new Vuex.Store({
     ADD_NOTIFICATION(state, notification) {
       state.notifications.push(notification)
     },
-    REMOVE_NOTIFICATION(state, index) {
-      state.notifications.splice(index, 1)
+    REMOVE_NOTIFICATION(state, notificationId) {
+      state.notifications = state.notifications.filter(
+        (notification) => notification._id !== notificationId
+      )
     },
     TOGGLE_SHOW_NOTIFICATIONS(state) {
       state.showNotifications = !state.showNotifications

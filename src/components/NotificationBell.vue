@@ -8,13 +8,14 @@
         v-for="(notification, index) in notifications"
         :key="index"
         :notification="notification"
+        @remove-notification="handleRemoveNotification"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import NotificationListElement from './NotificationListElement.vue'
 
 export default {
@@ -28,6 +29,10 @@ export default {
     ...mapMutations(['TOGGLE_SHOW_NOTIFICATIONS']),
     toggleNotifications() {
       this.TOGGLE_SHOW_NOTIFICATIONS()
+    },
+    ...mapActions(['removeNotification']),
+    handleRemoveNotification(notificationId) {
+      this.removeNotification(notificationId)
     }
   }
 }

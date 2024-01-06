@@ -322,7 +322,19 @@ export default {
   top: 0;
   right: 0;
   font-size: 16px;
-  color: #000000;
+  color: #ffffff;
   margin: 5px;
+}
+
+@media only screen and (max-width: 600px) {
+  .appointment-scheduler-container {
+    max-width: 100%;
+    padding: 20px;
+  }
+  .schedule-table th,
+  .schedule-table td,
+  .unbook-icon {
+    font-size: 8px;
+  }
 }
 </style>

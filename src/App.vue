@@ -78,11 +78,12 @@ body {
   justify-content: center;
   flex-direction: column;
   text-align: left;
-  padding: 40px;
+  padding: 5%;
 }
 
 .auth-inner {
-  width: 450px;
+  width: 80%;
+  max-width: 450px;
   margin: auto;
   background: var(--secondary-bg);
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
@@ -130,6 +131,24 @@ body {
 .schedule-table-container {
   max-width: 800px;
   margin: 0 auto;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px; /* or any desired maximum width */
+}
+
+@media only screen and (max-width: 600px) {
+  .auth-inner {
+    width: 90%;
+    padding: 20px;
+  }
 }
 
 @media (max-width: 576px) {

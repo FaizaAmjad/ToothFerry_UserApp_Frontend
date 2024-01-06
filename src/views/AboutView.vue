@@ -7,13 +7,13 @@
 
         <p class="about-description">
           Welcome to Tooth Fairy Dentist Hub, the exclusive platform for registered dentists
-          affiliated with the Tooth Fairy organization in Gothenburg.
+          affiliated with the Tooth Fairy organization in Sweden.
         </p>
 
         <div class="about-text">
           <p>🏥 Explore Clinics:</p>
           <p>
-            Discover and connect with numerous dental clinics in Gothenburg. Find the one that suits
+            Discover and connect with numerous dental clinics in Sweden. Find the one that suits
             your needs and book appointments effortlessly.
           </p>
 

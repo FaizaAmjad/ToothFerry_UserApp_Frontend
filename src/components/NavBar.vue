@@ -1,26 +1,27 @@
 <template>
-  <nav toggleable="lg" class="navbar navbar-expand-lg bg-body-tertiary navbar-light">
-    <div class="container-fluid">
-      <RouterLink class="navbar-brand" to="/">
-        <span class="app-name">
-          ToothFerry - <span class="tagline">PROTECTS YOUR TEETH!</span></span
-        >
-      </RouterLink>
+  <nav toggleable="lg" class="navbar navbar-expand-md bg-body-tertiary navbar-light">
+    <RouterLink class="navbar-brand" to="/">
+      <span class="app-name">
+        Tooth Ferry<span class="tagline d-none d-md-inline"> - PROTECTS YOUR TEETH!</span>
+      </span>
+    </RouterLink>
 
-      <div>
-        <ul class="nav navbar-nav navbar-right" v-if="!user">
-          <b-nav-item-dropdown right>
-            <!-- TODO: Check whether the user is logged in or not and display the information based on that -->
-            <template #button-content>
-              <em>User</em>
-            </template>
-            <b-dropdown-item href="/login">Login</b-dropdown-item>
-            <b-dropdown-item href="/signup">Sign-up</b-dropdown-item>
-            <!--<b-dropdown-item href="my-page">Account</b-dropdown-item>-->
-          </b-nav-item-dropdown>
+    <button class="navbar-toggler" type="button" @click="toggleNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" :class="{ show: isNavVisible }">
+      <div class="container-fluid justify-content-between">
+        <ul class="nav navbar-nav" v-if="!user">
+          <li class="nav-item">
+            <RouterLink class="nav-link" to="/login">Login</RouterLink>
+          </li>
+          <li class="nav-item">
+            <RouterLink class="nav-link" to="/signup">Sign-up</RouterLink>
+          </li>
         </ul>
 
-        <ul class="nav navbar-nav navbar-left" v-if="user">
+        <ul class="nav navbar-nav" v-if="user">
           <li class="nav-item notify">
             <notification-bell />
           </li>
@@ -54,6 +55,11 @@ export default {
   name: 'nav-bar',
   components: {
     NotificationBell
+  },
+  data() {
+    return {
+      isNavVisible: false
+    }
   },
   setup() {
     onMounted(() => {
@@ -93,8 +99,21 @@ export default {
   },
   computed: {
     ...mapGetters(['user'])
+  },
+  methods: {
+    toggleNav() {
+      this.isNavVisible = !this.isNavVisible
+    }
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.show {
+  display: block !important;
+}
+
+.app-name {
+  padding: 20px;
+}
+</style>

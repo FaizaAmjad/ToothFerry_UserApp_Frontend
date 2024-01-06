@@ -1,88 +1,91 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
     <b-row class="row">
       <div v-if="error" class="alert alert-danger">
         {{ error }}
       </div>
       <!-- Left Section -->
-      <b-col md="8">
-        <div id="search">
-          <!-- TODO: doesn't look the greatest but actual functionalities are more important -->
-          <button type="searchButton" class="btn btn-primary" @click="Search()">Search</button>
-          <input
-            type="input"
-            v-model="searchInput"
-            class="form-input"
-            id="SearchInput"
-            placeholder="Clinic Name"
+      <div class="left-section">
+        <b-col md="8">
+          <div id="search">
+            <!-- TODO: doesn't look the greatest but actual functionalities are more important -->
+            <button type="searchButton" class="btn btn-primary" @click="Search()">Search</button>
+            <input
+              type="input"
+              v-model="searchInput"
+              class="form-input"
+              id="SearchInput"
+              placeholder="Clinic Name"
+            />
+          </div>
+        </b-col>
+        <b-col>
+          <!-- Map component -->
+          <MapComponent
+            :markers="markers"
+            :center="userPosition"
+            :zoom="12.5"
+            :mapOptions="{
+              zoomControl: true,
+              mapTypeControl: true,
+              scaleControl: true,
+              streetViewControl: true,
+              rotateControl: false,
+              fullscreenControl: true
+            }"
+            :isInfoWindowVisible="isInfoWindowVisible"
+            :infoWindowPosition="infoWindowPosition"
+            :infoWindowOptions="infoWindowOptions"
+            :infoWindowTitle="infoWindowTitle"
+            :infoWindowContent="infoWindowContent"
+            :infoWindowLink="infoWindowLink"
           />
-        </div>
-      </b-col>
-      <b-col md="8">
-        <!-- Map component -->
-        <MapComponent
-          :markers="markers"
-          :center="userPosition"
-          :zoom="12"
-          :mapOptions="{
-            zoomControl: true,
-            mapTypeControl: true,
-            scaleControl: true,
-            streetViewControl: true,
-            rotateControl: false,
-            fullscreenControl: true
-          }"
-          :isInfoWindowVisible="isInfoWindowVisible"
-          :infoWindowPosition="infoWindowPosition"
-          :infoWindowOptions="infoWindowOptions"
-          :infoWindowTitle="infoWindowTitle"
-          :infoWindowContent="infoWindowContent"
-          :infoWindowLink="infoWindowLink"
-        />
-      </b-col>
+        </b-col>
+      </div>
       <!-- Right Section -->
-      <b-col md="4">
-        <!-- My Bookings -->
-        <div class="bg-light p-5">
-          <div class="card">
-            <h5 class="bookingsHeader">My Bookings</h5>
-            <br />
-            <BookingListElement
-              v-for="booking in bookings"
-              :booking="booking"
-              :key="booking.id"
-              @click="showPopup(booking)"
-            />
-            <b-pagination
-              class="pagination"
-              v-model="currentPage"
-              :link-gen="generatePaginationLink"
-              :total-rows="numPages"
-              :align="center"
-            ></b-pagination>
+      <!--
+      <div class="right-section">
+        <b-col md="4">
+          <div class="bg-light p-5">
+            <div class="card">
+              <h5 class="bookingsHeader">My Bookings</h5>
+              <br />
+              <BookingListElement
+                v-for="booking in bookings"
+                :booking="booking"
+                :key="booking.id"
+                @click="showPopup(booking)"
+              />
+              <b-pagination
+                class="pagination"
+                v-model="currentPage"
+                :link-gen="generatePaginationLink"
+                :total-rows="numPages"
+                :align="center"
+              ></b-pagination>
+            </div>
           </div>
-        </div>
 
-        <!-- Inbox -->
-        <div class="bg-light p-5">
-          <div class="card">
-            <h5 class="card-header" @click="goToInbox">Inbox</h5>
-            <br />
-            <NotificationListElement
-              v-for="notification in notifications"
-              :notification="notification"
-              :key="notification.id"
-            />
-            <p :style="{ color: unreadMessages > 0 ? 'red' : 'black' }">
-              {{ unreadMessages }} unread messages
-            </p>
+          <div class="bg-light p-5">
+            <div class="card">
+              <h5 class="card-header" @click="goToInbox">Inbox</h5>
+              <br />
+              <NotificationListElement
+                v-for="notification in notifications"
+                :notification="notification"
+                :key="notification.id"
+              />
+              <p :style="{ color: unreadMessages > 0 ? 'red' : 'black' }">
+                {{ unreadMessages }} unread messages
+              </p>
+            </div>
           </div>
-        </div>
-      </b-col>
+        </b-col>
+      </div>
+    -->
     </b-row>
   </div>
-
-  <!-- Popup Container -->
+  <!--
   <div v-if="isPopupVisible" id="popup-container">
     <b-card v-if="isPopupVisible" class="popupCard">
       <h5 class="card-header">{{ popupInfo.type }}</h5>
@@ -96,22 +99,22 @@
       </div>
       <button id="close-button" @click="hidePopup">Close</button>
     </b-card>
-  </div>
+  </div>-->
 </template>
 
 <script>
 import MapComponent from '@/components/MapComponent.vue'
-import BookingListElement from '../components/BookingListElement.vue'
-import NotificationListElement from '../components/NotificationListElement.vue'
+//import BookingListElement from '../components/BookingListElement.vue'
+//import NotificationListElement from '../components/NotificationListElement.vue'
 
 const CARDS_PER_PAGINATION = 1
 
 export default {
   name: 'home-view',
   components: {
-    MapComponent,
-    BookingListElement,
-    NotificationListElement
+    MapComponent
+    //BookingListElement,
+    //NotificationListElement
   },
   computed: {
     error() {
@@ -121,8 +124,8 @@ export default {
   created() {
     this.$store.commit('SET_ERROR', null)
   },
-  unmounted() {
-    //this.$store.commit('SET_ERROR', null)
+  beforeUnmounty() {
+    window.removeEventListener('resize', this.handleResize)
   },
   mounted() {
     try {
@@ -157,6 +160,7 @@ export default {
     } catch (error) {
       console.error('Error in mounted hook:', error)
     }
+    window.addEventListener('resize', this.handleResize)
   },
   data() {
     return {
@@ -303,6 +307,11 @@ export default {
     cancelBooking() {
       console.log('TODO: Cancel booking using api call')
       //we have the _id of the selected booking in this.popupInfo._id
+    },
+    handleResize() {
+      if (this.$refs.map) {
+        this.$refs.map.resize()
+      }
     }
   }
 }
@@ -314,16 +323,6 @@ html {
   margin: 0;
   padding: 0;
   height: 100%;
-}
-
-#gmap-container {
-  height: 100%;
-  width: 100%;
-}
-
-.GMapMap {
-  height: 100%;
-  width: 100%;
 }
 
 #popup-container {
@@ -379,5 +378,31 @@ html {
 }
 button.page-link {
   z-index: 0 !important;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.left-section {
+  width: 100%;
+  flex: 1;
+}
+
+.right-section {
+  width: 100%;
+  flex: 1;
+}
+
+@media (max-width: 767px) {
+  .right-section {
+    display: none;
+  }
+
+  .left-section,
+  .right-section {
+    width: 100%;
+  }
 }
 </style>

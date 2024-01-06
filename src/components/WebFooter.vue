@@ -27,6 +27,20 @@ export default {
 }
 </script>
 <style scoped>
+body {
+  margin: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
 .footer-content {
   display: flex;
   justify-content: space-around;
@@ -36,7 +50,6 @@ export default {
   color: white;
   bottom: 0;
   width: 100%;
-  position: fixed;
   z-index: 5;
 }
 
@@ -61,5 +74,18 @@ a {
 
 a:hover {
   color: #81b1de;
+}
+
+@media (max-width: 600px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
 }
 </style>

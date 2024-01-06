@@ -2,7 +2,7 @@
   <nav toggleable="lg" class="navbar navbar-expand-md bg-body-tertiary navbar-light">
     <RouterLink class="navbar-brand" to="/">
       <span class="app-name">
-        ToothFerry<span class="tagline d-none d-md-inline"> - PROTECTS YOUR TEETH!</span>
+        Tooth Ferry<span class="tagline d-none d-md-inline"> - PROTECTS YOUR TEETH!</span>
       </span>
     </RouterLink>
 
@@ -111,5 +111,9 @@ export default {
 <style scoped>
 .show {
   display: block !important;
+}
+
+.app-name {
+  padding: 20px;
 }
 </style>

@@ -122,9 +122,7 @@ export default {
   methods: {
     async onSignUp() {
       try {
-        //   console.log(' submitted ' + this.form.email)
-        // TODO create a field for the theme on the signup form
-        const user = await createUser(
+        await createUser(
           this.form.firstName,
           this.form.lastName,
           this.form.socialNumber,
@@ -133,8 +131,6 @@ export default {
           'light'
         )
 
-        // localStorage.setItem('token', user.token);
-        // this.$store.dispatch('user', user.user);
         this.$router.push('/login')
       } catch (error) {
         this.error = 'En error occurred.'

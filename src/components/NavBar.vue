@@ -1,7 +1,9 @@
 <template>
   <nav toggleable="lg" class="navbar navbar-expand-md bg-body-tertiary navbar-light">
     <RouterLink class="navbar-brand" to="/">
-      <span class="app-name"> ToothFerry - <span class="tagline">PROTECTS YOUR TEETH!</span> </span>
+      <span class="app-name">
+        ToothFerry<span class="tagline d-none d-md-inline"> - PROTECTS YOUR TEETH!</span>
+      </span>
     </RouterLink>
 
     <button class="navbar-toggler" type="button" @click="toggleNav">

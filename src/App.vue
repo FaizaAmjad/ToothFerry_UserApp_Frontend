@@ -131,4 +131,36 @@ body {
   max-width: 800px;
   margin: 0 auto;
 }
+
+@media (max-width: 576px) {
+  h3 {
+    font-size: 1.5rem;
+  }
+  p {
+    font-size: 0.875rem;
+  }
+  .col-md-6 {
+    width: 100%;
+  }
+  .auth-inner {
+    padding: 15px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-wrapper {
+    padding: 10px;
+  }
+  .auth-inner {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  button {
+    font-size: 1rem;
+  }
+}
 </style>

@@ -2,7 +2,7 @@
   <div>
     <div class="explannation">
       <br />
-      <h4>Please answer following questionnaire.</h4>
+      <h4>Please answer the following questionnaire.</h4>
       <h6>We require you to answer all of the questions</h6>
       <br />
     </div>

@@ -81,7 +81,7 @@ export default {
         {
           text: '5. How would you rate the health of your teeth and gums?',
           type: 'multipleChoice',
-          choices: ['Never', 'Hardly Ever', 'Occassionally', 'Fairly Often', 'Very Often'],
+          choices: ['Excellent', 'Good', 'Fair', 'Bad', 'Extremely Bad'],
           answer: null
         }
       ],
@@ -92,7 +92,7 @@ export default {
           answer: null
         },
         {
-          text: '7. Did the dentist explain about the benefit og giving up cigarettes?',
+          text: '7. Did the dentist explain about the benefit of giving up cigarettes?',
           type: 'yesNo',
           answer: null
         },

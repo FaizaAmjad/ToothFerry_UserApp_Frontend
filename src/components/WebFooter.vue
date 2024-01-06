@@ -23,7 +23,8 @@
 </template>
 <script>
 export default {
-  name: 'web-footer',}
+  name: 'web-footer'
+}
 </script>
 <style scoped>
 .footer-content {

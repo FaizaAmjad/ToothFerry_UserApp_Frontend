@@ -92,14 +92,19 @@ export default {
 </script>
 
 <style scoped>
-/* Map component styles */
 #gmap-container {
-  height: 100%;
   width: 100%;
+  height: 70vh;
 }
 
 .GMapMap {
-  height: 100%;
   width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 768px) {
+  .responsive-container {
+    height: 100%;
+  }
 }
 </style>

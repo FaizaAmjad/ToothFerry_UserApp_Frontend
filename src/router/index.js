@@ -5,6 +5,8 @@ import AppointmentView from '../views/AppointmentView.vue'
 import LandingView from '../views/LandingView.vue'
 import MyPage from '../views/MyPage.vue'
 import InboxView from '../views/InboxView.vue'
+import EmergencyForm from '../views/emergencyForm.vue'
+import ResultLoader from '../views/resultLoader.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,7 +59,17 @@ const router = createRouter({
     {
       path: '/inbox',
       name: 'inbox-view',
-      component: InboxView
+      component: InboxView,
+    },
+    {
+      path: '/emergency-form',
+      name: 'emergency-form',
+      component: EmergencyForm
+    },
+    {
+      path: '/emergency-results',
+      name: 'emergency-results',
+      component: ResultLoader
     }
   ]
 })

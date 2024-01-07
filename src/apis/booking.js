@@ -6,6 +6,12 @@ export const getSlots = async () => {
   return response.data
 }
 
+export const getUserBookings = async () => {
+  const response = await Api().get('slots?offset=0&limit=3')
+
+  return response.data
+}
+
 export const getSlot = async (slot_id) => {
   const response = await Api().get(`slots/${slot_id}`)
 

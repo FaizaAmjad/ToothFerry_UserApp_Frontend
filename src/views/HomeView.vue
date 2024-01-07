@@ -21,6 +21,7 @@
       <b-col md="8">
         <!-- Map component -->
         <MapComponent
+          ref="parentMapRef"
           :markers="markers"
           :center="userPosition"
           :zoom="12"
@@ -103,6 +104,8 @@
 import MapComponent from '@/components/MapComponent.vue'
 import BookingListElement from '../components/BookingListElement.vue'
 import NotificationListElement from '../components/NotificationListElement.vue'
+import { getUserNotifications } from '@/apis/notifications';
+import { getUserBookings } from '@/apis/booking';
 
 const CARDS_PER_PAGINATION = 1
 
@@ -125,38 +128,9 @@ export default {
     //this.$store.commit('SET_ERROR', null)
   },
   mounted() {
-    try {
-      this.$store.dispatch('fetchClinics').then(() => {
-        // Try to get the user's current location
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              // Successfully obtained the user's current position
-              const latitude = position.coords.latitude
-              const longitude = position.coords.longitude
-
-              if (!isNaN(latitude) && !isNaN(longitude)) {
-                this.userPosition = { lat: latitude, lng: longitude }
-                this.setMapCenter(this.userPosition)
-                this.markers = this.computeMarkers(this.userPosition)
-              } else {
-                this.useDefaultPosition()
-              }
-            },
-            (error) => {
-              console.error('Error getting user location:', error)
-              this.useDefaultPosition()
-            }
-          )
-        } else {
-          // Geolocation is not supported by the browser
-          console.error('Geolocation is not supported by your browser.')
-          this.useDefaultPosition()
-        }
-      })
-    } catch (error) {
-      console.error('Error in mounted hook:', error)
-    }
+    this.fetchClinics()
+    this.fetchBookings()
+    this.fetchNotifications()
   },
   data() {
     return {
@@ -173,48 +147,8 @@ export default {
       infoWindowLink: '',
       searchInput: '',
       popupInfo: {},
-      bookings: [
-        {
-          type: 'Checkup',
-          clinic: {
-            name: 'City Hospital',
-            location: '123 Main St, Cityville'
-          },
-          date: '2023-11-28',
-          time: '10:30 AM'
-          // Add more details based on your booking data structure
-        },
-        {
-          type: 'Dental Appointment',
-          clinic: {
-            name: 'Dentist Clinic',
-            location: '456 Dental St, Toothland'
-          },
-          date: '2023-12-05',
-          time: '2:00 PM'
-          // Add more details based on your booking data structure
-        }
-        // Add more mock bookings as needed
-      ],
-      notifications: [
-        {
-          sender: {
-            name: 'Dr. Dentist',
-            profilePicture: 'https://picsum.photos/200'
-          },
-          date: '2023-11-28',
-          content: 'Your gonna die, your teeth have the big C.'
-        },
-        {
-          sender: {
-            name: 'Dr. Teeth',
-            profilePicture: 'https://picsum.photos/210'
-          },
-          date: '2023-12-05',
-          content: 'Your appointment has been confirmed.'
-        }
-        // Add more mock notifications as needed
-      ]
+      bookings: [],
+      notifications: [],
     }
   },
   methods: {
@@ -273,13 +207,71 @@ export default {
       const offset = (pageNum - 1) * CARDS_PER_PAGINATION
       return `${this.$route.path}?offset=${offset}&limit=${CARDS_PER_PAGINATION}`
     },
+    async fetchClinics() {
+      try {
+        this.$store.dispatch('fetchClinics').then(() => {
+          // Try to get the user's current location
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                // Successfully obtained the user's current position
+                const latitude = position.coords.latitude
+                const longitude = position.coords.longitude
+
+                if (!isNaN(latitude) && !isNaN(longitude)) {
+                  this.userPosition = { lat: latitude, lng: longitude }
+                  this.setMapCenter(this.userPosition)
+                  this.markers = this.computeMarkers(this.userPosition)
+                } else {
+                  this.useDefaultPosition()
+                }
+              },
+              (error) => {
+                console.error('Error getting user location:', error)
+                this.useDefaultPosition()
+              }
+            )
+          } else {
+            // Geolocation is not supported by the browser
+            console.error('Geolocation is not supported by your browser.')
+            this.useDefaultPosition()
+          }
+        })
+      } catch (error) {
+        console.error('Error in fetchClinics of mounted hook:', error)
+      }
+    },
+    async fetchNotifications() {
+      try {
+        const response = await getUserNotifications(0,3);
+        if (response) {
+          console.log('notifications:', response);
+          this.notifications = response;
+          this.totalNotifications = response.length; //TODO: the totalNotifications should be a part of the response, since the length of the response is not the total number of notifications
+        }
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    },
+    async fetchBookings() {
+      try {
+        const response = await getUserBookings(0,3);
+        if (response) {
+          console.log('bookings:', response);
+          this.bookings = response;
+        }
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      }
+    },
     Search() {
       try {
         console.log('Trying to search for ' + this.searchInput)
         const foundMarker = this.markers.find((marker) => marker.clinicName === this.searchInput)
-
+        console.log(foundMarker)
         if (foundMarker) {
-          this.onMarkerClicked(foundMarker)
+          this.$refs.parentMapRef.$refs.map.panTo(foundMarker.position)
+          this.$refs.parentMapRef.showInfoWindow(foundMarker)
         } else {
           console.log('No marker found')
         }

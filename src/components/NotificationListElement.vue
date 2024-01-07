@@ -1,10 +1,10 @@
 <template>
-  <b-card @click="expand" class="card">
+  <b-card class="card">
     <div>   
       <b-card-text>
-        <b-card-title>{{notification.sender.name}}</b-card-title>
-        <b-card-sub-title>{{notification.date}}</b-card-sub-title>
-        <b-card-text>{{notification.content}}</b-card-text>
+        <b-card-title>{{notification.id}}</b-card-title>
+        <b-card-sub-title>{{notification.type}}</b-card-sub-title>
+        <b-card-text>{{notification.note}}</b-card-text>
       </b-card-text>
     </div>
   </b-card>
@@ -15,14 +15,10 @@ export default {
   name: 'NotificationListElement',
   props: {
     notification: {
-      sender: Object,
-      Date: String,
-      content: String
-    }
-  },
-  methods: {
-    expand() {
-      this.$router.push(`/inbox/${this.notification._id}`)
+      id: String,
+      user_id: String,
+      note: String,
+      type: String
     }
   }
   // Add methods or lifecycle hooks as needed

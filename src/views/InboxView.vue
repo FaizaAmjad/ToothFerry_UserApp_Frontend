@@ -10,12 +10,13 @@
         :per-page="perPage"
         @change="fetchNotifications"
       ></b-pagination>
+      <button @click="onClick">Click me</button>
     </div>
   </template>
   
   <script>
   import NotificationListElement from '@/components/NotificationListElement.vue';
-  import { getUserNotifications } from '@/apis/users';
+  import { getUserNotifications } from '@/apis/notifications';
   
   
   export default {
@@ -37,18 +38,20 @@
     methods: {
       async fetchNotifications() {
         try {
-          var offset = (this.currentPage - 1) * this.perPage;
-          var limit = this.perPage;
-          const response = await getUserNotifications(
-          offset,
-          limit,
-          );
-  
-          this.notifications = response.data.notifications;
-          this.totalNotifications = response.data.total;
+          const response = await getUserNotifications();
+          if (response) {
+            console.log('response.data:', response);
+            this.notifications = response;
+            this.totalNotifications = response.length;
+          }
         } catch (error) {
           console.error('Error fetching notifications:', error);
         }
+      },
+      onClick() {
+        this.fetchNotifications();
+        console.log('Notifications:', this.notifications);
+        console.log('toalNotifications:', this.totalNotifications);
       },
     },
   };

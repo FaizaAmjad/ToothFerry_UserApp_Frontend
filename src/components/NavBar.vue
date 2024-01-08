@@ -6,38 +6,41 @@
       </span>
     </RouterLink>
 
-    <button class="navbar-toggler" type="button" @click="toggleNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse justify-content-end" :class="{ show: isNavVisible }">
-      <div class="container-fluid justify-content-between">
-        <ul class="nav navbar-nav" v-if="!user">
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/login">Login</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/signup">Sign-up</RouterLink>
-          </li>
-        </ul>
-
-        <ul class="nav navbar-nav" v-if="user">
-          <li class="nav-item notify">
-            <notification-bell />
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link active" aria-current="page" to="/home">Home</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/my-page">Profile</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/about">About Us</RouterLink>
-          </li>
-          <li class="nav-item">
-            <a href="javascript:void(0)" @click="handleLogout" class="nav-link">Logout</a>
-          </li>
-        </ul>
+    
+      <button class="navbar-toggler" type="button" @click="toggleNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse justify-content-end" :class="{ show: isNavVisible }">
+        <div style="display:flex; justify-content:flex-end">
+        <div class="container-fluid justify-content-between">
+          <ul class="nav navbar-nav" v-if="!user">
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/login">Login</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/signup">Sign-up</RouterLink>
+            </li>
+          </ul>
+  
+          <ul class="nav navbar-nav" v-if="user">
+            <li class="nav-item notify">
+              <notification-bell />
+            </li>
+            <li class="nav-item">
+              <RouterLink class="nav-link active" aria-current="page" to="/home">Home</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/my-page">Profile</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/about">About Us</RouterLink>
+            </li>
+            <li class="nav-item">
+              <a href="javascript:void(0)" @click="handleLogout" class="nav-link">Logout</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>

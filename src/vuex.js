@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import { getClinics, getDentists } from './apis/clinic'
 import { getSlots, book, unBook } from './apis/booking'
-import { getNotifications } from './apis/notifications'
+import { getNotifications } from './apis/notification'
 
 const state = {
   user: null,
@@ -15,7 +15,7 @@ const state = {
   dentistSlots: [],
   errorMessage: null,
   notifications: [],
-  newNotifications: false
+  showNotifications: false
 }
 
 const store = new Vuex.Store({
@@ -32,20 +32,21 @@ const store = new Vuex.Store({
     dentistSlots: (state) => state.dentistSlots,
     errorMessage: (state) => state.errorMessage,
     notifications: (state) => state.notifications,
-    hasNewNotifications: (state) => state.newNotifications
+    showNotifications: (state) => state.showNotifications
   },
   actions: {
-    user({ commit }, user) {
+    user({ commit, dispatch }, user) {
       commit('SET_USER', user)
+      dispatch('getNotifications')
     },
 
-    async fetchClinics({ commit }) {
+    async fetchClinics({ commit, dispatch }) {
       try {
         // Make an API request to fetch all clinics information
         const clinics = await getClinics()
         // Update the clinic state
         commit('SET_CLINICS', clinics)
-        //dispatch('fetchDentists')
+        dispatch('fetchDentists')
       } catch (error) {
         let errorMessage = 'An unexpected error occurred.'
         if (error.response) {
@@ -211,6 +212,35 @@ const store = new Vuex.Store({
 
     errorMessage({ commit }, errorMessage) {
       commit('SET_ERROR', errorMessage)
+    },
+
+    async getNotifications({ commit }) {
+      try {
+        // Make an API request to fetch notifications
+        const notifications = await getNotifications()
+        notifications.forEach((notification) => {
+          console.log('checking notifications' + notification.note)
+        })
+        // Update the notifications state
+        commit('SET_NOTIFICATIONS', notifications)
+      } catch (error) {
+        let errorMessage = 'An unexpected error occurred.'
+        if (error.response) {
+          if (error.response.status === 500) {
+            errorMessage = 'Server error in getting notifications.'
+          } else {
+            errorMessage = 'An error occurred during fetching notifications.'
+          }
+        }
+        commit('SET_ERROR', errorMessage)
+      }
+    },
+
+    addNotification({ commit }, notification) {
+      commit('ADD_NOTIFICATION', notification)
+    },
+    removeNotification({ commit }, notificationId) {
+      commit('REMOVE_NOTIFICATION', notificationId)
     }
   },
   mutations: {
@@ -251,8 +281,16 @@ const store = new Vuex.Store({
     SET_NOTIFICATIONS(state, notifications) {
       state.notifications = notifications
     },
-    SET_NEW_NOTIFICATIONS(state, hasNewNotifications) {
-      state.newNotifications = hasNewNotifications
+    ADD_NOTIFICATION(state, notification) {
+      state.notifications.push(notification)
+    },
+    REMOVE_NOTIFICATION(state, notificationId) {
+      state.notifications = state.notifications.filter(
+        (notification) => notification._id !== notificationId
+      )
+    },
+    TOGGLE_SHOW_NOTIFICATIONS(state) {
+      state.showNotifications = !state.showNotifications
     }
   }
 })

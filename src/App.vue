@@ -78,11 +78,12 @@ body {
   justify-content: center;
   flex-direction: column;
   text-align: left;
-  padding: 40px;
+  padding: 5%;
 }
 
 .auth-inner {
-  width: 450px;
+  width: 80%;
+  max-width: 450px;
   margin: auto;
   background: var(--secondary-bg);
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
@@ -132,15 +133,53 @@ body {
   margin: 0 auto;
 }
 
-.card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-  /* Add more styles as needed */
+img,
+video {
+  max-width: 100%;
+  height: auto;
 }
 
-.card-header:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Darken the background color on hover */
-  cursor: pointer; /* Change cursor to indicate interactivity */
+.container {
+  width: 100%;
+  max-width: 1200px; /* or any desired maximum width */
+}
+
+@media only screen and (max-width: 600px) {
+  .auth-inner {
+    width: 90%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  h3 {
+    font-size: 1.5rem;
+  }
+  p {
+    font-size: 0.875rem;
+  }
+  .col-md-6 {
+    width: 100%;
+  }
+  .auth-inner {
+    padding: 15px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-wrapper {
+    padding: 10px;
+  }
+  .auth-inner {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  button {
+    font-size: 1rem;
+  }
 }
 </style>

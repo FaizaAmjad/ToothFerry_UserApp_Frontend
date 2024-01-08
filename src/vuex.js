@@ -193,6 +193,23 @@ const store = new Vuex.Store({
       }
     },
 
+    async fetchNotifications({ commit }) {
+      try {
+        // Fetch notifications from your API or another source
+        const notifications = await getNotifications()
+        commit('setNotifications', notifications)
+      } catch (error) {
+        console.error('Error fetching notifications:', error)
+        // Handle error
+      }
+    },
+
+    markNotificationsAsRead({ commit }) {
+      // Assuming you have an API call or logic to mark notifications as read
+      // Adjust as needed
+      commit('setNewNotifications', false)
+    },
+
     errorMessage({ commit }, errorMessage) {
       commit('SET_ERROR', errorMessage)
     },

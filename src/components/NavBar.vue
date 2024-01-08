@@ -35,6 +35,9 @@
             <RouterLink class="nav-link" to="/about">About Us</RouterLink>
           </li>
           <li class="nav-item">
+            <RouterLink class="nav-link" to="/inbox">Inbox</RouterLink>
+          </li>
+          <li class="nav-item">
             <a href="javascript:void(0)" @click="handleLogout" class="nav-link">Logout</a>
           </li>
         </ul>

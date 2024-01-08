@@ -40,13 +40,25 @@ npm run lint
 ```
 ## Features
 - Notification System: <br>Receive timely updates on booking status and cancellations.
-- Personal Profile Management: <br> Edit, delete, and view personal details conveniently
+- Personal Profile Management: <br> Edit, delete, and view personal details conveniently.
 - Map Integration:  <br> Locate nearby clinics, view details, and book appointments.
 - Appointment Booking:<br>Select dentists, choose time slots, and manage booked appointments.
 - Emergency Booking:<br> Swiftly book appointments for urgent dental care needs.
 - User-Friendly Interface:<br> Intuitive design with error handling for a smooth user experience.
 
 ## Visuals
+#### Log in page for the Patients
+![Log in page](image.png)
+
+#### Emergency Booking Form
+![Emergency booking Form](image-1.png)
+
+#### Map with clinics
+![Map with clinics](image-2.png)
+
+#### Schedule Page for booking on Mobile
+![Schedule page for booking on mobile](image-3.png)
+
 
 
 ## Usage

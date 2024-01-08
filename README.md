@@ -54,7 +54,7 @@ npm run lint
 ![Emergency booking Form](image-1.png)
 
 #### Map with clinics
-![Map with clinics](image-2.png)
+![Map with clinics](image-4.png)
 
 #### Schedule Page for booking on Mobile
 ![Schedule page for booking on mobile](image-3.png)

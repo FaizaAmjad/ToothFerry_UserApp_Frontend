@@ -88,11 +88,11 @@
     <b-card v-if="isPopupVisible" class="popupCard">
       <h5 class="card-header">{{ popupInfo.type }}</h5>
       <div class="card-body">
-        <h5 class="card-title">{{ popupInfo.clinic.name }}</h5>
-        <p class="card-sub-title">{{ popupInfo.clinic.location }}</p>
+        <h5 class="card-title">{{ popupInfo.clinic.clinicName }}</h5>
+        <p class="card-sub-title">{{ popupInfo.clinic.address }}</p>
         <p class="card-text">{{ popupInfo.date }}</p>
         <p class="card-text">{{ popupInfo.time }}</p>
-        <p class="card-text">{{ popupInfo.comments }}</p>
+        <p class="card-text">{{ popupInfo.description }}</p>
         <a class="btn btn-primary" @click="cancelBooking">Cancel</a>
       </div>
       <button id="close-button" @click="hidePopup">Close</button>
@@ -102,19 +102,21 @@
 
 <script>
 import MapComponent from '@/components/MapComponent.vue'
-import BookingListElement from '../components/BookingListElement.vue'
-import NotificationListElement from '../components/NotificationListElement.vue'
+import BookingListElement from '@/components/BookingListElement.vue'
+import NotificationListElement from '@/components/NotificationListElement.vue'
 import { getUserNotifications } from '@/apis/notifications';
 import { getUserBookings } from '@/apis/booking';
+import { getClinics } from '@/apis/clinic';
+import { unBook } from '../apis/booking';
 
 const CARDS_PER_PAGINATION = 1
 
 export default {
   name: 'home-view',
   components: {
-    MapComponent
-    //BookingListElement,
-    //NotificationListElement
+    MapComponent,
+    BookingListElement,
+    NotificationListElement
   },
   computed: {
     error() {
@@ -255,11 +257,37 @@ export default {
     },
     async fetchBookings() {
       try {
-        const response = await getUserBookings(0,3);
-        if (response) {
-          console.log('bookings:', response);
-          this.bookings = response;
+        const response = await getUserBookings(0, 3);
+        if (!response || !Array.isArray(response)) {
+          console.error('No bookings received or invalid format');
+          return; // Exit if no bookings or response is not an array
         }
+        const allClinics = await getClinics();
+        for (let i = 0; i < response.length; i++) {
+          const booking = response[i];
+          const clinic = allClinics.find((clinic) => clinic._id === booking.clinic_id);
+          // Assuming this is the start time from your booking
+          const startString = booking.start;
+
+          // Create a Date object from the start string
+          const startDate = new Date(startString);
+
+          // Extract the date in YYYY-MM-DD format
+          const date = startDate.toISOString().split('T')[0];
+
+          // Extract the time in HH:MM format
+          const time = startDate.toISOString().split('T')[1].substring(0, 5);
+
+          console.log("Date:", date); // Outputs the date
+          console.log("Time:", time); // Outputs the time
+          if (clinic) {
+            booking.clinic = clinic;
+            booking.date = date;
+            booking.time = time;
+          }
+          this.bookings[i] = booking;
+        }
+        console.log('bookings:', this.bookings);
       } catch (error) {
         console.error('Error fetching bookings:', error);
       }
@@ -293,8 +321,8 @@ export default {
       console.log('Hide popup')
     },
     cancelBooking() {
-      console.log('TODO: Cancel booking using api call')
-      //we have the _id of the selected booking in this.popupInfo._id
+      unBook(this.popupInfo._id)
+      window.location.reload();
     },
     handleResize() {
       if (this.$refs.map) {
@@ -303,6 +331,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style scoped>

@@ -1,25 +1,19 @@
-# vue-project
+# User-App
+
+## Getting Started
 
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
+For an optimal development experience, consider the following IDE setup:
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+- [VSCode](https://code.visualstudio.com/) 
+- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) 
+- [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
 ## Customize configuration
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+Refer to [Vite Configuration Reference](https://vitejs.dev/config/) to customize your project configuration.
 
 ## Project Setup
 
@@ -33,35 +27,10 @@ npm install
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Compile and Minify for Production
 
 ```sh
 npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Run End-to-End Tests with [Playwright](https://playwright.dev)
-
-```sh
-# Install browsers for the first run
-npx playwright install
-
-# When testing on CI, must build the project first
-npm run build
-
-# Runs the end-to-end tests
-npm run test:e2e
-# Runs the tests only on Chromium
-npm run test:e2e -- --project=chromium
-# Runs the tests of a specific file
-npm run test:e2e -- tests/example.spec.ts
-# Runs the tests in debug mode
-npm run test:e2e -- --debug
 ```
 
 ### Lint with [ESLint](https://eslint.org/)
@@ -69,3 +38,50 @@ npm run test:e2e -- --debug
 ```sh
 npm run lint
 ```
+## Features
+- Notification System: <br>Receive timely updates on booking status and cancellations.
+- Personal Profile Management: <br> Edit, delete, and view personal details conveniently
+- Map Integration:  <br> Locate nearby clinics, view details, and book appointments.
+- Appointment Booking:<br>Select dentists, choose time slots, and manage booked appointments.
+- Emergency Booking:<br> Swiftly book appointments for urgent dental care needs.
+- User-Friendly Interface:<br> Intuitive design with error handling for a smooth user experience.
+
+## Visuals
+
+
+## Usage
+#### 1. Admin Management:
+
+- Register dentists, assign clinics, and manage admin roles effortlessly.
+- Admins have secure login access to relevant data and controls.
+
+#### 2. Clinic Administration:
+
+- View, register, update, and delete clinics with ease.
+
+#### 3. Appointment Management:
+
+- Dentists can register, visualize, and edit appointments.
+- Efficient error handling ensures a smooth experience.
+
+#### 4. Personal Schedules: 
+Dentists have a clear view of their schedules and personal information.
+
+
+## Support
+Please contact our email support123@toothferry.com for any further support.
+
+
+
+## Contribution
+We welcome further contributions while adhering to our privacy policies.
+
+## Authors and acknowledgement
+Show your appreciation to those who have contributed to the Dentist App.
+
+## Project Status
+The project has been completed but might require further maintenance and enhancements, such as for scaling further.
+
+
+
+

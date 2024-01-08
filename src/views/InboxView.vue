@@ -16,7 +16,7 @@
   
   <script>
   import NotificationListElement from '@/components/NotificationListElement.vue';
-  import { getUserNotifications } from '@/apis/notifications';
+  import { getUserNotifications } from '@/apis/notification';
   import { readNotification } from '@/apis/notification';
   
   

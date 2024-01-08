@@ -46,6 +46,7 @@
       <!-- Right Section -->
       <div class="right-section">
         <b-col>
+          <!-- Bookings -->
           <div class="bg-light p-5">
             <div class="card">
               <h5 class="bookingsHeader">My Bookings</h5>
@@ -65,23 +66,24 @@
               ></b-pagination>
             </div>
           </div>
-
-        <!-- Inbox -->
-        <div class="bg-light p-5">
-          <div class="card">
-            <h5 class="card-header" @click="goToInbox">Notifications</h5>
-            <br />
-            <NotificationListElement
-              v-for="notification in notifications"
-              :notification="notification"
-              :key="notification.id"
-            />
-            <p :style="{ color: unreadMessages > 0 ? 'red' : 'black' }">
-              {{ unreadMessages }} unread messages
-            </p>
+        
+          <!-- Inbox -->
+          <div class="bg-light p-5">
+            <div class="card">
+              <h5 class="card-header" @click="goToInbox">Notifications</h5>
+              <br />
+              <NotificationListElement
+                v-for="notification in notifications"
+                :notification="notification"
+                :key="notification.id"
+              />
+              <p :style="{ color: unreadMessages > 0 ? 'red' : 'black' }">
+                {{ unreadMessages }} unread messages
+              </p>
+            </div>
           </div>
-        </div>
-      </b-col>
+        </b-col>
+      </div>
     </b-row>
   </div>
   <div v-if="isPopupVisible" id="popup-container">
@@ -104,7 +106,7 @@
 import MapComponent from '@/components/MapComponent.vue'
 import BookingListElement from '@/components/BookingListElement.vue'
 import NotificationListElement from '@/components/NotificationListElement.vue'
-import { getUserNotifications } from '@/apis/notifications';
+import { getUserNotifications } from '@/apis/notification';
 import { getUserBookings } from '@/apis/booking';
 import { getClinics } from '@/apis/clinic';
 import { unBook } from '../apis/booking';

@@ -25,7 +25,7 @@ export default {
 
     onMounted(() => {
       clinic.value = store.getters.getSelectedClinic
-      store.dispatch('fetchDentists')
+      store.dispatch('fetchClinicDentists')
     })
 
     const error = computed(() => {

@@ -1,7 +1,7 @@
 import { Api } from './api'
 
-export const getSlots = async () => {
-  const response = await Api().get('slots')
+export const getDentistSlots = async (dentist_id) => {
+  const response = await Api().get(`slots/dentist/${dentist_id}`)
 
   return response.data
 }

@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
-import { getClinics, getDentists } from './apis/clinic'
-import { getSlots, book, unBook } from './apis/booking'
+import { getClinics, getClinicDentists } from './apis/clinic'
+import { getDentistSlots, book, unBook } from './apis/booking'
 import { getNotifications } from './apis/notification'
 
 const state = {
@@ -40,13 +40,13 @@ const store = new Vuex.Store({
       dispatch('getNotifications')
     },
 
-    async fetchClinics({ commit, dispatch }) {
+    async fetchClinics({ commit }) {
       try {
         // Make an API request to fetch all clinics information
         const clinics = await getClinics()
         // Update the clinic state
         commit('SET_CLINICS', clinics)
-        dispatch('fetchDentists')
+        //dispatch('fetchDentists')
       } catch (error) {
         let errorMessage = 'An unexpected error occurred.'
         if (error.response) {
@@ -61,13 +61,16 @@ const store = new Vuex.Store({
       }
     },
 
-    async fetchDentists({ commit, dispatch }) {
+    async fetchClinicDentists({ commit }) {
       try {
-        // Make an API request to fetch all clinics information
-        const dentists = await getDentists()
+        // Make an API request to fetch all dentists
+        const dentists = await getClinicDentists(state.selectedClinic._id)
+        dentists.forEach((dentist) => {
+          console.log('clinic dentist: ' + dentist.name)
+        })
         // Update the dentist state
         commit('SET_DENTISTS', dentists)
-        dispatch('fetchSlots')
+        //dispatch('fetchSlots')
       } catch (error) {
         let errorMessage = 'An unexpected error occurred.'
         if (error.response) {
@@ -82,10 +85,10 @@ const store = new Vuex.Store({
       }
     },
 
-    async fetchSlots({ commit }) {
+    async fetchDentistSlots({ commit }) {
       try {
         // Make an API request to fetch slots
-        const slots = await getSlots()
+        const slots = await getDentistSlots(state.selectedDentist._id)
         // Update the slots state
         commit('SET_SLOTS', slots)
       } catch (error) {
@@ -104,7 +107,7 @@ const store = new Vuex.Store({
     selectClinic({ commit, dispatch }, clinic) {
       console.log('selected clinic ' + clinic.clinicName)
       commit('SET_SELECTED_CLINIC', clinic)
-      dispatch('clinicDentists')
+      dispatch('fetchClinicDentists')
     },
 
     clinicDentists({ commit, state }) {
@@ -123,7 +126,7 @@ const store = new Vuex.Store({
       const selectedDentist = state.clinicDentists.find((d) => d._id === dentistId)
       if (selectedDentist) {
         commit('SET_SELECTED_DENTIST', selectedDentist)
-        dispatch('dentistSlots')
+        dispatch('fetchDentistSlots')
       } else {
         console.error('Dentist not found with id:', dentistId)
       }

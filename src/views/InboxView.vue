@@ -10,13 +10,14 @@
         :per-page="perPage"
         @change="fetchNotifications"
       ></b-pagination>
-      <button @click="onClick">Click me</button>
+      <button @click="onClick">Mark All read</button>
     </div>
   </template>
   
   <script>
   import NotificationListElement from '@/components/NotificationListElement.vue';
   import { getUserNotifications } from '@/apis/notifications';
+  import { readNotification } from '@/apis/notification';
   
   
   export default {
@@ -49,9 +50,11 @@
         }
       },
       onClick() {
-        this.fetchNotifications();
-        console.log('Notifications:', this.notifications);
-        console.log('toalNotifications:', this.totalNotifications);
+        for (let i = 0; i < this.notifications.length; i++) {
+          if (this.notifications[i].read === false) {
+            readNotification(this.notifications[i]._id);
+          }
+        }
       },
     },
   };

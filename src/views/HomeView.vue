@@ -138,8 +138,8 @@ export default {
     return {
       userPosition: {},
       markers: [],
-      numPages: 3,
-      unreadMessages: 1,
+      numPages: 0,
+      unreadMessages: 0,
       isPopupVisible: false,
       isInfoWindowVisible: false,
       infoWindowPosition: { lat: 51.5072, lng: 0.1276 },
@@ -250,6 +250,7 @@ export default {
           console.log('notifications:', response);
           this.notifications = response;
           this.totalNotifications = response.length; //TODO: the totalNotifications should be a part of the response, since the length of the response is not the total number of notifications
+          this.unreadMessages = this.notifications.filter((notification) => !notification.read).length;
         }
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -287,6 +288,7 @@ export default {
           }
           this.bookings[i] = booking;
         }
+        this.numPages = Math.ceil(this.bookings.length / CARDS_PER_PAGINATION);
         console.log('bookings:', this.bookings);
       } catch (error) {
         console.error('Error fetching bookings:', error);

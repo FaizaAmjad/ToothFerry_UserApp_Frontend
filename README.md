@@ -50,22 +50,25 @@ npm run lint
 
 
 ## Usage
-#### 1. Admin Management:
+#### 1.User Account Management:
 
-- Register dentists, assign clinics, and manage admin roles effortlessly.
-- Admins have secure login access to relevant data and controls.
+- Efficient user login and registration processes.
+- Notifications for booking confirmations or cancellations.
 
-#### 2. Clinic Administration:
+#### 2. Personalization and Themes:
 
-- View, register, update, and delete clinics with ease.
+- Choose between light and dark themes.
+- Personalize language settings for a comfortable experience.
 
-#### 3. Appointment Management:
+#### 3. Clinic Exploration and Booking:
 
-- Dentists can register, visualize, and edit appointments.
-- Efficient error handling ensures a smooth experience.
+- Explore clinics on an interactive map with markers.
+- Book appointments with preferred clinics and dentists.
 
-#### 4. Personal Schedules: 
-Dentists have a clear view of their schedules and personal information.
+#### 4. Appointment Scheduling:
+
+- View available time slots for specific dentists and clinics.
+- Book, unbook, and manage appointments seamlessly.
 
 
 ## Support
@@ -77,7 +80,7 @@ Please contact our email support123@toothferry.com for any further support.
 We welcome further contributions while adhering to our privacy policies.
 
 ## Authors and acknowledgement
-Show your appreciation to those who have contributed to the Dentist App.
+Show your appreciation to those who have contributed to the User App.
 
 ## Project Status
 The project has been completed but might require further maintenance and enhancements, such as for scaling further.

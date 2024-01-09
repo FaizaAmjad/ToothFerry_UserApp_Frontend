@@ -1,13 +1,13 @@
 import { Api } from './api'
 
-export const getDentistSlots = async (dentist_id) => {
-  const response = await Api().get(`slots/dentist/${dentist_id}`)
+export const getDentistSlots = async (dentistId) => {
+  const response = await Api().get(`slots/dentist/${dentistId}`)
 
   return response.data
 }
 
 export const getUserBookings = async () => {
-  const response = await Api().get('slots?offset=0&limit=3')
+  const response = await Api().get('slots/my-booking?offset=0&limit=3')
 
   return response.data
 }

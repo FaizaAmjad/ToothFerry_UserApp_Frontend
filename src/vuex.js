@@ -1,5 +1,5 @@
 import Vuex from 'vuex'
-import { getClinics, getClinicDentists } from './apis/clinic'
+import { getClinics, getClinicDentists, getDentists } from './apis/clinic'
 import { getDentistSlots, book, unBook } from './apis/booking'
 import { getNotifications } from './apis/notification'
 
@@ -61,12 +61,17 @@ const store = new Vuex.Store({
       }
     },
 
-    async fetchClinicDentists({ commit }) {
+    async fetchDentists({ commit }) {
       try {
+        if (!state.selectedClinic) {
+          console.log('selected clinic not set yet. ')
+          return
+        }
         // Make an API request to fetch all dentists
-        const dentists = await getClinicDentists(state.selectedClinic._id)
+        const dentists = await getDentists(state.selectedClinic.id)
+
         dentists.forEach((dentist) => {
-          console.log('clinic dentist: ' + dentist.name)
+          console.log('fetching all clinic dentist: ' + dentist.email)
         })
         // Update the dentist state
         commit('SET_DENTISTS', dentists)
@@ -85,12 +90,47 @@ const store = new Vuex.Store({
       }
     },
 
-    async fetchDentistSlots({ commit }) {
+    async fetchClinicDentists({ commit }) {
       try {
+        if (!state.selectedClinic) {
+          console.log('selected clinic not set yet. ')
+          return
+        }
+        // Make an API request to fetch all dentists
+        const clinicDentists = await getClinicDentists(state.selectedClinic.id)
+
+        clinicDentists.forEach((dentist) => {
+          console.log('clinic dentist: ' + dentist.email)
+        })
+        // Update the dentist state
+        commit('SET_CLINIC_DENTISTS', clinicDentists)
+        //dispatch('fetchSlots')
+      } catch (error) {
+        let errorMessage = 'An unexpected error occurred.'
+        if (error.response) {
+          console.log('Error status code:', error.response.status)
+          if (error.response.status === 500) {
+            errorMessage = 'Server error in getting dentists.'
+          } else {
+            errorMessage = 'An error occurred during fetching dentists.'
+          }
+        }
+        commit('SET_ERROR', errorMessage)
+      }
+    },
+
+    async fetchDentistSlots({ commit, dispatch }) {
+      try {
+        if (!state.selectedDentist) {
+          console.log('selected dentist not set yet. ')
+          return
+        }
         // Make an API request to fetch slots
-        const slots = await getDentistSlots(state.selectedDentist._id)
+        console.log('selected dentist id ' + state.selectedDentist._id)
+        const dentistSlots = await getDentistSlots(state.selectedDentist._id)
         // Update the slots state
-        commit('SET_SLOTS', slots)
+        commit('SET_DENTIST_SLOTS', dentistSlots)
+        dispatch('bookedSlots')
       } catch (error) {
         let errorMessage = 'An unexpected error occurred.'
         if (error.response) {
@@ -104,10 +144,11 @@ const store = new Vuex.Store({
       }
     },
 
-    selectClinic({ commit, dispatch }, clinic) {
+    async selectClinic({ commit, dispatch }, clinic) {
       console.log('selected clinic ' + clinic.clinicName)
+      console.log('selected clinic id ' + clinic.id)
       commit('SET_SELECTED_CLINIC', clinic)
-      dispatch('fetchClinicDentists')
+      await dispatch('fetchClinicDentists')
     },
 
     clinicDentists({ commit, state }) {
@@ -122,11 +163,11 @@ const store = new Vuex.Store({
       commit('SET_CLINIC_DENTISTS', clinicDentists)
     },
 
-    selectDentist({ commit, dispatch, state }, dentistId) {
+    async selectDentist({ commit, dispatch, state }, dentistId) {
       const selectedDentist = state.clinicDentists.find((d) => d._id === dentistId)
       if (selectedDentist) {
         commit('SET_SELECTED_DENTIST', selectedDentist)
-        dispatch('fetchDentistSlots')
+        await dispatch('fetchDentistSlots')
       } else {
         console.error('Dentist not found with id:', dentistId)
       }
@@ -152,8 +193,7 @@ const store = new Vuex.Store({
     },
 
     updateBookedSlots({ dispatch }) {
-      dispatch('fetchSlots')
-      dispatch('dentistSlots')
+      dispatch('fetchDentistSlots')
     },
 
     async bookSlot({ commit, dispatch }, { slotId, userId }) {

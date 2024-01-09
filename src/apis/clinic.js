@@ -11,3 +11,10 @@ export const getDentists = async () => {
 
   return response.data
 }
+
+export const getClinicDentists = async (clinicId) => {
+  console.log('getClinicDentists: clinic id ' + clinicId)
+  const response = await Api().get(`dentists/clinic/${clinicId}`)
+
+  return response.data
+}

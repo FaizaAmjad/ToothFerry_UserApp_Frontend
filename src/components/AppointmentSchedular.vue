@@ -9,7 +9,12 @@
     </select>
     <br />
     <div class="appointment-scheduler-container">
-      <Datepicker v-model="selectedDate" @input="onDateChange" placeholder="Choose date" />
+      <Datepicker
+        v-model="selectedDate"
+        @input="onDateChange"
+        placeholder="Choose date"
+        :key="selectedDate"
+      />
       <br />
       <table class="schedule-table">
         <thead>
@@ -107,6 +112,7 @@ export default {
     const onDentistChange = async () => {
       if (selectedDentist.value) {
         await store.dispatch('selectDentist', selectedDentist.value)
+        await store.dispatch('fetchDentistSlots')
 
         slots.value = store.getters.dentistSlots || []
         bookedSlots.value = store.getters.bookedSlots || []

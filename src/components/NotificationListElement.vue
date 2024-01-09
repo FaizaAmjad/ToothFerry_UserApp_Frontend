@@ -9,9 +9,6 @@
     </div>
     <div>
       <span @click="removeNotification" class="close-icon">x</span>
-      <b-card-text>
-        {{ notification.note }}
-      </b-card-text>
     </div>
   </b-card>
 </template>

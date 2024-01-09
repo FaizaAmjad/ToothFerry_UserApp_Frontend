@@ -9,7 +9,6 @@
         <b-col md="8">
           <div id="search">
             <!-- TODO: doesn't look the greatest but actual functionalities are more important -->
-            <button type="searchButton" class="btn btn-primary" @click="Search()">Search</button>
             <input
               type="input"
               v-model="searchInput"
@@ -17,6 +16,7 @@
               id="SearchInput"
               placeholder="Clinic Name"
             />
+            <button type="searchButton" class="btn btn-primary" @click="Search()">Search</button>
           </div>
         </b-col>
         <b-col md="12">
@@ -79,6 +79,23 @@
               <p :style="{ color: unreadMessages > 0 ? 'red' : 'black' }">
                 {{ unreadMessages }} unread messages
               </p>
+            </div>
+          </div>
+
+          <div class="bg-light p-5">
+            <div class="card">
+              <h5 class="card-header">Emergency</h5>
+              <br />
+              <small>Use our emergency booking system in case of a serious dental threat</small>
+              <div class="my-1"></div>
+              <router-link :to="{ path: '/emergency-form' }">
+                <button
+                  class="btn btn-primary"
+                  style="width: 7.5rem; height: 2rem; font-size: 12px"
+                >
+                  Emergency Form
+                </button>
+              </router-link>
             </div>
           </div>
         </b-col>
@@ -314,7 +331,7 @@ export default {
     },
     goToInbox() {
       console.log('Go to inbox')
-      this.$router.push('/notifications')
+      this.$router.push('/inbox')
     },
     showPopup(booking) {
       this.isPopupVisible = true
@@ -406,6 +423,8 @@ button.page-link {
 .left-section {
   width: 100%;
   flex: 1;
+  align-content: center;
+  justify-content: center;
 }
 
 .right-section {

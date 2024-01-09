@@ -59,14 +59,13 @@
               />
               <b-pagination
                 class="pagination"
-                v-model="currentPage"
                 :link-gen="generatePaginationLink"
                 :total-rows="numPages"
                 :align="center"
               ></b-pagination>
             </div>
           </div>
-        
+
           <!-- Inbox -->
           <div class="bg-light p-5">
             <div class="card">
@@ -106,10 +105,10 @@
 import MapComponent from '@/components/MapComponent.vue'
 import BookingListElement from '@/components/BookingListElement.vue'
 import NotificationListElement from '@/components/NotificationListElement.vue'
-import { getUserNotifications } from '@/apis/notification';
-import { getUserBookings } from '@/apis/booking';
-import { getClinics } from '@/apis/clinic';
-import { unBook } from '../apis/booking';
+import { getUserNotifications } from '@/apis/notification'
+import { getUserBookings } from '@/apis/booking'
+import { getClinics } from '@/apis/clinic'
+import { unBook } from '../apis/booking'
 
 const CARDS_PER_PAGINATION = 1
 
@@ -152,7 +151,7 @@ export default {
       searchInput: '',
       popupInfo: {},
       bookings: [],
-      notifications: [],
+      notifications: []
     }
   },
   methods: {
@@ -247,53 +246,55 @@ export default {
     },
     async fetchNotifications() {
       try {
-        const response = await getUserNotifications(0,3);
+        const response = await getUserNotifications(0, 3)
         if (response) {
-          console.log('notifications:', response);
-          this.notifications = response;
-          this.totalNotifications = response.length; //TODO: the totalNotifications should be a part of the response, since the length of the response is not the total number of notifications
-          this.unreadMessages = this.notifications.filter((notification) => !notification.read).length;
+          console.log('notifications:', response)
+          this.notifications = response
+          this.totalNotifications = response.length //TODO: the totalNotifications should be a part of the response, since the length of the response is not the total number of notifications
+          this.unreadMessages = this.notifications.filter(
+            (notification) => !notification.read
+          ).length
         }
       } catch (error) {
-        console.error('Error fetching notifications:', error);
+        console.error('Error fetching notifications:', error)
       }
     },
     async fetchBookings() {
       try {
-        const response = await getUserBookings(0, 3);
+        const response = await getUserBookings(0, 3)
         if (!response || !Array.isArray(response)) {
-          console.error('No bookings received or invalid format');
-          return; // Exit if no bookings or response is not an array
+          console.error('No bookings received or invalid format')
+          return // Exit if no bookings or response is not an array
         }
-        const allClinics = await getClinics();
+        const allClinics = await getClinics()
         for (let i = 0; i < response.length; i++) {
-          const booking = response[i];
-          const clinic = allClinics.find((clinic) => clinic._id === booking.clinic_id);
+          const booking = response[i]
+          const clinic = allClinics.find((clinic) => clinic._id === booking.clinic_id)
           // Assuming this is the start time from your booking
-          const startString = booking.start;
+          const startString = booking.start
 
           // Create a Date object from the start string
-          const startDate = new Date(startString);
+          const startDate = new Date(startString)
 
           // Extract the date in YYYY-MM-DD format
-          const date = startDate.toISOString().split('T')[0];
+          const date = startDate.toISOString().split('T')[0]
 
           // Extract the time in HH:MM format
-          const time = startDate.toISOString().split('T')[1].substring(0, 5);
+          const time = startDate.toISOString().split('T')[1].substring(0, 5)
 
-          console.log("Date:", date); // Outputs the date
-          console.log("Time:", time); // Outputs the time
+          console.log('Date:', date) // Outputs the date
+          console.log('Time:', time) // Outputs the time
           if (clinic) {
-            booking.clinic = clinic;
-            booking.date = date;
-            booking.time = time;
+            booking.clinic = clinic
+            booking.date = date
+            booking.time = time
           }
-          this.bookings[i] = booking;
+          this.bookings[i] = booking
         }
-        this.numPages = Math.ceil(this.bookings.length / CARDS_PER_PAGINATION);
-        console.log('bookings:', this.bookings);
+        this.numPages = Math.ceil(this.bookings.length / CARDS_PER_PAGINATION)
+        console.log('bookings:', this.bookings)
       } catch (error) {
-        console.error('Error fetching bookings:', error);
+        console.error('Error fetching bookings:', error)
       }
     },
     Search() {
@@ -326,7 +327,7 @@ export default {
     },
     cancelBooking() {
       unBook(this.popupInfo._id)
-      window.location.reload();
+      window.location.reload()
     },
     handleResize() {
       if (this.$refs.map) {
@@ -335,7 +336,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

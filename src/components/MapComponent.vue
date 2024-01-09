@@ -66,9 +66,9 @@ export default {
     }
   },
   methods: {
-    onMarkerClicked(marker) {
-      this.$store.dispatch('selectClinic', marker)
-      this.$store.dispatch('fetchClinicDentists')
+    async onMarkerClicked(marker) {
+      await this.$store.dispatch('selectClinic', marker)
+      await this.$store.dispatch('fetchClinicDentists')
       this.$refs.map.panTo(marker.position)
       this.$router.push({ path: '/clinic' })
     },

@@ -35,6 +35,7 @@
               @mouseleave="highlightCell(date, timeSlot.time, false)"
               :style="{ backgroundColor: getBackgroundColor(date, timeSlot.time) }"
               style="position: relative"
+              :slots="slots"
             >
               <div
                 v-if="
@@ -166,7 +167,8 @@ export default {
         const user = this.$store.getters.user
         if (user) {
           const userId = user.id
-          if (!this.validateDate(date)) {
+          console.log(this.validateDate(date))
+          if (this.validateDate(date)) {
             alert('Please choose a date in the future.')
             return
           }
@@ -183,6 +185,7 @@ export default {
                     alert('Slot booked!')
                     this.slots.value = this.$store.getters.dentistSlots || []
                     this.bookedSlots.value = this.$store.getters.bookedSlots || []
+                    this.$store.dispatch('fetchNotifgetNotificationsications')
                     this.highlightedCell = { date, time }
                   } catch (error) {
                     console.error('Error booking slot', error)
@@ -244,6 +247,7 @@ export default {
               alert('Slot is now unbooked!')
               this.slots.value = this.$store.getters.dentistSlots || []
               this.bookedSlots.value = this.$store.getters.bookedSlots || []
+              this.$store.dispatch('getNotifications') || []
             }
           } catch (error) {
             console.error('Error unbooking slot', error)

@@ -59,7 +59,6 @@
               />
               <b-pagination
                 class="pagination"
-                v-model="currentPage"
                 :link-gen="generatePaginationLink"
                 :total-rows="numPages"
                 :align="center"

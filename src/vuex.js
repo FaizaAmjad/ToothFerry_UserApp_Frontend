@@ -144,11 +144,11 @@ const store = new Vuex.Store({
       }
     },
 
-    async selectClinic({ commit, dispatch }, clinic) {
+    async selectClinic({ commit }, clinic) {
       console.log('selected clinic ' + clinic.clinicName)
       console.log('selected clinic id ' + clinic.id)
       commit('SET_SELECTED_CLINIC', clinic)
-      await dispatch('fetchClinicDentists')
+      //await dispatch('fetchClinicDentists')
     },
 
     clinicDentists({ commit, state }) {
@@ -163,11 +163,11 @@ const store = new Vuex.Store({
       commit('SET_CLINIC_DENTISTS', clinicDentists)
     },
 
-    async selectDentist({ commit, dispatch, state }, dentistId) {
+    async selectDentist({ commit, state }, dentistId) {
       const selectedDentist = state.clinicDentists.find((d) => d._id === dentistId)
       if (selectedDentist) {
         commit('SET_SELECTED_DENTIST', selectedDentist)
-        await dispatch('fetchDentistSlots')
+        //await dispatch('fetchDentistSlots')
       } else {
         console.error('Dentist not found with id:', dentistId)
       }

@@ -332,7 +332,7 @@ export default {
     },
     goToInbox() {
       console.log('Go to inbox')
-      this.$router.push('/notifications')
+      this.$router.push('/inbox')
     },
     showPopup(booking) {
       this.isPopupVisible = true

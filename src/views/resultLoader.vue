@@ -43,7 +43,6 @@ export default {
     async getResults() {
       let resultsReceived = false
 
-      // Set a timeout for 3 seconds
       const timeoutId = setTimeout(() => {
         if (!resultsReceived) {
           this.showResults = true
@@ -61,7 +60,7 @@ export default {
         console.error(err)
       } finally {
         this.loading = false
-        clearTimeout(timeoutId) // Clear the timeout if results are received
+        clearTimeout(timeoutId)
       }
     }
   },

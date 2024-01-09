@@ -30,7 +30,14 @@
       <b-alert variant="danger" :show="showAlert" @dismiss="showAlert = false">
         Please answer all questions before submitting the survey.
       </b-alert>
+      <div class="my-3"></div>
       <b-button @click="submitSurvey" variant="primary">Submit</b-button>
+      <div class="my-3"></div>
+      <router-link :to="{ path: '/emergency-results' }">
+        <b-button @click="checkResult" variant="primary" :disabled="!surveySubmitted"
+          >Check Result</b-button
+        >
+      </router-link>
     </div>
   </div>
 </template>
@@ -41,6 +48,7 @@ export default {
   data() {
     return {
       showAlert: false,
+      surveySubmitted: false,
       multipleChoiceQuestions: [
         {
           text: '1. When did you last visit a dentist',
@@ -130,17 +138,6 @@ export default {
       return null
     },
     async submitSurvey() {
-      const showAlert = this.multipleChoiceQuestions
-        .concat(this.yesNoQuestions)
-        .some((question) => question.answer === null)
-
-      if (showAlert) {
-        this.showAlert = true
-        return
-      }
-
-      this.showAlert = false
-
       /* Real survey data but not used for now.
       const surveyData = {
         multipleChoiceQuestions: this.multipleChoiceQuestions.map((question, index) => ({
@@ -206,9 +203,12 @@ export default {
 
       try {
         const data = await postScore(calculatedScore)
-        this.$router.push('/emergency-results')
+        console.log('Submission successful')
       } catch (err) {
-        this.err = 'An error occured'
+        this.err = 'An error occurred during postScore'
+        console.error(err)
+      } finally {
+        this.surveySubmitted = true
       }
     }
   }

@@ -24,7 +24,6 @@ export default {
     const clinic = ref(null)
 
     onBeforeMount(async () => {
-      //store.dispatch('fetchClinicDentists')
       clinic.value = store.getters.getSelectedClinic
     })
 

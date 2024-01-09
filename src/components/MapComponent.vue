@@ -53,10 +53,11 @@ export default {
       infoWindowPosition: {},
       infoWindowOptions: {
         pixelOffset: {
-          width: 0, height: -38
+          width: 0,
+          height: -38
         },
         maxWidth: 320,
-        maxHeight: 320,
+        maxHeight: 320
       },
       infoWindowTitle: '',
       infoWindowContent: '',
@@ -67,6 +68,7 @@ export default {
   methods: {
     onMarkerClicked(marker) {
       this.$store.dispatch('selectClinic', marker)
+      this.$store.dispatch('fetchClinicDentists')
       this.$refs.map.panTo(marker.position)
       this.$router.push({ path: '/clinic' })
     },
@@ -79,9 +81,9 @@ export default {
       this.hideInfoWindow()
     },
     showInfoWindow(marker) {
-      this.infoWindowPosition = marker.position;
-      this.infoWindowTitle = `${marker.clinicName}`;
-      this.isInfoWindowVisible = true;
+      this.infoWindowPosition = marker.position
+      this.infoWindowTitle = `${marker.clinicName}`
+      this.isInfoWindowVisible = true
     },
     hideInfoWindow() {
       // Close the InfoWindow

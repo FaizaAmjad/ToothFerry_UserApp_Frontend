@@ -14,6 +14,7 @@
         @input="onDateChange"
         placeholder="Choose date"
         :key="selectedDate"
+        :datesDisabled="disabledDate"
       />
       <br />
       <table class="schedule-table">
@@ -127,7 +128,10 @@ export default {
 
     const onDateChange = (newDate) => {
       // update the displayed slots
+      console.log('date : ' + newDate)
       selectedDate.value = newDate
+      console.log('date : ' + selectedDate.value)
+
       dates.value = generateDateRange(selectedDate.value)
     }
 
@@ -150,11 +154,22 @@ export default {
       // eslint-disable-next-line no-undef
       return moment(date).format('MMM D, YYYY')
     },
+
+    validateDate(newDate) {
+      const currentDate = new Date()
+      console.log('date : ' + newDate)
+      return newDate < currentDate
+    },
+
     async showEvent(date, time) {
       try {
         const user = this.$store.getters.user
         if (user) {
           const userId = user.id
+          if (!this.validateDate(date)) {
+            alert('Please choose a date in the future.')
+            return
+          }
           if (this.selectedDentist) {
             const slotId = this.getSlotID(date, time)
             if (slotId) {

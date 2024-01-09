@@ -4,7 +4,7 @@
       ref="map"
       class="GMapMap"
       :center="center"
-      :zoom="zoom"
+      :zoom="12"
       map-type-id="terrain"
       :options="mapOptions"
     >
@@ -21,7 +21,7 @@
         @mouseout="onMarkerMouseOut"
       />
       <GMapInfoWindow
-        v-if="isInfoWindowVisible"
+        :opened="isInfoWindowVisible"
         :position="infoWindowPosition"
         :options="infoWindowOptions"
         ref="infoWindow"
@@ -45,14 +45,19 @@ export default {
   props: {
     markers: Array,
     center: Object,
-    zoom: Number,
     mapOptions: Object
   },
   data() {
     return {
       isInfoWindowVisible: false,
       infoWindowPosition: {},
-      infoWindowOptions: {},
+      infoWindowOptions: {
+        pixelOffset: {
+          width: 0, height: -38
+        },
+        maxWidth: 320,
+        maxHeight: 320,
+      },
       infoWindowTitle: '',
       infoWindowContent: '',
       infoWindowLink: '',
@@ -74,15 +79,9 @@ export default {
       this.hideInfoWindow()
     },
     showInfoWindow(marker) {
-      const markerPosition = marker.position
-      const slideOffset = { lat: 0.005, lng: 0.005 }
-      this.infoWindowPosition = {
-        lat: markerPosition.lat + slideOffset.lat,
-        lng: markerPosition.lng + slideOffset.lng
-      }
-
-      this.infoWindowTitle = `${marker.clinicName}`
-      this.isInfoWindowVisible = true
+      this.infoWindowPosition = marker.position;
+      this.infoWindowTitle = `${marker.clinicName}`;
+      this.isInfoWindowVisible = true;
     },
     hideInfoWindow() {
       // Close the InfoWindow

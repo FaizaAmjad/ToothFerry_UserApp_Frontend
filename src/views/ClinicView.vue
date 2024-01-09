@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+import { ref, computed, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
 import AppointmentSchedular from '../components/AppointmentSchedular.vue'
 
@@ -23,9 +23,9 @@ export default {
     const store = useStore()
     const clinic = ref(null)
 
-    onMounted(() => {
+    onBeforeMount(async () => {
+      //store.dispatch('fetchClinicDentists')
       clinic.value = store.getters.getSelectedClinic
-      store.dispatch('fetchDentists')
     })
 
     const error = computed(() => {

@@ -1,6 +1,13 @@
 <template>
   <b-card class="card">
     <div>
+      <b-card-text>
+        <b-card-title>{{ notification.id }}</b-card-title>
+        <b-card-sub-title>{{ notification.type }}</b-card-sub-title>
+        <b-card-text>{{ notification.note }}</b-card-text>
+      </b-card-text>
+    </div>
+    <div>
       <span @click="removeNotification" class="close-icon">x</span>
       <b-card-text>
         {{ notification.note }}
@@ -13,7 +20,13 @@
 export default {
   name: 'NotificationListElement',
   props: {
-    notification: Object
+    notification: {
+      id: String,
+      user_id: String,
+      note: String,
+      type: String,
+      notification: Object
+    }
   },
   methods: {
     removeNotification() {

@@ -1,145 +1,99 @@
 <template>
   <div>
     <b-alert variant="danger" :show="alert !== null">{{ alert }}</b-alert>
-    <div class="my-page wrapper d-flex align-items-center justify-content-center">
-      <div class="col-7 main-mypage auth-wrapper">
+    <div class="my-page d-flex align-items-center justify-content-center">
+      <div class="col-7 main-mypage">
         <form class="col-lg-6">
           <div class="my-page-label">My Page</div>
-          <div class="auth-inner">
-            <p>My account:</p>
-            <input
-              class="current-email"
-              type="text"
-              :placeholder="showOtherField ? '' : email"
-              v-model="currentEmail"
-              disabled
-            />
-            <input
-              v-if="showOtherField"
-              type="text"
-              v-model="firstName"
-              placeholder="New FirstName"
-            />
+          <input
+            class="current-email"
+            type="text"
+            :placeholder="showOtherField ? '' : email"
+            v-model="currentEmail"
+            disabled
+          />
+          <input
+            v-if="showOtherField"
+            type="text"
+            v-model="firstName"
+            placeholder="New FirstName"
+          />
 
-            <input
-              v-if="showOtherField"
-              type="text"
-              v-model="lastName"
-              placeholder="New LastName"
-            />
+          <input v-if="showOtherField" type="text" v-model="lastName" placeholder="New LastName" />
 
-            <input v-if="showOtherField" type="text" v-model="email" placeholder="New email" />
-            <input
-              v-if="showOtherField"
-              type="password"
-              v-model="password"
-              placeholder="New Password"
-            />
-            <div class="d-flex w-100 justify-content-center">
-              <form @submit.prevent="edit">
-                <b-button
-                  type="submit"
-                  variant="secondary"
-                  class="w-auto mr-2"
-                  v-show="showEditButton"
-                >
-                  <span>Edit</span>
-                </b-button>
-              </form>
-              <form @submit.prevent="discardChanges">
-                <b-button
-                  type="submit"
-                  variant="danger"
-                  class="w-auto mr-2"
-                  v-show="showDiscardButton"
-                >
-                  <span>Discard</span>
-                </b-button>
-              </form>
-              <div style="margin-right: 10px"></div>
-              <form @submit.prevent="editAccount">
-                <b-button type="submit" v-show="showSaveButton" variant="success" class="w-auto">
-                  <span>Save changes</span>
-                </b-button>
-              </form>
-              <form @submit.prevent="deleteAccount" v-show="!showOtherField">
-                <b-button variant="danger" type="submit" class="w-auto">
-                  <span>Delete</span>
-                </b-button>
-              </form>
-            </div>
+          <input v-if="showOtherField" type="text" v-model="email" placeholder="New email" />
+          <input
+            v-if="showOtherField"
+            type="password"
+            v-model="password"
+            placeholder="New Password"
+          />
+          <div class="d-flex w-100 justify-content-center">
+            <form @submit.prevent="edit">
+              <b-button
+                type="submit"
+                variant="secondary"
+                class="w-auto mr-2"
+                v-show="showEditButton"
+              >
+                <span>Edit</span>
+              </b-button>
+            </form>
+            <form @submit.prevent="discardChanges">
+              <b-button
+                type="submit"
+                variant="danger"
+                class="w-auto mr-2"
+                v-show="showDiscardButton"
+              >
+                <span>Discard</span>
+              </b-button>
+            </form>
+            <div style="margin-right: 10px"></div>
+            <form @submit.prevent="editAccount">
+              <b-button type="submit" v-show="showSaveButton" variant="success" class="w-auto">
+                <span>Save changes</span>
+              </b-button>
+            </form>
+            <form @submit.prevent="deleteAccount" v-show="!showOtherField">
+              <b-button variant="danger" type="submit" class="w-auto">
+                <span>Delete Account</span>
+              </b-button>
+            </form>
           </div>
-          <div>
-            <div class="theme mt-3 d-flex flex-column align-items-center">
-              <div class="auth-inner">
-                <p>
-                  Current Theme:
-                  <b-dropdown
-                    id="dropdown-right"
-                    right
-                    :text="selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)"
-                    variant="primary"
-                    class="ml-2"
-                  >
-                    <b-dropdown-item @click="setSelectedTheme('dark')" href="#"
-                      >Dark</b-dropdown-item
-                    >
-                    <b-dropdown-item @click="setSelectedTheme('light')" href="#"
-                      >Light</b-dropdown-item
-                    >
-                  </b-dropdown>
-                </p>
-
-                <form @submit.prevent="updateTheme">
-                  <b-button
-                    type="submit"
-                    v-show="showUpdateButton"
-                    variant="success"
-                    class="w-auto"
-                  >
-                    <span id="apply-button">Update Theme</span>
-                  </b-button>
-                </form>
-              </div>
-            </div>
-            <div style="margin-right: 20px"></div>
-            <div class="theme mt-3 d-flex flex-column align-items-center">
-              <div class="auth-inner">
-                <p>
-                  Current Language:
-                  <b-dropdown
-                    id="dropdown-right"
-                    right
-                    :text="selectedLanguage.charAt(0).toUpperCase() + selectedLanguage.slice(1)"
-                    variant="primary"
-                    class="ml-2"
-                  >
-                    <b-dropdown-item @click="setSelectedLanguage('english')" href="#"
-                      >English</b-dropdown-item
-                    >
-                    <b-dropdown-item @click="setSelectedLanguage('swedish')" href="#"
-                      >Swedish</b-dropdown-item
-                    >
-                    <b-dropdown-item @click="setSelectedLanguage('korean')" href="#"
-                      >Korean</b-dropdown-item
-                    >
-                  </b-dropdown>
-                </p>
-
-                <form @submit.prevent="updateLanguage">
-                  <b-button
-                    type="submit"
-                    v-show="showUpdateButton"
-                    variant="success"
-                    class="w-auto"
-                  >
-                    <span id="apply-button">Update Language</span>
-                  </b-button>
-                </form>
-              </div>
+          <div class="theme mt-3 d-flex flex-column align-items-center">
+            <div style="">
+              <b-button @click="setSelectedTheme('dark')" href="#" class="w-auto">Dark</b-button>
+              <b-button @click="setSelectedTheme('light')" href="#" class="w-auto">Light</b-button>
             </div>
           </div>
         </form>
+      </div>
+    </div>
+    <div class="my-page d-flex align-items-center justify-content-center">
+      <div v-if="showResults">
+        <div v-if="slot && Object.keys(slot).length > 0" class="slot-item">
+          <b-list-group>
+            <b-list-group-item href="#" class="flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Emergecy Slot Information</h5>
+                <small>{{ slot.date }}</small>
+              </div>
+              <p class="mb-1">Start time: {{ slot.start.split('T')[1].slice(0, 5) }}</p>
+              <p class="mb-1">End time: {{ slot.end.split('T')[1].slice(0, 5) }}</p>
+            </b-list-group-item>
+            <b-list-group-item href="#" class="flex-column align-items-middle">
+              <small>{{ 'Clinic Name: ' + slot.clinicName }}</small>
+            </b-list-group-item>
+            <b-list-group-item href="#" class="flex-column align-items-middle">
+              <small>{{ 'Address: ' + slot.address }}</small>
+            </b-list-group-item>
+            <b-list-group-item href="#" class="flex-column align-items-middle">
+              <small>{{ 'Booking ID: ' + slot._id }}</small>
+            </b-list-group-item>
+          </b-list-group>
+        </div>
+        <div v-else></div>
       </div>
     </div>
   </div>
@@ -147,6 +101,7 @@
 
 <script>
 import { deleteUser, getUserInfo, updateUser } from '../apis/users'
+import { getResults } from '../apis/emergencyBooking'
 
 export default {
   name: 'MyPage',
@@ -169,7 +124,9 @@ export default {
       firstName: '',
       lastName: '',
       currentEmail: 'your@email.com',
-      password: ''
+      password: '',
+      showResults: false,
+      slot: {}
     }
   },
   async mounted() {
@@ -182,6 +139,7 @@ export default {
     this.currentEmail = this.userDetails.email
     this.firstName = this.userDetails.firstName
     this.lastName = this.userDetails.lastName
+    this.getResults()
   },
   methods: {
     async editAccount() {
@@ -203,6 +161,29 @@ export default {
       localStorage.removeItem('token')
       this.$store.dispatch('user', null)
       this.$router.push('/login')
+    },
+
+    async getResults() {
+      let resultsReceived = false
+      const timeoutId = setTimeout(() => {
+        if (!resultsReceived) {
+          this.showResults = true
+        }
+      }, 3000)
+
+      try {
+        this.loading = true
+        this.slot = await getResults()
+        resultsReceived = true
+        this.showResults = true
+        this.loading = false
+        console.log(this.slot)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
+        clearTimeout(timeoutId)
+      }
     },
     setSelectedTheme(theme) {
       this.selectedTheme = theme
@@ -251,19 +232,57 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 .my-page {
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 80vh;
   font-family: 'Jost', sans-serif;
   background: var(--main-bg);
 }
 .current-email {
   text-align: center;
+}
+
+.main-mypage {
+  width: 63%;
+  height: 70%;
+  overflow: hidden;
+  margin-right: 10px;
+  border-radius: 10px;
+  box-shadow: 5px 20px 50px #00072d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-mypage {
+  width: 63%;
+  height: 20%;
+  overflow: hidden;
+  margin-right: 10px;
+  border-radius: 10px;
+  box-shadow: 5px 20px 50px #00072d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-mypage input {
+  width: 80%;
+  height: auto;
+  background: #fbfaf5;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 20px auto;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
 }
 
 .main-mypage input {
@@ -308,6 +327,17 @@ export default {
   transition: 0.5s ease-in-out;
 }
 
+.sub-page-label {
+  color: #fff;
+  font-size: 1.3em;
+  justify-content: center;
+  display: flex;
+  margin: 60px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+}
+
 .image-logo {
   text-align: left;
 }
@@ -336,18 +366,11 @@ export default {
   height: auto;
 }
 
-@media (max-width: 992px) {
-  button {
-    font-size: 1rem;
-  }
-}
-@media (max-width: 576px) {
-  .my-page-label {
-    margin: 20px 0;
-  }
-
-  .btn-group {
-    width: 100%;
-  }
+.slot-item {
+  width: 20em;
+  height: 6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

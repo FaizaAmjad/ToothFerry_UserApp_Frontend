@@ -66,8 +66,9 @@
             </div>
           </div>
 
-          <!-- Inbox -->
-          <div class="bg-light p-5">
+          <!-- Inbox --> 
+        <!--  I commented this  cuz we have the inbox and the dropdowwn list
+           <div class="bg-light p-5">        
             <div class="card">
               <h5 class="card-header" @click="goToInbox">Notifications</h5>
               <br />
@@ -80,7 +81,7 @@
                 {{ unreadMessages }} unread messages
               </p>
             </div>
-          </div>
+          </div> -->
 
           <div class="bg-light p-5">
             <div class="card">
@@ -126,6 +127,7 @@ import { getUserNotifications } from '@/apis/notification'
 import { getUserBookings } from '@/apis/booking'
 import { getClinics } from '@/apis/clinic'
 import { unBook } from '../apis/booking'
+import { getUserInfo } from '../apis/users'
 
 const CARDS_PER_PAGINATION = 1
 
@@ -277,8 +279,9 @@ export default {
       }
     },
     async fetchBookings() {
+      const user = await getUserInfo()
       try {
-        const response = await getUserBookings(0, 3)
+        const response = await getUserBookings(user.id)
         if (!response || !Array.isArray(response)) {
           console.error('No bookings received or invalid format')
           return // Exit if no bookings or response is not an array

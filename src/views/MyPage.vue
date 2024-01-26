@@ -89,7 +89,7 @@
               <small>{{ 'Address: ' + slot.address }}</small>
             </b-list-group-item>
             <b-list-group-item href="#" class="flex-column align-items-middle">
-              <small>{{ 'Booking ID: ' + slot._id }}</small>
+              <img :src="'data:image/png;base64,' + slot.barcode" alt="Barcode" />
             </b-list-group-item>
           </b-list-group>
         </div>
